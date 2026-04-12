@@ -1,4 +1,4 @@
-# 🤖 SmartBiz – AI-Assisted Backend Automation System
+# 🤖 SmartBiz – AI-Assisted Backend Automation System 
 
 SmartBiz is a backend-driven automation system designed to simulate real-world business operations using **natural language input (text/voice)**.
 
