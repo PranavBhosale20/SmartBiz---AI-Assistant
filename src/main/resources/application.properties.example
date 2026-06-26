@@ -1,0 +1,10 @@
+spring.application.name=smartbiz
+
+server.port = 8081
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/smartbiz_db
+spring.datasource.username=postgres
+spring.datasource.password=YOUR_PASSWORD_HERE
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
