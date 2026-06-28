@@ -27,9 +27,4 @@ public class PrescriptionController {
     public ResponseEntity<List<PrescriptionResponseDTO>> getAllPrescriptions() {
         return ResponseEntity.ok(prescriptionService.getAllPrescriptions());
     }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PrescriptionResponseDTO>> getPrescriptionsByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(prescriptionService.getPrescriptionsByUserId(userId));
-    }
 }

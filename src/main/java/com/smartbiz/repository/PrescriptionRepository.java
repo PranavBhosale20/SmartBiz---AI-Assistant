@@ -8,10 +8,12 @@ import java.util.List;
 @Repository
 public interface PrescriptionRepository extends JpaRepository<Prescription, Long> {
 
-    // Lets us pull up a patient's full prescription history - useful
-    // for a doctor to see what a patient has been given before.
-    List<Prescription> findByUserId(Long userId);
-
-    // Lets us see everything a specific doctor has prescribed.
-    List<Prescription> findByDoctorId(Long doctorId);
+    // CHANGED: findByUserId and findByDoctorId removed - Prescription
+    // no longer has direct userId/doctorId fields. If we need "all
+    // prescriptions for this user" later, we'd write it differently,
+    // e.g. findByAppointment_User_Id(Long userId) - reaching THROUGH
+    // the appointment relationship - but we don't need that right now,
+    // so we're keeping this repository minimal and correct rather than
+    // guessing ahead.
+    List<Prescription> findByAppointmentId(Long appointmentId);
 }

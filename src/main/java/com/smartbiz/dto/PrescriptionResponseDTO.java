@@ -5,24 +5,27 @@ import java.time.LocalDateTime;
 public class PrescriptionResponseDTO {
 
     private Long id;
-    private Long userId;
+    private Long appointmentId;
+
+    // We still flatten OUT the patient/doctor names for display
+    // convenience, even though they're not stored directly on
+    // Prescription anymore - the Mapper will pull them from the
+    // linked Appointment when building this response.
     private String userName;
-    private Long doctorId;
     private String doctorName;
+
     private Long productId;
     private String productName;
     private int quantityPrescribed;
     private String dosageInstructions;
     private LocalDateTime createdAt;
 
-    public PrescriptionResponseDTO(Long id, Long userId, String userName, Long doctorId,
-                                    String doctorName, Long productId, String productName,
-                                    int quantityPrescribed, String dosageInstructions,
-                                    LocalDateTime createdAt) {
+    public PrescriptionResponseDTO(Long id, Long appointmentId, String userName, String doctorName,
+                                    Long productId, String productName, int quantityPrescribed,
+                                    String dosageInstructions, LocalDateTime createdAt) {
         this.id = id;
-        this.userId = userId;
+        this.appointmentId = appointmentId;
         this.userName = userName;
-        this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.productId = productId;
         this.productName = productName;
@@ -32,9 +35,8 @@ public class PrescriptionResponseDTO {
     }
 
     public Long getId() { return id; }
-    public Long getUserId() { return userId; }
+    public Long getAppointmentId() { return appointmentId; }
     public String getUserName() { return userName; }
-    public Long getDoctorId() { return doctorId; }
     public String getDoctorName() { return doctorName; }
     public Long getProductId() { return productId; }
     public String getProductName() { return productName; }

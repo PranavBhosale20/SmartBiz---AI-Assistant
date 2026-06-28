@@ -3,8 +3,10 @@ package com.smartbiz.service;
 import com.smartbiz.dto.PrescriptionMapper;
 import com.smartbiz.dto.PrescriptionRequestDTO;
 import com.smartbiz.dto.PrescriptionResponseDTO;
+import com.smartbiz.model.BillItem;
 import com.smartbiz.model.Prescription;
 import com.smartbiz.model.Product;
+import com.smartbiz.repository.BillItemRepository;
 import com.smartbiz.repository.PrescriptionRepository;
 import com.smartbiz.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -20,29 +22,29 @@ public class PrescriptionService {
     private final ProductRepository productRepository;
     private final PrescriptionMapper prescriptionMapper;
 
+    // NEW: needed so we can auto-create a BillItem alongside the
+    // Prescription, in the same transaction.
+    private final BillItemRepository billItemRepository;
+
     public PrescriptionService(PrescriptionRepository prescriptionRepository,
                                 ProductRepository productRepository,
-                                PrescriptionMapper prescriptionMapper) {
+                                PrescriptionMapper prescriptionMapper,
+                                BillItemRepository billItemRepository) {
         this.prescriptionRepository = prescriptionRepository;
         this.productRepository = productRepository;
         this.prescriptionMapper = prescriptionMapper;
+        this.billItemRepository = billItemRepository;
     }
 
-    // @Transactional is the key piece here. It tells Spring: "treat
-    // everything inside this method as ONE unit." If ANY line inside
-    // here throws an exception, Spring automatically UNDOES every
-    // database change this method made so far - it's all or nothing.
-    // Without this annotation, if the prescription save succeeded but
-    // the stock deduction failed afterward (for whatever reason), we'd
-    // be left with a prescription on record for medicine that was
-    // never actually removed from inventory - a silent, hard-to-debug
-    // data bug. @Transactional makes that scenario impossible.
+    // @Transactional now covers THREE database writes instead of two:
+    // 1) save the Prescription, 2) deduct stock, 3) create the
+    // matching BillItem. All three succeed together, or all three
+    // roll back together - there's no scenario where a prescription
+    // exists without its bill item, or stock gets deducted without
+    // either of those being recorded.
     @Transactional
     public PrescriptionResponseDTO createPrescription(PrescriptionRequestDTO dto) {
 
-        // Fetch the product FIRST, before saving anything, so we can
-        // check stock availability before committing to this
-        // prescription at all.
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + dto.getProductId()));
 
@@ -53,30 +55,33 @@ public class PrescriptionService {
                     + ", Requested: " + dto.getQuantityPrescribed());
         }
 
-        // Step 1: build and save the prescription itself.
+        // Step 1: save the prescription itself. toEntity() resolves
+        // appointmentId -> real Appointment, productId -> real Product.
         Prescription prescription = prescriptionMapper.toEntity(dto);
         Prescription savedPrescription = prescriptionRepository.save(prescription);
 
-        // Step 2: deduct the prescribed quantity from the product's
-        // stock, and save THAT change too. If this line were to fail
-        // for any reason, @Transactional ensures the prescription
-        // saved in Step 1 gets rolled back too - they succeed or fail
-        // together, never just one of them.
+        // Step 2: deduct stock.
         product.setQuantity(product.getQuantity() - dto.getQuantityPrescribed());
         productRepository.save(product);
+
+        // Step 3: automatically create the matching BillItem - this
+        // is the new piece. We capture the product's CURRENT price
+        // right now, at the moment of sale, into unitPriceAtTimeOfSale -
+        // this protects future bills from being affected if the
+        // product's price changes later.
+        BillItem billItem = new BillItem();
+        billItem.setAppointment(savedPrescription.getAppointment());
+        billItem.setProduct(product);
+        billItem.setQuantity(dto.getQuantityPrescribed());
+        billItem.setUnitPriceAtTimeOfSale(product.getPrice());
+        billItem.setSubtotal(product.getPrice() * dto.getQuantityPrescribed());
+        billItemRepository.save(billItem);
 
         return prescriptionMapper.toResponseDTO(savedPrescription);
     }
 
     public List<PrescriptionResponseDTO> getAllPrescriptions() {
         return prescriptionRepository.findAll()
-                .stream()
-                .map(prescriptionMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<PrescriptionResponseDTO> getPrescriptionsByUserId(Long userId) {
-        return prescriptionRepository.findByUserId(userId)
                 .stream()
                 .map(prescriptionMapper::toResponseDTO)
                 .collect(Collectors.toList());

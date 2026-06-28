@@ -2,17 +2,18 @@ package com.smartbiz.dto;
 
 public class PrescriptionRequestDTO {
 
-    private Long userId;
-    private Long doctorId;
+    // CHANGED: was userId + doctorId separately. Now the client just
+    // tells us WHICH appointment this prescription belongs to - the
+    // patient and doctor are already known from that appointment, no
+    // need to send them again.
+    private Long appointmentId;
+
     private Long productId;
     private int quantityPrescribed;
     private String dosageInstructions;
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-
-    public Long getDoctorId() { return doctorId; }
-    public void setDoctorId(Long doctorId) { this.doctorId = doctorId; }
+    public Long getAppointmentId() { return appointmentId; }
+    public void setAppointmentId(Long appointmentId) { this.appointmentId = appointmentId; }
 
     public Long getProductId() { return productId; }
     public void setProductId(Long productId) { this.productId = productId; }
