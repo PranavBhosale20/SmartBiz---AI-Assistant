@@ -3,20 +3,24 @@ package com.smartbiz.repository;
 import com.smartbiz.model.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    // "findByUserId" - Spring reads this and knows to look inside the
-    // Appointment entity for a field called "user" (the @ManyToOne
-    // relationship), then filter by that user's id. It generates:
-    // SELECT * FROM appointments WHERE user_id = ?
     List<Appointment> findByUserId(Long userId);
 
-    // Useful later for filtering appointments by their booking status
-    // (e.g. show only "BOOKED" ones, hide "CANCELLED" ones).
     List<Appointment> findByStatus(String status);
 
-    List<Appointment> findByDoctorName(String doctorName);
+    List<Appointment> findByDoctorId(Long doctorId);
+
+    // Finds a doctor's appointments that fall between two timestamps.
+    // We pass in "start of day" and "end of day" for whatever date
+    // we're checking, so this effectively means "this doctor's
+    // appointments on this specific date." "Between" is one of Spring
+    // Data JPA's built-in keywords - it generates:
+    // WHERE doctor_id = ? AND appointment_date BETWEEN ? AND ?
+    List<Appointment> findByDoctorIdAndAppointmentDateBetween(
+            Long doctorId, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }

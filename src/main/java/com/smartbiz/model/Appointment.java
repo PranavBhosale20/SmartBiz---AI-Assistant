@@ -15,8 +15,17 @@ public class Appointment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String doctorName;
+    // CHANGED: this used to be "private String doctorName" - now it's
+    // a real relationship, same pattern as "user" above. This means
+    // the appointments table will get a NEW column "doctor_id" (a
+    // foreign key pointing into the doctors table) instead of just
+    // storing a doctor's name as loose text. This is more reliable -
+    // a typo'd doctor name string could never be caught by the
+    // database, but a wrong doctor_id pointing to a non-existent
+    // doctor WOULD be rejected.
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
 
     @Column(nullable = false)
     private LocalDateTime appointmentDate;
@@ -40,8 +49,8 @@ public class Appointment {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
-    public String getDoctorName() { return doctorName; }
-    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
+    public Doctor getDoctor() { return doctor; }
+    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
     public LocalDateTime getAppointmentDate() { return appointmentDate; }
     public void setAppointmentDate(LocalDateTime appointmentDate) { this.appointmentDate = appointmentDate; }

@@ -5,8 +5,9 @@ import com.smartbiz.dto.AppointmentResponseDTO;
 import com.smartbiz.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -17,6 +18,19 @@ public class AppointmentController {
     public AppointmentController(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
     }
+    
+    // GET /api/appointments/available-slots?doctorId=1&date=2026-06-29
+    // Returns the list of free time slots for that doctor on that date.
+    // Both doctorId and date come from the URL's query string via
+    // @RequestParam, same idea as the existing "search" endpoint in
+    // ProductController.
+    @GetMapping("/available-slots")
+    public ResponseEntity<List<LocalTime>> getAvailableSlots(
+            @RequestParam Long doctorId,
+            @RequestParam LocalDate date) {
+        return ResponseEntity.ok(appointmentService.getAvailableSlots(doctorId, date));
+    }
+    
 
     // POST /api/appointments - books a new appointment.
     // The client sends a userId (number) + doctorName + appointmentDate
