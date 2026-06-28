@@ -15,17 +15,16 @@ public class Appointment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // CHANGED: this used to be "private String doctorName" - now it's
-    // a real relationship, same pattern as "user" above. This means
-    // the appointments table will get a NEW column "doctor_id" (a
-    // foreign key pointing into the doctors table) instead of just
-    // storing a doctor's name as loose text. This is more reliable -
-    // a typo'd doctor name string could never be caught by the
-    // database, but a wrong doctor_id pointing to a non-existent
-    // doctor WOULD be rejected.
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
+
+    // NEW: which kind of visit this is (Checkup, Consultant, etc).
+    // This is what lets the Bill calculation later know which
+    // repeatPrice to charge.
+    @ManyToOne
+    @JoinColumn(name = "visit_type_id", nullable = false)
+    private VisitType visitType;
 
     @Column(nullable = false)
     private LocalDateTime appointmentDate;
@@ -42,7 +41,6 @@ public class Appointment {
         this.status = "BOOKED";
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -51,6 +49,9 @@ public class Appointment {
 
     public Doctor getDoctor() { return doctor; }
     public void setDoctor(Doctor doctor) { this.doctor = doctor; }
+
+    public VisitType getVisitType() { return visitType; }
+    public void setVisitType(VisitType visitType) { this.visitType = visitType; }
 
     public LocalDateTime getAppointmentDate() { return appointmentDate; }
     public void setAppointmentDate(LocalDateTime appointmentDate) { this.appointmentDate = appointmentDate; }
