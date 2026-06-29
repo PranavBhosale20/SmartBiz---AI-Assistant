@@ -3,6 +3,8 @@ package com.smartbiz.service;
 import com.smartbiz.dto.ProductMapper;
 import com.smartbiz.dto.ProductRequestDTO;
 import com.smartbiz.dto.ProductResponseDTO;
+import com.smartbiz.exception.BusinessException;
+import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.Product;
 import com.smartbiz.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -24,11 +26,14 @@ public class ProductService {
         // Doesn't make sense to have -5 units of medicine in stock,
         // or a product priced at -100. Catching this here, before
         // it ever reaches the database, keeps bad data out entirely.
+        // CHANGED (Phase 5): BusinessException instead of RuntimeException
+        // - the request is well-formed, it just breaks a domain rule,
+        // which GlobalExceptionHandler now turns into a clean 400.
         if (dto.getQuantity() < 0) {
-            throw new RuntimeException("Product quantity cannot be negative!");
+            throw new BusinessException("Product quantity cannot be negative!");
         }
         if (dto.getPrice() < 0) {
-            throw new RuntimeException("Product price cannot be negative!");
+            throw new BusinessException("Product price cannot be negative!");
         }
 
         Product product = ProductMapper.toEntity(dto);
@@ -44,8 +49,13 @@ public class ProductService {
     }
 
     public ProductResponseDTO getProductById(Long id) {
+        // CHANGED (Phase 5): ResourceNotFoundException instead of
+        // RuntimeException - this is a "doesn't exist" case, which
+        // GlobalExceptionHandler now turns into a clean 404. The
+        // (entityName, id) constructor keeps this one line instead of
+        // hand-building the message string.
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", id));
         return ProductMapper.toResponseDTO(product);
     }
 
@@ -74,14 +84,14 @@ public class ProductService {
 
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO dto) {
         if (dto.getQuantity() < 0) {
-            throw new RuntimeException("Product quantity cannot be negative!");
+            throw new BusinessException("Product quantity cannot be negative!");
         }
         if (dto.getPrice() < 0) {
-            throw new RuntimeException("Product price cannot be negative!");
+            throw new BusinessException("Product price cannot be negative!");
         }
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", id));
 
         product.setName(dto.getName());
         product.setCategory(dto.getCategory());
@@ -94,7 +104,7 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", id));
         productRepository.deleteById(id);
     }
 }

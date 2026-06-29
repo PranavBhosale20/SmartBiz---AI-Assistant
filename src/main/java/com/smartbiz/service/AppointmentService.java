@@ -3,10 +3,16 @@ package com.smartbiz.service;
 import com.smartbiz.dto.AppointmentMapper;
 import com.smartbiz.dto.AppointmentRequestDTO;
 import com.smartbiz.dto.AppointmentResponseDTO;
+import com.smartbiz.exception.BusinessException;
+import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.Appointment;
 import com.smartbiz.model.Doctor;
+import com.smartbiz.model.User;
+import com.smartbiz.model.VisitType;
 import com.smartbiz.repository.AppointmentRepository;
 import com.smartbiz.repository.DoctorRepository;
+import com.smartbiz.repository.UserRepository;
+import com.smartbiz.repository.VisitTypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,37 +27,42 @@ public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
-
-    // NEW: needed so getAvailableSlots() below can look up a doctor's
-    // OPD hours and slot duration directly - a separate concern from
-    // what AppointmentMapper uses its own DoctorRepository for
-    // (resolving doctorId -> Doctor during booking).
     private final DoctorRepository doctorRepository;
+
+    // NEW (Phase 5): UserRepository and VisitTypeRepository moved here
+    // from AppointmentMapper - this Service is now responsible for
+    // resolving every id on the incoming DTO into a real entity,
+    // BEFORE handing those resolved entities to the (now pure) mapper.
+    private final UserRepository userRepository;
+    private final VisitTypeRepository visitTypeRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                                AppointmentMapper appointmentMapper,
-                               DoctorRepository doctorRepository) {
+                               DoctorRepository doctorRepository,
+                               UserRepository userRepository,
+                               VisitTypeRepository visitTypeRepository) {
         this.appointmentRepository = appointmentRepository;
         this.appointmentMapper = appointmentMapper;
         this.doctorRepository = doctorRepository;
+        this.userRepository = userRepository;
+        this.visitTypeRepository = visitTypeRepository;
     }
 
     public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO dto) {
-
         LocalDateTime requestedDate = LocalDateTime.parse(dto.getAppointmentDate());
 
         // --- Rule 1: no booking in the past ---
+        // CHANGED (Phase 5): BusinessException instead of RuntimeException.
         if (requestedDate.isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Cannot book an appointment in the past!");
+            throw new BusinessException("Cannot book an appointment in the past!");
         }
 
         // --- Rule 2: can't book more than 2 days in advance ---
         LocalDate today = LocalDate.now();
         LocalDate requestedDateOnly = requestedDate.toLocalDate();
         LocalDate maxAllowedDate = today.plusDays(2);
-
         if (requestedDateOnly.isAfter(maxAllowedDate)) {
-            throw new RuntimeException("Appointments can only be booked up to 2 days in advance!");
+            throw new BusinessException("Appointments can only be booked up to 2 days in advance!");
         }
 
         // --- Rule 3: this USER can't have any other appointment at
@@ -59,7 +70,7 @@ public class AppointmentService {
         List<Appointment> userAppointments = appointmentRepository.findByUserId(dto.getUserId());
         for (Appointment a : userAppointments) {
             if (a.getAppointmentDate().equals(requestedDate) && !a.getStatus().equals("CANCELLED")) {
-                throw new RuntimeException("You already have an appointment at this date and time!");
+                throw new BusinessException("You already have an appointment at this date and time!");
             }
         }
 
@@ -68,11 +79,24 @@ public class AppointmentService {
         List<Appointment> doctorAppointments = appointmentRepository.findByDoctorId(dto.getDoctorId());
         for (Appointment a : doctorAppointments) {
             if (a.getAppointmentDate().equals(requestedDate) && !a.getStatus().equals("CANCELLED")) {
-                throw new RuntimeException("This doctor is already booked at this date and time!");
+                throw new BusinessException("This doctor is already booked at this date and time!");
             }
         }
 
-        Appointment appointment = appointmentMapper.toEntity(dto);
+        // NEW (Phase 5): these 3 lookups used to happen INSIDE
+        // appointmentMapper.toEntity(dto). Moved here so the mapper
+        // stays a pure data-shaper with no repository dependency.
+        // ResourceNotFoundException instead of RuntimeException -
+        // each of these is a genuine "doesn't exist" case (404), not
+        // a business-rule violation (400).
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", dto.getUserId()));
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor", dto.getDoctorId()));
+        VisitType visitType = visitTypeRepository.findById(dto.getVisitTypeId())
+                .orElseThrow(() -> new ResourceNotFoundException("VisitType", dto.getVisitTypeId()));
+
+        Appointment appointment = appointmentMapper.toEntity(dto, user, doctor, visitType);
         Appointment saved = appointmentRepository.save(appointment);
         return appointmentMapper.toResponseDTO(saved);
     }
@@ -86,7 +110,7 @@ public class AppointmentService {
 
     public AppointmentResponseDTO getAppointmentById(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", id));
         return appointmentMapper.toResponseDTO(appointment);
     }
 
@@ -99,10 +123,10 @@ public class AppointmentService {
 
     public AppointmentResponseDTO cancelAppointment(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", id));
 
         if (appointment.getStatus().equals("CANCELLED")) {
-            throw new RuntimeException("Appointment is already cancelled!");
+            throw new BusinessException("Appointment is already cancelled!");
         }
 
         appointment.setStatus("CANCELLED");
@@ -112,22 +136,14 @@ public class AppointmentService {
 
     public void deleteAppointment(Long id) {
         appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", id));
         appointmentRepository.deleteById(id);
     }
 
-    // NEW: calculates which time slots are still free for a given
-    // doctor on a given day. This is "read-only" logic - it doesn't
-    // save anything, just calculates and returns a list.
     public List<LocalTime> getAvailableSlots(Long doctorId, LocalDate date) {
-
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + doctorId));
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor", doctorId));
 
-        // Step 1: generate EVERY theoretically possible slot for the
-        // day - starting at opdStartTime, stepping forward by
-        // slotDurationMinutes each time, stopping once we reach (but
-        // not pass) opdEndTime.
         List<LocalTime> allPossibleSlots = new ArrayList<>();
         LocalTime current = doctor.getOpdStartTime();
         while (current.isBefore(doctor.getOpdEndTime())) {
@@ -135,25 +151,16 @@ public class AppointmentService {
             current = current.plusMinutes(doctor.getSlotDurationMinutes());
         }
 
-        // Step 2: fetch this doctor's REAL booked appointments, but
-        // ONLY for this specific date - we build "00:00:00" and
-        // "23:59:59" boundaries for that date to search within.
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(23, 59, 59);
-
         List<Appointment> bookedAppointments = appointmentRepository
                 .findByDoctorIdAndAppointmentDateBetween(doctorId, startOfDay, endOfDay);
 
-        // Step 3: pull out just the TIME portion of each booked
-        // appointment (ignoring cancelled ones, since a cancelled
-        // slot becomes free again), so we have a simple list of
-        // "already taken" times to compare against.
         List<LocalTime> bookedTimes = bookedAppointments.stream()
                 .filter(a -> !a.getStatus().equals("CANCELLED"))
                 .map(a -> a.getAppointmentDate().toLocalTime())
                 .collect(Collectors.toList());
 
-        // Step 4: keep only the slots that are NOT in the booked list.
         return allPossibleSlots.stream()
                 .filter(slot -> !bookedTimes.contains(slot))
                 .collect(Collectors.toList());

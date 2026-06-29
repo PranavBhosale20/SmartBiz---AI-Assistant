@@ -2,6 +2,8 @@ package com.smartbiz.service;
 
 import com.smartbiz.dto.BillItemRequestDTO;
 import com.smartbiz.dto.BillItemResponseDTO;
+import com.smartbiz.exception.BusinessException;
+import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.Appointment;
 import com.smartbiz.model.BillItem;
 import com.smartbiz.model.Product;
@@ -29,27 +31,27 @@ public class BillItemService {
         this.appointmentRepository = appointmentRepository;
     }
 
-    // This is for STAFF manually adding a non-prescribed extra (e.g.
+    // For STAFF manually adding a non-prescribed extra (e.g.
     // sanitizer, bandaids) to a visit's bill. Same @Transactional
     // safety as PrescriptionService - stock deduction and bill item
     // creation succeed or fail together.
     @Transactional
     public BillItemResponseDTO addBillItem(BillItemRequestDTO dto) {
-
+        // CHANGED (Phase 5): ResourceNotFoundException instead of
+        // RuntimeException - both are "doesn't exist" cases (404).
         Appointment appointment = appointmentRepository.findById(dto.getAppointmentId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Appointment not found with id: " + dto.getAppointmentId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", dto.getAppointmentId()));
 
         Product product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Product not found with id: " + dto.getProductId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", dto.getProductId()));
 
         // Same stock-availability rule as prescriptions - can't sell
         // more than what's physically on the shelf.
+        // CHANGED (Phase 5): BusinessException instead of RuntimeException.
         if (dto.getQuantity() > product.getQuantity()) {
-            throw new RuntimeException(
+            throw new BusinessException(
                     "Not enough stock! Available: " + product.getQuantity()
-                    + ", Requested: " + dto.getQuantity());
+                            + ", Requested: " + dto.getQuantity());
         }
 
         product.setQuantity(product.getQuantity() - dto.getQuantity());
@@ -63,7 +65,6 @@ public class BillItemService {
         billItem.setSubtotal(product.getPrice() * dto.getQuantity());
 
         BillItem saved = billItemRepository.save(billItem);
-
         return toResponseDTO(saved);
     }
 
@@ -75,9 +76,9 @@ public class BillItemService {
     }
 
     // Small private helper since BillItem doesn't need a separate
-    // Mapper class - it has no complex multi-id resolution like
-    // Prescription does (we already have the Appointment/Product
-    // objects in hand by the time we build the response).
+    // Mapper class - no complex multi-id resolution like Prescription
+    // has, since we already hold the Appointment/Product objects by
+    // the time we build the response.
     private BillItemResponseDTO toResponseDTO(BillItem billItem) {
         return new BillItemResponseDTO(
                 billItem.getId(),

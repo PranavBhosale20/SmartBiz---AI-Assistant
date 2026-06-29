@@ -3,41 +3,30 @@ package com.smartbiz.dto;
 import com.smartbiz.model.Appointment;
 import com.smartbiz.model.Prescription;
 import com.smartbiz.model.Product;
-import com.smartbiz.repository.AppointmentRepository;
-import com.smartbiz.repository.ProductRepository;
 import org.springframework.stereotype.Component;
 
+/**
+ * CHANGED (Phase 5): toEntity() used to take just the
+ * PrescriptionRequestDTO and look up the Appointment and Product
+ * itself via repositories it held, throwing RuntimeException if
+ * either id didn't exist. Same issue as AppointmentMapper had - a
+ * mapper doing repository lookups isn't really a mapper's job.
+ *
+ * Now toEntity() takes the already-resolved Appointment and Product
+ * directly. PrescriptionService resolves them first (throwing
+ * ResourceNotFoundException if missing) before calling this method.
+ * This class no longer needs AppointmentRepository/ProductRepository
+ * injected at all - zero database dependency, zero exceptions.
+ */
 @Component
 public class PrescriptionMapper {
 
-    private final AppointmentRepository appointmentRepository;
-    private final ProductRepository productRepository;
-
-    // CHANGED: no longer needs UserRepository or DoctorRepository
-    // directly - just AppointmentRepository, since user and doctor
-    // are both reachable through the Appointment we look up.
-    public PrescriptionMapper(AppointmentRepository appointmentRepository,
-                               ProductRepository productRepository) {
-        this.appointmentRepository = appointmentRepository;
-        this.productRepository = productRepository;
-    }
-
-    public Prescription toEntity(PrescriptionRequestDTO dto) {
+    public Prescription toEntity(PrescriptionRequestDTO dto, Appointment appointment, Product product) {
         Prescription prescription = new Prescription();
-
-        Appointment appointment = appointmentRepository.findById(dto.getAppointmentId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Appointment not found with id: " + dto.getAppointmentId()));
-
-        Product product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Product not found with id: " + dto.getProductId()));
-
         prescription.setAppointment(appointment);
         prescription.setProduct(product);
         prescription.setQuantityPrescribed(dto.getQuantityPrescribed());
         prescription.setDosageInstructions(dto.getDosageInstructions());
-
         return prescription;
     }
 

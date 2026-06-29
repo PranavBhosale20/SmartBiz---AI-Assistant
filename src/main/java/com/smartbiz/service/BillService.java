@@ -1,5 +1,6 @@
 package com.smartbiz.service;
 
+import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.Appointment;
 import com.smartbiz.model.Bill;
 import com.smartbiz.model.BillItem;
@@ -31,9 +32,10 @@ public class BillService {
 
     @Transactional
     public Bill generateBill(Long appointmentId) {
-
+        // CHANGED (Phase 5): ResourceNotFoundException instead of
+        // RuntimeException - 404, the appointment genuinely doesn't exist.
         Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new RuntimeException("Appointment not found with id: " + appointmentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", appointmentId));
 
         // A bill should only ever be generated once per appointment -
         // if one already exists, just return it instead of creating
@@ -51,9 +53,17 @@ public class BillService {
         // first visit ever.
         List<Appointment> allUserAppointments = appointmentRepository.findByUserId(appointment.getUser().getId());
 
+        // CHANGED (Phase 5): removed the old .orElseThrow() here.
+        // This list can NEVER be empty: `appointment` was already
+        // fetched above (so it exists in the DB), and `appointment`
+        // belongs to the exact same user we're querying for here -
+        // so `appointment` itself is always at least one entry in
+        // this list. .min(...) is therefore guaranteed to find a
+        // value, which makes .get() safe to call directly instead of
+        // guarding against an Optional that can't actually be empty.
         Appointment earliestAppointment = allUserAppointments.stream()
                 .min(Comparator.comparing(Appointment::getCreatedAt))
-                .orElseThrow(() -> new RuntimeException("No appointments found for this user - unexpected state"));
+                .get();
 
         double visitFee;
         if (earliestAppointment.getId().equals(appointment.getId())) {
@@ -82,7 +92,12 @@ public class BillService {
     }
 
     public Bill getBillByAppointmentId(Long appointmentId) {
+        // CHANGED (Phase 5): ResourceNotFoundException instead of
+        // RuntimeException. Using the 1-arg constructor here (not the
+        // (entityName, id) convenience one) because "Bill not found with
+        // id: X" would be ambiguous - X is actually an appointment id,
+        // not a bill id. This wording stays accurate about what X means.
         return billRepository.findByAppointmentId(appointmentId)
-                .orElseThrow(() -> new RuntimeException("No bill found for appointment id: " + appointmentId));
+                .orElseThrow(() -> new ResourceNotFoundException("No bill found for appointment id: " + appointmentId));
     }
 }
