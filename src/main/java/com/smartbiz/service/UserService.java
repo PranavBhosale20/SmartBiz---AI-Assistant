@@ -3,9 +3,11 @@ package com.smartbiz.service;
 import com.smartbiz.dto.UserMapper;
 import com.smartbiz.dto.UserRequestDTO;
 import com.smartbiz.dto.UserResponseDTO;
+import com.smartbiz.exception.BusinessException;
 import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.User;
 import com.smartbiz.repository.UserRepository;
+import com.smartbiz.security.AuthHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,17 +18,23 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    // NEW (Phase 6): needed for ownership checks on profile access.
+    private final AuthHelper authHelper;
+
+    public UserService(UserRepository userRepository, AuthHelper authHelper) {
         this.userRepository = userRepository;
+        this.authHelper = authHelper;
     }
 
     public UserResponseDTO createUser(UserRequestDTO dto) {
+        // STAFF-only in SecurityConfig - no ownership check needed.
         User user = UserMapper.toEntity(dto);
         User saved = userRepository.save(user);
         return UserMapper.toResponseDTO(saved);
     }
 
     public List<UserResponseDTO> getAllUsers() {
+        // STAFF-only in SecurityConfig - no ownership check needed.
         return userRepository.findAll()
                 .stream()
                 .map(UserMapper::toResponseDTO)
@@ -34,11 +42,19 @@ public class UserService {
     }
 
     public UserResponseDTO getUserById(Long id) {
-        // CHANGED (Phase 5): ResourceNotFoundException instead of
-        // RuntimeException - GlobalExceptionHandler now turns this
-        // into a clean 404 JSON body instead of a raw stack trace.
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", id));
+
+        // NEW (Phase 6): PATIENT can only view their own profile.
+        // STAFF can view any user's profile.
+        if (authHelper.isPatient()) {
+            Long callerUserId = authHelper.getAuthenticatedUserId();
+            if (!callerUserId.equals(id)) {
+                throw new BusinessException(
+                        "You are not authorized to view this profile!");
+            }
+        }
+
         return UserMapper.toResponseDTO(user);
     }
 
@@ -46,9 +62,15 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", id));
 
-        // We only update the fields - we deliberately don't replace
-        // the whole object, so things like "id" and "createdAt" (which
-        // the client never sent) stay untouched.
+        // NEW (Phase 6): PATIENT can only update their own profile.
+        if (authHelper.isPatient()) {
+            Long callerUserId = authHelper.getAuthenticatedUserId();
+            if (!callerUserId.equals(id)) {
+                throw new BusinessException(
+                        "You are not authorized to update this profile!");
+            }
+        }
+
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
@@ -58,8 +80,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        // Check it exists first - deleting a non-existent id would
-        // otherwise fail silently or throw a less helpful database error.
+        // STAFF-only in SecurityConfig - no ownership check needed.
         userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", id));
         userRepository.deleteById(id);

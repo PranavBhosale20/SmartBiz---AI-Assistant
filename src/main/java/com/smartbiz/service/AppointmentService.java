@@ -13,6 +13,7 @@ import com.smartbiz.repository.AppointmentRepository;
 import com.smartbiz.repository.DoctorRepository;
 import com.smartbiz.repository.UserRepository;
 import com.smartbiz.repository.VisitTypeRepository;
+import com.smartbiz.security.AuthHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,31 +29,44 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
     private final DoctorRepository doctorRepository;
-
-    // NEW (Phase 5): UserRepository and VisitTypeRepository moved here
-    // from AppointmentMapper - this Service is now responsible for
-    // resolving every id on the incoming DTO into a real entity,
-    // BEFORE handing those resolved entities to the (now pure) mapper.
     private final UserRepository userRepository;
     private final VisitTypeRepository visitTypeRepository;
+
+    // NEW (Phase 6): reads who is making the current request from
+    // the JWT token (already parsed by JwtAuthFilter).
+    private final AuthHelper authHelper;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                                AppointmentMapper appointmentMapper,
                                DoctorRepository doctorRepository,
                                UserRepository userRepository,
-                               VisitTypeRepository visitTypeRepository) {
+                               VisitTypeRepository visitTypeRepository,
+                               AuthHelper authHelper) {
         this.appointmentRepository = appointmentRepository;
         this.appointmentMapper = appointmentMapper;
         this.doctorRepository = doctorRepository;
         this.userRepository = userRepository;
         this.visitTypeRepository = visitTypeRepository;
+        this.authHelper = authHelper;
     }
 
     public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO dto) {
+        // NEW (Phase 6): ownership check on booking.
+        // A PATIENT can only book for themselves - they can't supply
+        // someone else's userId in the request body and book on their
+        // behalf. STAFF can book for any patient (receptionist booking
+        // a walk-in, for example).
+        if (authHelper.isPatient()) {
+            Long callerUserId = authHelper.getAuthenticatedUserId();
+            if (!callerUserId.equals(dto.getUserId())) {
+                throw new BusinessException(
+                        "Patients can only book appointments for themselves!");
+            }
+        }
+
         LocalDateTime requestedDate = LocalDateTime.parse(dto.getAppointmentDate());
 
         // --- Rule 1: no booking in the past ---
-        // CHANGED (Phase 5): BusinessException instead of RuntimeException.
         if (requestedDate.isBefore(LocalDateTime.now())) {
             throw new BusinessException("Cannot book an appointment in the past!");
         }
@@ -62,33 +76,32 @@ public class AppointmentService {
         LocalDate requestedDateOnly = requestedDate.toLocalDate();
         LocalDate maxAllowedDate = today.plusDays(2);
         if (requestedDateOnly.isAfter(maxAllowedDate)) {
-            throw new BusinessException("Appointments can only be booked up to 2 days in advance!");
+            throw new BusinessException(
+                    "Appointments can only be booked up to 2 days in advance!");
         }
 
-        // --- Rule 3: this USER can't have any other appointment at
-        // this exact date+time, regardless of which doctor ---
-        List<Appointment> userAppointments = appointmentRepository.findByUserId(dto.getUserId());
+        // --- Rule 3: user clash ---
+        List<Appointment> userAppointments =
+                appointmentRepository.findByUserId(dto.getUserId());
         for (Appointment a : userAppointments) {
-            if (a.getAppointmentDate().equals(requestedDate) && !a.getStatus().equals("CANCELLED")) {
-                throw new BusinessException("You already have an appointment at this date and time!");
+            if (a.getAppointmentDate().equals(requestedDate)
+                    && !a.getStatus().equals("CANCELLED")) {
+                throw new BusinessException(
+                        "You already have an appointment at this date and time!");
             }
         }
 
-        // --- Rule 4: this DOCTOR can't have any other patient booked
-        // at this exact date+time ---
-        List<Appointment> doctorAppointments = appointmentRepository.findByDoctorId(dto.getDoctorId());
+        // --- Rule 4: doctor clash ---
+        List<Appointment> doctorAppointments =
+                appointmentRepository.findByDoctorId(dto.getDoctorId());
         for (Appointment a : doctorAppointments) {
-            if (a.getAppointmentDate().equals(requestedDate) && !a.getStatus().equals("CANCELLED")) {
-                throw new BusinessException("This doctor is already booked at this date and time!");
+            if (a.getAppointmentDate().equals(requestedDate)
+                    && !a.getStatus().equals("CANCELLED")) {
+                throw new BusinessException(
+                        "This doctor is already booked at this date and time!");
             }
         }
 
-        // NEW (Phase 5): these 3 lookups used to happen INSIDE
-        // appointmentMapper.toEntity(dto). Moved here so the mapper
-        // stays a pure data-shaper with no repository dependency.
-        // ResourceNotFoundException instead of RuntimeException -
-        // each of these is a genuine "doesn't exist" case (404), not
-        // a business-rule violation (400).
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", dto.getUserId()));
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
@@ -102,6 +115,7 @@ public class AppointmentService {
     }
 
     public List<AppointmentResponseDTO> getAllAppointments() {
+        // STAFF-only in SecurityConfig - no ownership check needed here.
         return appointmentRepository.findAll()
                 .stream()
                 .map(appointmentMapper::toResponseDTO)
@@ -111,10 +125,30 @@ public class AppointmentService {
     public AppointmentResponseDTO getAppointmentById(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", id));
+
+        // NEW (Phase 6): PATIENT can only view their own appointment.
+        if (authHelper.isPatient()) {
+            Long callerUserId = authHelper.getAuthenticatedUserId();
+            if (!callerUserId.equals(appointment.getUser().getId())) {
+                throw new BusinessException(
+                        "You are not authorized to view this appointment!");
+            }
+        }
+
         return appointmentMapper.toResponseDTO(appointment);
     }
 
     public List<AppointmentResponseDTO> getAppointmentsByUserId(Long userId) {
+        // NEW (Phase 6): PATIENT can only fetch their own list.
+        // STAFF can fetch any user's appointments.
+        if (authHelper.isPatient()) {
+            Long callerUserId = authHelper.getAuthenticatedUserId();
+            if (!callerUserId.equals(userId)) {
+                throw new BusinessException(
+                        "You are not authorized to view these appointments!");
+            }
+        }
+
         return appointmentRepository.findByUserId(userId)
                 .stream()
                 .map(appointmentMapper::toResponseDTO)
@@ -124,6 +158,15 @@ public class AppointmentService {
     public AppointmentResponseDTO cancelAppointment(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", id));
+
+        // NEW (Phase 6): PATIENT can only cancel their own appointment.
+        if (authHelper.isPatient()) {
+            Long callerUserId = authHelper.getAuthenticatedUserId();
+            if (!callerUserId.equals(appointment.getUser().getId())) {
+                throw new BusinessException(
+                        "You are not authorized to cancel this appointment!");
+            }
+        }
 
         if (appointment.getStatus().equals("CANCELLED")) {
             throw new BusinessException("Appointment is already cancelled!");
@@ -135,6 +178,8 @@ public class AppointmentService {
     }
 
     public void deleteAppointment(Long id) {
+        // Delete is STAFF-only in SecurityConfig - no ownership
+        // check needed, PATIENT can't reach this endpoint at all.
         appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", id));
         appointmentRepository.deleteById(id);

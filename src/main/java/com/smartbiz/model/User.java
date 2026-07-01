@@ -20,6 +20,19 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
+    // NEW (Phase 6): login credentials for PATIENT authentication.
+    // Kept separate from email - email is a contact detail, username
+    // is purely a login identifier, so a patient can change their
+    // email later without it ever affecting their ability to log in.
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    // Stored as a BCrypt HASH, never plain text. The actual hashing
+    // happens in the Service layer (via BCryptPasswordEncoder), not
+    // here - this entity just holds whatever string it's given.
+    @Column(nullable = false)
+    private String password;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -40,6 +53,12 @@ public class User {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
