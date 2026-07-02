@@ -10,22 +10,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Core NLP engine - rule-based keyword + regex matching.
- * Takes a raw message, returns an IntentResult.
- *
- * Strategy: each intent has a set of trigger keywords AND
- * optional regex patterns for entity extraction. A message
- * scores higher confidence if it matches both keywords AND
- * yields extractable entities.
- *
- * If no intent scores above 0.5 confidence, returns UNKNOWN
- * so Phase 9 can route to Gemini fallback.
- */
 @Service
 public class NlpService {
 
-    // --- Keyword sets per intent ---
+    // NEW (Phase 8): Gemini fallback when no intent matches
+    private final GeminiService geminiService;
+
+    public NlpService(GeminiService geminiService) {
+        this.geminiService = geminiService;
+    }
+
     private static final String[] BOOK_KEYWORDS =
             {"book", "schedule", "appointment", "reserve", "set up"};
     private static final String[] CANCEL_KEYWORDS =
@@ -39,35 +33,21 @@ public class NlpService {
     private static final String[] VIEW_BILL_KEYWORDS =
             {"view bill", "show bill", "get bill", "bill for", "bill of"};
 
-    // --- Regex patterns for entity extraction ---
-
-    // Matches "Dr. Mehta", "dr mehta", "doctor mehta"
     private static final Pattern DOCTOR_PATTERN =
             Pattern.compile("(?:dr\\.?|doctor)\\s+([a-zA-Z]+)", Pattern.CASE_INSENSITIVE);
-
-    // Matches "10:00", "10:00am", "10 am", "10am"
     private static final Pattern TIME_PATTERN =
             Pattern.compile("\\b(\\d{1,2})(?::(\\d{2}))?\\s*(am|pm)?\\b",
                     Pattern.CASE_INSENSITIVE);
-
-    // Matches "tomorrow", "today", or "2026-07-02"
     private static final Pattern DATE_PATTERN =
             Pattern.compile("\\b(today|tomorrow|\\d{4}-\\d{2}-\\d{2})\\b",
                     Pattern.CASE_INSENSITIVE);
-
-    // Matches "appointment 3", "appointment id 3", "appt 3"
     private static final Pattern APPOINTMENT_ID_PATTERN =
             Pattern.compile("(?:appointment|appt|apt)\\s*(?:id)?\\s*(\\d+)",
                     Pattern.CASE_INSENSITIVE);
-
-    // Matches product names - any word(s) after "of", "for", "stock of"
     private static final Pattern PRODUCT_PATTERN =
             Pattern.compile("(?:of|for)\\s+([a-zA-Z]+(?:\\s+[a-zA-Z]+)?)",
                     Pattern.CASE_INSENSITIVE);
 
-    /**
-     * Main entry point - takes raw user message, returns IntentResult.
-     */
     public IntentResult process(String message) {
         if (message == null || message.isBlank()) {
             return IntentResult.unknown();
@@ -75,8 +55,6 @@ public class NlpService {
 
         String normalized = message.toLowerCase().trim();
 
-        // Try each intent in priority order - more specific first
-        // (GENERATE_BILL before VIEW_BILL since both contain "bill")
         IntentResult result;
 
         result = tryGenerateBill(normalized);
@@ -97,34 +75,29 @@ public class NlpService {
         result = tryCheckStock(normalized);
         if (result.getConfidence() >= 0.5) return result;
 
-        return IntentResult.unknown();
+        // CHANGED (Phase 8): instead of returning UNKNOWN,
+        // hand off to Gemini for AI-based intent detection
+        return geminiService.process(message);
     }
-
-    // -------------------------------------------------------
-    // PATIENT intents
-    // -------------------------------------------------------
 
     private IntentResult tryBookAppointment(String msg) {
         if (!containsAny(msg, BOOK_KEYWORDS)) return IntentResult.unknown();
 
         Map<String, String> entities = new HashMap<>();
-        double confidence = 0.5; // base: keyword matched
+        double confidence = 0.5;
 
-        // Extract doctor name
         Matcher dm = DOCTOR_PATTERN.matcher(msg);
         if (dm.find()) {
             entities.put("doctorName", capitalize(dm.group(1)));
             confidence += 0.2;
         }
 
-        // Extract date
         Matcher dateMatcher = DATE_PATTERN.matcher(msg);
         if (dateMatcher.find()) {
             entities.put("date", resolveDate(dateMatcher.group(1)));
             confidence += 0.2;
         }
 
-        // Extract time
         Matcher timeMatcher = TIME_PATTERN.matcher(msg);
         if (timeMatcher.find()) {
             entities.put("time", resolveTime(
@@ -156,7 +129,6 @@ public class NlpService {
     private IntentResult tryViewSlots(String msg) {
         if (!containsAny(msg, SLOTS_KEYWORDS)) return IntentResult.unknown();
 
-        // "slots" alone is too vague - require doctor or date context
         Map<String, String> entities = new HashMap<>();
         double confidence = 0.4;
 
@@ -174,10 +146,6 @@ public class NlpService {
 
         return new IntentResult(IntentType.VIEW_SLOTS, entities, confidence);
     }
-
-    // -------------------------------------------------------
-    // STAFF intents
-    // -------------------------------------------------------
 
     private IntentResult tryCheckStock(String msg) {
         if (!containsAny(msg, STOCK_KEYWORDS)) return IntentResult.unknown();
@@ -224,10 +192,6 @@ public class NlpService {
         return new IntentResult(IntentType.VIEW_BILL, entities, confidence);
     }
 
-    // -------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------
-
     private boolean containsAny(String msg, String[] keywords) {
         for (String kw : keywords) {
             if (msg.contains(kw)) return true;
@@ -240,7 +204,7 @@ public class NlpService {
             return LocalDate.now().toString();
         if ("tomorrow".equalsIgnoreCase(raw))
             return LocalDate.now().plusDays(1).toString();
-        return raw; // already in yyyy-MM-dd format
+        return raw;
     }
 
     private String resolveTime(String hour, String minute, String ampm) {
