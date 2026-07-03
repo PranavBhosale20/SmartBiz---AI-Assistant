@@ -67,129 +67,17 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Prescription ID</th>
-
+                      <th>Prescription No.</th>
                       <th>Patient</th>
-
                       <th>Doctor</th>
-
+                      <th>Medicines</th>
                       <th>Date</th>
-
                       <th>Status</th>
-
                       <th>Actions</th>
                     </tr>
                   </thead>
 
-                  <tbody>
-                    <tr>
-                      <td>RX001</td>
-
-                      <td>Rahul Sharma</td>
-
-                      <td>Dr. Mehta</td>
-
-                      <td>12 Jul 2026</td>
-
-                      <td>
-                        <span class="status active"> Active </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-prescription"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-prescription">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>RX002</td>
-
-                      <td>Priya Patil</td>
-
-                      <td>Dr. Joshi</td>
-
-                      <td>11 Jul 2026</td>
-
-                      <td>
-                        <span class="status completed"> Completed </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-prescription"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-prescription">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>RX003</td>
-
-                      <td>Amit Joshi</td>
-
-                      <td>Dr. Kulkarni</td>
-
-                      <td>08 Jul 2026</td>
-
-                      <td>
-                        <span class="status expired"> Expired </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-prescription"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-prescription">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="prescriptionTableBody"></tbody>
                 </table>
               </div>
 
@@ -212,16 +100,28 @@
 
     <div id="modalContainer"></div>
 
+    <!-- JavaScript -->
+
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Components -->
     <script src="js/components/modal.js"></script>
     <script src="js/components/sidebar.js"></script>
     <script src="js/components/header.js"></script>
     <script src="js/components/footer.js"></script>
 
+    <!-- Loader -->
     <script src="js/loader.js"></script>
+
+    <!-- Utilities -->
+    <script src="js/utils/api.js"></script>
+    <script src="js/utils/auth.js"></script>
+    <script src="js/utils/ui.js"></script>
+
+    <!-- App -->
     <script src="js/app.js"></script>
 
+    <!-- Page -->
     <script src="js/pages/prescriptions.js"></script>
 
     <script>

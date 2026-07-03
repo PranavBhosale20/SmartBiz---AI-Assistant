@@ -101,191 +101,7 @@
                     </tr>
                   </thead>
 
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img src="assets/avatars/patient-male.png" />
-
-                          <div>
-                            <h4>Rahul Sharma</h4>
-
-                            <p>PT001</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>Dr. Mehta</td>
-
-                      <td>12 Jul 2026</td>
-
-                      <td>09:30 AM</td>
-
-                      <td>
-                        <span class="status confirmed"> Confirmed </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-appointment"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-appointment">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img src="assets/avatars/patient-female.png" />
-
-                          <div>
-                            <h4>Priya Patil</h4>
-
-                            <p>PT002</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>Dr. Joshi</td>
-
-                      <td>12 Jul 2026</td>
-
-                      <td>10:15 AM</td>
-
-                      <td>
-                        <span class="status pending"> Pending </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-appointment"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-appointment">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img src="assets/avatars/patient-male.png" />
-
-                          <div>
-                            <h4>Amit Joshi</h4>
-
-                            <p>PT003</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>Dr. Kulkarni</td>
-
-                      <td>13 Jul 2026</td>
-
-                      <td>11:45 AM</td>
-
-                      <td>
-                        <span class="status confirmed"> Confirmed </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-appointment"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-appointment">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img src="assets/avatars/patient-female.png" />
-
-                          <div>
-                            <h4>Sneha Kulkarni</h4>
-
-                            <p>PT004</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>Dr. Patil</td>
-
-                      <td>14 Jul 2026</td>
-
-                      <td>03:00 PM</td>
-
-                      <td>
-                        <span class="status cancelled"> Cancelled </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-appointment"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-appointment">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="appointmentTableBody"></tbody>
                 </table>
               </div>
 
@@ -310,16 +126,28 @@
 
     <div id="modalContainer"></div>
 
+    <!-- JavaScript -->
+
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Components -->
     <script src="js/components/modal.js"></script>
     <script src="js/components/sidebar.js"></script>
     <script src="js/components/header.js"></script>
     <script src="js/components/footer.js"></script>
 
+    <!-- Loader -->
     <script src="js/loader.js"></script>
+
+    <!-- Utilities -->
+    <script src="js/utils/api.js"></script>
+    <script src="js/utils/auth.js"></script>
+    <script src="js/utils/ui.js"></script>
+
+    <!-- App -->
     <script src="js/app.js"></script>
 
+    <!-- Page -->
     <script src="js/pages/appointments.js"></script>
 
     <script>

@@ -87,227 +87,17 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Patient</th>
-
                       <th>Patient ID</th>
-
+                      <th>Patient</th>
                       <th>Age</th>
-
                       <th>Gender</th>
-
                       <th>Phone</th>
-
                       <th>Status</th>
-
                       <th>Actions</th>
                     </tr>
                   </thead>
 
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img
-                            src="assets/avatars/avatar-1.png"
-                            alt="Patient"
-                          />
-
-                          <div>
-                            <h4>Rahul Sharma</h4>
-
-                            <p>rahul@email.com</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>PT001</td>
-
-                      <td>32</td>
-
-                      <td>Male</td>
-
-                      <td>+91 9876543210</td>
-
-                      <td>
-                        <span class="status active"> Active </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-patient"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-patient">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img
-                            src="assets/avatars/avatar-2.png"
-                            alt="Patient"
-                          />
-
-                          <div>
-                            <h4>Priya Patil</h4>
-
-                            <p>priya@email.com</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>PT002</td>
-
-                      <td>28</td>
-
-                      <td>Female</td>
-
-                      <td>+91 9876543211</td>
-
-                      <td>
-                        <span class="status active"> Active </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-patient"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-patient">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img
-                            src="assets/avatars/avatar-3.png"
-                            alt="Patient"
-                          />
-
-                          <div>
-                            <h4>Amit Joshi</h4>
-
-                            <p>amit@email.com</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>PT003</td>
-
-                      <td>45</td>
-
-                      <td>Male</td>
-
-                      <td>+91 9876543212</td>
-
-                      <td>
-                        <span class="status inactive"> Inactive </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-patient"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-patient">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <div class="patient-info">
-                          <img
-                            src="assets/avatars/avatar-4.png"
-                            alt="Patient"
-                          />
-
-                          <div>
-                            <h4>Sneha Kulkarni</h4>
-
-                            <p>sneha@email.com</p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td>PT004</td>
-
-                      <td>36</td>
-
-                      <td>Female</td>
-
-                      <td>+91 9876543213</td>
-
-                      <td>
-                        <span class="status active"> Active </span>
-                      </td>
-
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="view-patient"
-                          >
-                            <i data-lucide="eye"></i>
-                          </button>
-
-                          <button class="action-btn edit-patient">
-                            <i data-lucide="square-pen"></i>
-                          </button>
-
-                          <button
-                            class="action-btn open-modal"
-                            data-modal="delete-confirmation"
-                          >
-                            <i data-lucide="trash-2"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="patientTableBody"></tbody>
                 </table>
               </div>
 
@@ -340,14 +130,24 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Components -->
     <script src="js/components/modal.js"></script>
     <script src="js/components/sidebar.js"></script>
     <script src="js/components/header.js"></script>
     <script src="js/components/footer.js"></script>
 
+    <!-- Loader -->
     <script src="js/loader.js"></script>
+
+    <!-- Utilities -->
+    <script src="js/utils/api.js"></script>
+    <script src="js/utils/auth.js"></script>
+    <script src="js/utils/ui.js"></script>
+
+    <!-- App -->
     <script src="js/app.js"></script>
 
+    <!-- Page -->
     <script src="js/pages/patients.js"></script>
 
     <script>

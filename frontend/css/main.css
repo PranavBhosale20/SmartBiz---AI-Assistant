@@ -44,3 +44,8 @@
 @import url("./pages/billing.css");
 @import url("./pages/command-console.css");
 @import url("./pages/patient-dashboard.css");
+
+/* ==========================================================
+   AUTH
+========================================================== */
+@import url("./pages/auth.css");

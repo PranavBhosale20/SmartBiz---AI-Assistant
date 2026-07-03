@@ -1,0 +1,261 @@
+/* ==========================================================
+   AUTH PAGE
+========================================================== */
+
+.auth-page {
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: linear-gradient(135deg, #fff7f1 0%, #ffffff 100%);
+
+  padding: 40px;
+}
+
+.auth-container {
+  width: 100%;
+
+  max-width: 1200px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 480px;
+
+  background: var(--surface);
+
+  border-radius: var(--radius-xl);
+
+  overflow: hidden;
+
+  box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.auth-left {
+  padding: 60px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  background: linear-gradient(135deg, #fff7f1 0%, #ffffff 100%);
+}
+
+.auth-logo {
+  width: 180px;
+
+  margin-bottom: 28px;
+}
+
+.auth-left h1 {
+  margin-bottom: 14px;
+}
+
+.auth-left p {
+  color: var(--text-muted);
+
+  margin-bottom: 40px;
+}
+
+.auth-illustration {
+  width: 100%;
+
+  max-width: 420px;
+
+  align-self: center;
+}
+
+/* ==========================================================
+   RIGHT
+========================================================== */
+
+.auth-right {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 50px;
+}
+
+.auth-card {
+  width: 100%;
+}
+
+.auth-card h2 {
+  margin-bottom: 8px;
+}
+
+.auth-card > p {
+  margin-bottom: 30px;
+
+  color: var(--text-muted);
+}
+
+.auth-btn {
+  width: 100%;
+
+  margin-top: 10px;
+}
+
+.auth-footer {
+  margin-top: 28px;
+
+  text-align: center;
+}
+
+.auth-footer a {
+  color: var(--primary);
+
+  font-weight: 600;
+}
+
+/* ==========================================================
+   ROLE SELECTOR
+========================================================== */
+
+.role-selector {
+  display: flex;
+
+  gap: 24px;
+
+  margin-bottom: 24px;
+}
+
+.role-selector label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 992px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-left {
+    display: none;
+  }
+}
+
+/* ==========================================================
+   INPUT GROUP
+========================================================== */
+
+.input-group {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  padding: 0 16px;
+
+  background: var(--surface);
+}
+
+.input-group:focus-within {
+  border-color: var(--primary);
+}
+
+.input-group svg {
+  width: 20px;
+
+  height: 20px;
+
+  color: var(--text-muted);
+}
+
+.input-group input {
+  flex: 1;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+}
+
+/* ==========================================================
+   ROLE CARDS
+========================================================== */
+
+.role-selector {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.role-card {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 18px;
+
+  border: 2px solid var(--border);
+
+  border-radius: var(--radius-lg);
+
+  cursor: pointer;
+
+  transition: var(--transition);
+}
+
+.role-card svg {
+  width: 28px;
+
+  height: 28px;
+
+  color: var(--text-muted);
+}
+
+.role-card span {
+  font-weight: 600;
+}
+
+#staffRole:checked + .role-card,
+#patientRole:checked + .role-card {
+  border-color: var(--primary);
+
+  background: var(--primary-light);
+}
+
+#staffRole:checked + .role-card svg,
+#patientRole:checked + .role-card svg {
+  color: var(--primary);
+}

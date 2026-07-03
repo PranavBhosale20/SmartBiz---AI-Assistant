@@ -15,6 +15,7 @@ async function openModal(modalName) {
     const response = await fetch(`components/modals/${modalName}.html`);
 
     const html = await response.text();
+    console.log(html);
 
     modalContainer.innerHTML = html;
 
@@ -103,5 +104,9 @@ window.Modal = {
 /* ==========================================================
    INITIALIZE
 ========================================================== */
+
+function initializeModal() {
+  // Modal manager is initialized through global event listeners.
+}
 
 console.log("✓ Modal Manager Loaded");
