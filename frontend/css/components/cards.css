@@ -1,0 +1,187 @@
+/* ==========================================================
+   CARD
+========================================================== */
+
+.card {
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================
+   CARD BODY
+========================================================== */
+
+.card-body {
+  padding: 24px;
+}
+
+/* ==========================================================
+   CARD HEADER
+========================================================== */
+
+.card-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+.card-title {
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: var(--text-dark);
+}
+
+.card-subtitle {
+  margin-top: 6px;
+
+  font-size: 14px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   CARD FOOTER
+========================================================== */
+
+.card-footer {
+  padding-top: 20px;
+
+  border-top: 1px solid var(--border-light);
+}
+
+/* ==========================================================
+   KPI CARD
+========================================================== */
+
+.stat-card {
+  position: relative;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  min-height: 190px;
+
+  overflow: hidden;
+}
+
+.stat-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.stat-icon {
+  width: 62px;
+
+  height: 62px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  border-radius: 18px;
+}
+
+.stat-icon svg {
+  width: 28px;
+
+  height: 28px;
+}
+
+.orange {
+  background: var(--primary-light);
+
+  color: var(--primary);
+}
+
+.blue {
+  background: var(--info-bg);
+
+  color: var(--info);
+}
+
+.green {
+  background: var(--success-bg);
+
+  color: var(--success);
+}
+
+.red {
+  background: var(--danger-bg);
+
+  color: var(--danger);
+}
+
+.stat-value {
+  margin-top: 24px;
+
+  font-size: 34px;
+
+  font-weight: 700;
+
+  color: var(--text-dark);
+}
+
+.stat-title {
+  margin-top: 8px;
+
+  font-size: 15px;
+
+  color: var(--text-light);
+}
+
+.stat-footer {
+  margin-top: 20px;
+
+  font-size: 13px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   SECTION HEADER
+========================================================== */
+
+.section-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+.section-link {
+  color: var(--primary);
+
+  font-size: 14px;
+
+  font-weight: 600;
+}

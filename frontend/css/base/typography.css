@@ -1,0 +1,105 @@
+/* ==========================================================
+   GOOGLE FONT
+========================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+body {
+  font-family: "Inter", sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  line-height: 1.6;
+}
+
+/* ==========================================================
+   HEADINGS
+========================================================== */
+
+h1 {
+  font-size: 38px;
+
+  font-weight: 700;
+
+  color: var(--text-dark);
+}
+
+h2 {
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: var(--text-dark);
+}
+
+h3 {
+  font-size: 22px;
+
+  font-weight: 600;
+
+  color: var(--text-dark);
+}
+
+h4 {
+  font-size: 16px;
+
+  font-weight: 600;
+
+  color: var(--text-dark);
+}
+
+h5 {
+  font-size: 15px;
+
+  font-weight: 600;
+
+  color: var(--text-dark);
+}
+
+h6 {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: var(--text-dark);
+}
+
+/* ==========================================================
+   PARAGRAPH
+========================================================== */
+
+p {
+  color: var(--text-light);
+}
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: var(--text-dark);
+}
+
+/* ==========================================================
+   SMALL
+========================================================== */
+
+small {
+  font-size: 13px;
+
+  color: var(--text-muted);
+}

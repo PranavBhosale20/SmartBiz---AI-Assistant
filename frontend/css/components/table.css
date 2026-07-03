@@ -1,0 +1,121 @@
+/* ==========================================================
+   TABLE CONTAINER
+========================================================== */
+
+.table-container {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+/* ==========================================================
+   TABLE
+========================================================== */
+
+.table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  background: var(--surface);
+}
+
+/* ==========================================================
+   TABLE HEADER
+========================================================== */
+
+.table thead {
+  background: var(--surface-secondary);
+}
+
+.table th {
+  padding: 18px;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: var(--text-muted);
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+/* ==========================================================
+   TABLE BODY
+========================================================== */
+
+.table td {
+  padding: 18px;
+
+  font-size: 14px;
+
+  color: var(--text-dark);
+
+  border-bottom: 1px solid var(--border-light);
+
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: var(--transition);
+}
+
+.table tbody tr:hover {
+  background: #fff9f4;
+}
+
+/* ==========================================================
+   TABLE ACTIONS
+========================================================== */
+
+.table-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.action-btn {
+  width: 38px;
+
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: var(--surface-secondary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+
+  transition: var(--transition);
+}
+
+.action-btn:hover {
+  background: var(--primary-light);
+
+  color: var(--primary);
+}
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.table-empty {
+  padding: 40px;
+
+  text-align: center;
+
+  color: var(--text-muted);
+}

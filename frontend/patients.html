@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en" data-page="patients">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Patients | SmartBiz Clinic OS</title>
+
+    <link rel="icon" href="assets/logo/favicon.png" />
+
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+
+    <aside id="sidebar"></aside>
+
+    <!-- Main Wrapper -->
+
+    <div class="main-wrapper">
+      <!-- Header -->
+
+      <header id="header"></header>
+
+      <!-- Main Content -->
+
+      <main class="page-content">
+        <div class="patients-page">
+          <!-- ==========================================================
+                     PAGE HEADER
+                ========================================================== -->
+
+          <div class="page-header">
+            <div>
+              <h1>Patients</h1>
+
+              <p>Manage patient records, history and registrations.</p>
+            </div>
+
+            <button class="btn btn-primary open-modal" data-modal="add-patient">
+              <i data-lucide="user-plus"></i>
+
+              Add Patient
+            </button>
+          </div>
+
+          <!-- ==========================================================
+     TOOLBAR
+========================================================== -->
+
+          <div class="card patient-toolbar">
+            <div class="toolbar">
+              <div class="toolbar-search">
+                <i data-lucide="search"></i>
+
+                <input
+                  type="text"
+                  placeholder="Search patient by name, phone or ID..."
+                />
+              </div>
+
+              <div class="toolbar-actions">
+                <button class="btn btn-secondary">
+                  <i data-lucide="filter"></i>
+
+                  Filters
+                </button>
+
+                <button class="btn btn-secondary">
+                  <i data-lucide="download"></i>
+
+                  Export
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==========================================================
+     PATIENT TABLE
+========================================================== -->
+
+          <div class="card">
+            <div class="card-body">
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Patient</th>
+
+                      <th>Patient ID</th>
+
+                      <th>Age</th>
+
+                      <th>Gender</th>
+
+                      <th>Phone</th>
+
+                      <th>Status</th>
+
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="patient-info">
+                          <img
+                            src="assets/avatars/avatar-1.png"
+                            alt="Patient"
+                          />
+
+                          <div>
+                            <h4>Rahul Sharma</h4>
+
+                            <p>rahul@email.com</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>PT001</td>
+
+                      <td>32</td>
+
+                      <td>Male</td>
+
+                      <td>+91 9876543210</td>
+
+                      <td>
+                        <span class="status active"> Active </span>
+                      </td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="view-patient"
+                          >
+                            <i data-lucide="eye"></i>
+                          </button>
+
+                          <button class="action-btn edit-patient">
+                            <i data-lucide="square-pen"></i>
+                          </button>
+
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="delete-confirmation"
+                          >
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="patient-info">
+                          <img
+                            src="assets/avatars/avatar-2.png"
+                            alt="Patient"
+                          />
+
+                          <div>
+                            <h4>Priya Patil</h4>
+
+                            <p>priya@email.com</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>PT002</td>
+
+                      <td>28</td>
+
+                      <td>Female</td>
+
+                      <td>+91 9876543211</td>
+
+                      <td>
+                        <span class="status active"> Active </span>
+                      </td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="view-patient"
+                          >
+                            <i data-lucide="eye"></i>
+                          </button>
+
+                          <button class="action-btn edit-patient">
+                            <i data-lucide="square-pen"></i>
+                          </button>
+
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="delete-confirmation"
+                          >
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="patient-info">
+                          <img
+                            src="assets/avatars/avatar-3.png"
+                            alt="Patient"
+                          />
+
+                          <div>
+                            <h4>Amit Joshi</h4>
+
+                            <p>amit@email.com</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>PT003</td>
+
+                      <td>45</td>
+
+                      <td>Male</td>
+
+                      <td>+91 9876543212</td>
+
+                      <td>
+                        <span class="status inactive"> Inactive </span>
+                      </td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="view-patient"
+                          >
+                            <i data-lucide="eye"></i>
+                          </button>
+
+                          <button class="action-btn edit-patient">
+                            <i data-lucide="square-pen"></i>
+                          </button>
+
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="delete-confirmation"
+                          >
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="patient-info">
+                          <img
+                            src="assets/avatars/avatar-4.png"
+                            alt="Patient"
+                          />
+
+                          <div>
+                            <h4>Sneha Kulkarni</h4>
+
+                            <p>sneha@email.com</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>PT004</td>
+
+                      <td>36</td>
+
+                      <td>Female</td>
+
+                      <td>+91 9876543213</td>
+
+                      <td>
+                        <span class="status active"> Active </span>
+                      </td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="view-patient"
+                          >
+                            <i data-lucide="eye"></i>
+                          </button>
+
+                          <button class="action-btn edit-patient">
+                            <i data-lucide="square-pen"></i>
+                          </button>
+
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="delete-confirmation"
+                          >
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="pagination">
+                <button class="page-btn">&lt;</button>
+
+                <button class="page-btn active">1</button>
+
+                <button class="page-btn">2</button>
+
+                <button class="page-btn">3</button>
+
+                <button class="page-btn">&gt;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+
+      <footer id="footer"></footer>
+    </div>
+
+    <!-- Modal -->
+
+    <div id="modalContainer"></div>
+
+    <!-- JavaScript -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/sidebar.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+
+    <script src="js/loader.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="js/pages/patients.js"></script>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

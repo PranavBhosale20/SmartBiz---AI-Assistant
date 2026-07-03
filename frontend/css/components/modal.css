@@ -1,0 +1,171 @@
+/* ==========================================================
+   MODAL OVERLAY
+========================================================== */
+
+.modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  display: none;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 30px;
+
+  background: rgba(15, 23, 42, 0.45);
+
+  backdrop-filter: blur(8px);
+
+  z-index: 3000;
+}
+
+/* ==========================================================
+   MODAL
+========================================================== */
+
+.modal {
+  width: 900px;
+
+  max-width: 100%;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: var(--surface);
+
+  border-radius: var(--radius-xl);
+
+  box-shadow: var(--shadow-lg);
+
+  animation: modalShow 0.25s ease;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.modal-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 28px 32px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-title h2 {
+  font-size: 26px;
+
+  color: var(--text-dark);
+}
+
+.modal-title p {
+  margin-top: 6px;
+
+  font-size: 14px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   CLOSE
+========================================================== */
+
+.modal-close {
+  width: 42px;
+
+  height: 42px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: var(--surface-secondary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  transition: var(--transition);
+}
+
+.modal-close:hover {
+  background: var(--primary-light);
+
+  color: var(--primary);
+}
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+.modal-body {
+  padding: 32px;
+}
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.modal-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 16px;
+
+  padding: 24px 32px;
+
+  border-top: 1px solid var(--border);
+}
+
+/* ==========================================================
+   ANIMATION
+========================================================== */
+
+@keyframes modalShow {
+  from {
+    opacity: 0;
+
+    transform: translateY(20px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+  .modal {
+    width: 100%;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 20px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+}

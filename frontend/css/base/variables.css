@@ -1,0 +1,63 @@
+/* ==========================================================
+   SMARTBIZ DESIGN TOKENS
+========================================================== */
+
+:root {
+  /* Brand */
+
+  --primary: #f46a06;
+  --primary-dark: #d95d04;
+  --primary-light: #fff3eb;
+
+  /* Status */
+
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+
+  --success-bg: #eafbf1;
+  --warning-bg: #fff7e6;
+  --danger-bg: #ffecec;
+  --info-bg: #eef4ff;
+
+  /* Background */
+
+  --background: #f6f8fb;
+  --surface: #ffffff;
+  --surface-secondary: #f8fafc;
+
+  /* Text */
+
+  --text-dark: #1f2937;
+  --text: #374151;
+  --text-light: #6b7280;
+  --text-muted: #9ca3af;
+
+  /* Border */
+
+  --border: #e5e7eb;
+  --border-light: #f1f5f9;
+
+  /* Shadow */
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.08);
+
+  /* Radius */
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+
+  /* Layout */
+
+  --sidebar-width: 280px;
+  --header-height: 92px;
+
+  /* Transition */
+
+  --transition: 0.25s ease;
+}

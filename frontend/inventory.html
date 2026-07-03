@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en" data-page="inventory">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Inventory | SmartBiz Clinic OS</title>
+
+    <link rel="icon" href="assets/logo/favicon.png" />
+
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body>
+    <aside id="sidebar"></aside>
+
+    <div class="main-wrapper">
+      <header id="header"></header>
+
+      <main class="page-content">
+        <div class="inventory-page">
+          <div class="page-header">
+            <div>
+              <h1>Inventory</h1>
+
+              <p>Manage medicines and stock levels.</p>
+            </div>
+
+            <button
+              class="btn btn-primary open-modal"
+              data-modal="add-medicine"
+            >
+              <i data-lucide="plus"></i>
+
+              Add Medicine
+            </button>
+          </div>
+
+          <div class="card inventory-toolbar">
+            <div class="toolbar">
+              <div class="toolbar-search">
+                <i data-lucide="search"></i>
+
+                <input type="text" placeholder="Search medicine..." />
+              </div>
+
+              <div class="toolbar-actions">
+                <button class="btn btn-secondary">
+                  <i data-lucide="filter"></i>
+
+                  Filter
+                </button>
+
+                <button class="btn btn-secondary">
+                  <i data-lucide="download"></i>
+
+                  Export
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Medicine</th>
+
+                      <th>Category</th>
+
+                      <th>Price</th>
+
+                      <th>Stock</th>
+
+                      <th>Status</th>
+
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="medicine-info">
+                          <div class="medicine-icon">
+                            <i data-lucide="pill"></i>
+                          </div>
+
+                          <div>
+                            <h4>Paracetamol 500mg</h4>
+
+                            <p>MED001</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>Painkiller</td>
+
+                      <td>₹25</td>
+
+                      <td>320</td>
+
+                      <td>
+                        <span class="stock-status in-stock"> In Stock </span>
+                      </td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="view-medicine"
+                          >
+                            <i data-lucide="eye"></i>
+                          </button>
+
+                          <button class="action-btn edit-medicine">
+                            <i data-lucide="square-pen"></i>
+                          </button>
+
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="delete-confirmation"
+                          >
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="medicine-info">
+                          <div class="medicine-icon">
+                            <i data-lucide="capsule"></i>
+                          </div>
+
+                          <div>
+                            <h4>Amoxicillin</h4>
+
+                            <p>MED002</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>Antibiotic</td>
+
+                      <td>₹80</td>
+
+                      <td>42</td>
+
+                      <td>
+                        <span class="stock-status low-stock"> Low Stock </span>
+                      </td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="view-medicine"
+                          >
+                            <i data-lucide="eye"></i>
+                          </button>
+
+                          <button class="action-btn edit-medicine">
+                            <i data-lucide="square-pen"></i>
+                          </button>
+
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="delete-confirmation"
+                          >
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="medicine-info">
+                          <div class="medicine-icon">
+                            <i data-lucide="syringe"></i>
+                          </div>
+
+                          <div>
+                            <h4>Insulin</h4>
+
+                            <p>MED003</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>Injection</td>
+
+                      <td>₹450</td>
+
+                      <td>0</td>
+
+                      <td>
+                        <span class="stock-status out-of-stock">
+                          Out of Stock
+                        </span>
+                      </td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="view-medicine"
+                          >
+                            <i data-lucide="eye"></i>
+                          </button>
+
+                          <button class="action-btn edit-medicine">
+                            <i data-lucide="square-pen"></i>
+                          </button>
+
+                          <button
+                            class="action-btn open-modal"
+                            data-modal="delete-confirmation"
+                          >
+                            <i data-lucide="trash-2"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="pagination">
+                <button class="page-btn">&lt;</button>
+
+                <button class="page-btn active">1</button>
+
+                <button class="page-btn">2</button>
+
+                <button class="page-btn">&gt;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer id="footer"></footer>
+    </div>
+
+    <div id="modalContainer"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/sidebar.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+
+    <script src="js/loader.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="js/pages/inventory.js"></script>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

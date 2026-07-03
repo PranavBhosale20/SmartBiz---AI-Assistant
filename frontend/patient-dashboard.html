@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en" data-page="patient-dashboard">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Patient Dashboard | SmartBiz Clinic OS</title>
+
+    <link rel="icon" href="assets/logo/favicon.png" />
+
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body>
+    <aside id="sidebar"></aside>
+
+    <div class="main-wrapper">
+      <header id="header"></header>
+
+      <main class="page-content">
+        <div class="patient-dashboard">
+          <section class="patient-hero">
+            <div class="patient-info">
+              <img
+                src="assets/avatars/avatar-1.png"
+                class="patient-avatar"
+                alt="Patient"
+              />
+
+              <div class="patient-details">
+                <h2>Rahul Sharma</h2>
+
+                <p>Patient ID : PT001</p>
+
+                <p>Male • 32 Years</p>
+              </div>
+            </div>
+
+            <button class="btn btn-primary">
+              <i data-lucide="calendar-plus"></i>
+
+              Book Appointment
+            </button>
+          </section>
+
+          <section class="patient-stats">
+            <div class="card stat-card">
+              <div class="card-body">
+                <h2 class="stat-value">12</h2>
+
+                <p class="stat-title">Appointments</p>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <h2 class="stat-value">08</h2>
+
+                <p class="stat-title">Prescriptions</p>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <h2 class="stat-value">₹14,200</h2>
+
+                <p class="stat-title">Total Billing</p>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <h2 class="stat-value">2</h2>
+
+                <p class="stat-title">Pending Bills</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="patient-grid">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">Upcoming Appointments</h3>
+
+                <div class="upcoming-list">
+                  <div class="upcoming-item">
+                    <div class="doctor-info">
+                      <img src="assets/avatars/doctor-1.png" />
+
+                      <div>
+                        <h4>Dr. Mehta</h4>
+
+                        <p>General Physician</p>
+                      </div>
+                    </div>
+
+                    <strong>15 Jul • 10:30 AM</strong>
+                  </div>
+
+                  <div class="upcoming-item">
+                    <div class="doctor-info">
+                      <img src="assets/avatars/doctor-2.png" />
+
+                      <div>
+                        <h4>Dr. Joshi</h4>
+
+                        <p>Dentist</p>
+                      </div>
+                    </div>
+
+                    <strong>22 Jul • 11:00 AM</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">Recent Prescriptions</h3>
+
+                <div class="prescription-item">
+                  <span>Paracetamol</span>
+
+                  <strong>5 Days</strong>
+                </div>
+
+                <div class="prescription-item">
+                  <span>Vitamin D3</span>
+
+                  <strong>30 Days</strong>
+                </div>
+
+                <div class="prescription-item">
+                  <span>Calcium</span>
+
+                  <strong>15 Days</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer id="footer"></footer>
+    </div>
+
+    <div id="modalContainer"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/sidebar.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+
+    <script src="js/loader.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="js/pages/patient-dashboard.js"></script>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,193 @@
+/* ==========================================================
+   PRESCRIPTIONS PAGE
+========================================================== */
+
+.prescriptions-page {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   PAGE HEADER
+========================================================== */
+
+.page-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+.page-header h1 {
+  margin-bottom: 8px;
+
+  font-size: 34px;
+}
+
+.page-header p {
+  font-size: 15px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   TOOLBAR
+========================================================== */
+
+.prescription-toolbar {
+  padding: 20px 24px;
+}
+
+.toolbar {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+}
+
+.toolbar-search {
+  width: 360px;
+
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 18px;
+
+  background: var(--surface-secondary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+}
+
+.toolbar-search svg {
+  width: 18px;
+
+  height: 18px;
+
+  color: var(--text-muted);
+}
+
+.toolbar-search input {
+  flex: 1;
+
+  border: none;
+
+  background: transparent;
+}
+
+.toolbar-actions {
+  display: flex;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+/* ==========================================================
+   PRESCRIPTION INFO
+========================================================== */
+
+.prescription-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.prescription-info h4 {
+  font-size: 15px;
+
+  color: var(--text-dark);
+}
+
+.prescription-info p {
+  font-size: 13px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.status.active {
+  background: var(--success-bg);
+
+  color: var(--success);
+}
+
+.status.completed {
+  background: var(--info-bg);
+
+  color: var(--info);
+}
+
+.status.expired {
+  background: var(--danger-bg);
+
+  color: var(--danger);
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 992px) {
+  .page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .toolbar {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .toolbar-search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar-actions {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+}

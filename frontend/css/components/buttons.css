@@ -1,0 +1,173 @@
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+.btn {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  height: 48px;
+
+  padding: 0 22px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: var(--transition);
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   PRIMARY
+========================================================== */
+
+.btn-primary {
+  background: var(--primary);
+
+  color: #fff;
+
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+
+  transform: translateY(-2px);
+}
+
+.btn-soft-primary {
+  background: #fff3eb;
+
+  color: var(--primary);
+
+  border: 1px solid #ffd7bf;
+}
+
+.btn-soft-primary:hover {
+  background: #ffe8d9;
+}
+
+/* ==========================================================
+   SECONDARY
+========================================================== */
+
+.btn-secondary {
+  background: #fff;
+
+  color: var(--text-dark);
+
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-secondary);
+}
+
+/* ==========================================================
+   OUTLINE
+========================================================== */
+
+.btn-outline {
+  background: transparent;
+
+  border: 1px solid var(--primary);
+
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary-light);
+}
+
+/* ==========================================================
+   SUCCESS
+========================================================== */
+
+.btn-success {
+  background: var(--success);
+
+  color: #fff;
+}
+
+/* ==========================================================
+   DANGER
+========================================================== */
+
+.btn-danger {
+  background: var(--danger);
+
+  color: #fff;
+}
+
+/* ==========================================================
+   ICON BUTTON
+========================================================== */
+
+.icon-btn {
+  width: 46px;
+
+  height: 46px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  background: #fff;
+
+  transition: var(--transition);
+}
+
+.icon-btn:hover {
+  background: var(--primary-light);
+
+  color: var(--primary);
+}
+
+/* ==========================================================
+   BUTTON SIZES
+========================================================== */
+
+.btn-sm {
+  height: 38px;
+
+  padding: 0 16px;
+
+  font-size: 13px;
+}
+
+.btn-lg {
+  height: 56px;
+
+  padding: 0 30px;
+
+  font-size: 15px;
+}
+
+/* ==========================================================
+   DISABLED
+========================================================== */
+
+.btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}

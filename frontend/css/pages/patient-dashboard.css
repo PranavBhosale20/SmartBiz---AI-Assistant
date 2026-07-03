@@ -1,0 +1,175 @@
+/* ==========================================================
+   PATIENT DASHBOARD
+========================================================== */
+
+.patient-dashboard {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+.patient-hero {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 40px;
+
+  padding: 36px;
+
+  background: linear-gradient(135deg, #fff9f4 0%, #ffffff 100%);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-xl);
+}
+
+.patient-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+.patient-avatar {
+  width: 90px;
+
+  height: 90px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+.patient-details h2 {
+  margin-bottom: 8px;
+}
+
+.patient-details p {
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   QUICK STATS
+========================================================== */
+
+.patient-stats {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   DASHBOARD GRID
+========================================================== */
+
+.patient-grid {
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   APPOINTMENT LIST
+========================================================== */
+
+.upcoming-list {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.upcoming-item {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid var(--border-light);
+}
+
+.upcoming-item:last-child {
+  border-bottom: none;
+}
+
+.doctor-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+.doctor-info img {
+  width: 50px;
+
+  height: 50px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+/* ==========================================================
+   PRESCRIPTIONS
+========================================================== */
+
+.prescription-item {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid var(--border-light);
+}
+
+.prescription-item:last-child {
+  border-bottom: none;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1100px) {
+  .patient-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 992px) {
+  .patient-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .patient-hero {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .patient-stats {
+    grid-template-columns: 1fr;
+  }
+}

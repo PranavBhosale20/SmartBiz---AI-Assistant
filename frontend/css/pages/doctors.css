@@ -1,0 +1,217 @@
+/* ==========================================================
+   DOCTORS PAGE
+========================================================== */
+
+.doctors-page {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   PAGE HEADER
+========================================================== */
+
+.page-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+.page-header h1 {
+  margin-bottom: 8px;
+
+  font-size: 34px;
+}
+
+.page-header p {
+  font-size: 15px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   TOOLBAR
+========================================================== */
+
+.doctor-toolbar {
+  padding: 20px 24px;
+}
+
+.toolbar {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+}
+
+.toolbar-search {
+  width: 360px;
+
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 18px;
+
+  background: var(--surface-secondary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+}
+
+.toolbar-search svg {
+  width: 18px;
+
+  height: 18px;
+
+  color: var(--text-muted);
+}
+
+.toolbar-search input {
+  flex: 1;
+
+  border: none;
+
+  background: transparent;
+}
+
+/* ==========================================================
+   DOCTOR INFO
+========================================================== */
+
+.doctor-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+.doctor-info img {
+  width: 48px;
+
+  height: 48px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+.doctor-info h4 {
+  margin-bottom: 4px;
+
+  font-size: 15px;
+}
+
+.doctor-info p {
+  font-size: 13px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   SPECIALIZATION
+========================================================== */
+
+.specialization {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 6px 12px;
+
+  background: var(--info-bg);
+
+  color: var(--info);
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.status.available {
+  background: var(--success-bg);
+
+  color: var(--success);
+}
+
+.status.busy {
+  background: var(--warning-bg);
+
+  color: var(--warning);
+}
+
+.status.offline {
+  background: var(--danger-bg);
+
+  color: var(--danger);
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 992px) {
+  .page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .toolbar {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .toolbar-search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar-actions {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+}

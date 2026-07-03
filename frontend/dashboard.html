@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en" data-page="dashboard">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Dashboard | SmartBiz Clinic OS</title>
+
+    <link rel="icon" href="assets/logo/favicon.png" />
+
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+
+    <aside id="sidebar"></aside>
+
+    <!-- Main Wrapper -->
+
+    <div class="main-wrapper">
+      <!-- Header -->
+
+      <header id="header"></header>
+
+      <!-- Main Content -->
+
+      <main class="page-content">
+        <div class="dashboard">
+          <!-- ==========================================================
+     WELCOME SECTION
+========================================================== -->
+
+          <section class="welcome-section">
+            <!-- Left -->
+
+            <div class="welcome-left">
+              <span class="page-tag"> SmartBiz - Clinic Management System </span>
+
+              <h1>Welcome back, Dr. Mehta 👋</h1>
+
+              <p>Manage appointments, patients, billing, and clinic operations from one place.</p>
+
+              <div class="hero-buttons">
+                <a href="appointments.html" class="btn btn-primary">
+                  <i data-lucide="calendar-plus"></i>
+
+                  New Appointment
+                </a>
+
+                <a href="patients.html" class="btn btn-soft-primary">
+                  <i data-lucide="user-plus"></i>
+
+                  Add Patient
+                </a>
+              </div>
+            </div>
+
+            <!-- Right -->
+
+            <div class="welcome-right">
+              <img
+                src="assets/illustrations/dashboard.png"
+                alt="Dashboard Illustration"
+              />
+            </div>
+          </section>
+
+          <!-- ==========================================================
+     KPI CARDS
+========================================================== -->
+
+          <section class="stats-grid">
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-header">
+                  <div class="stat-icon orange">
+                    <i data-lucide="users"></i>
+                  </div>
+
+                  <span class="badge badge-success"> +12% </span>
+                </div>
+
+                <h2 class="stat-value">1,248</h2>
+
+                <p class="stat-title">Total Patients</p>
+
+                <small class="stat-footer"> Compared to last month </small>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-header">
+                  <div class="stat-icon blue">
+                    <i data-lucide="calendar-days"></i>
+                  </div>
+
+                  <span class="badge badge-success"> +8% </span>
+                </div>
+
+                <h2 class="stat-value">84</h2>
+
+                <p class="stat-title">Today's Appointments</p>
+
+                <small class="stat-footer"> Compared to yesterday </small>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-header">
+                  <div class="stat-icon green">
+                    <i data-lucide="indian-rupee"></i>
+                  </div>
+
+                  <span class="badge badge-success"> +18% </span>
+                </div>
+
+                <h2 class="stat-value">₹42.5K</h2>
+
+                <p class="stat-title">Revenue Today</p>
+
+                <small class="stat-footer"> Compared to last week </small>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-header">
+                  <div class="stat-icon red">
+                    <i data-lucide="package"></i>
+                  </div>
+
+                  <span class="badge badge-danger"> -2% </span>
+                </div>
+
+                <h2 class="stat-value">08</h2>
+
+                <p class="stat-title">Low Stock Items</p>
+
+                <small class="stat-footer"> Needs attention </small>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==========================================================
+     DASHBOARD CONTENT
+========================================================== -->
+
+          <section class="dashboard-row">
+            <!-- Revenue Analytics -->
+
+            <div class="card chart-card">
+              <div class="card-body">
+                <div class="section-header">
+                  <div>
+                    <h3 class="card-title">Revenue Analytics</h3>
+
+                    <p class="card-subtitle">Weekly Clinic Performance</p>
+                  </div>
+
+                  <button class="btn btn-secondary btn-sm">
+                    <i data-lucide="calendar"></i>
+
+                    This Week
+                  </button>
+                </div>
+
+                <div class="analytics-summary">
+                  <div class="analytics-item">
+                    <span>Total Revenue</span>
+
+                    <h2>₹2.85L</h2>
+
+                    <small class="text-success">↑ 18.2%</small>
+                  </div>
+
+                  <div class="analytics-item">
+                    <span>Appointments</span>
+
+                    <h2>418</h2>
+
+                    <small class="text-primary">This Week</small>
+                  </div>
+
+                  <div class="analytics-item">
+                    <span>Average Bill</span>
+
+                    <h2>₹682</h2>
+
+                    <small>Per Patient</small>
+                  </div>
+                </div>
+
+                <div class="chart-container">
+                  <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 120px"></div>
+                    <span class="chart-label">Mon</span>
+                  </div>
+
+                  <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 170px"></div>
+                    <span class="chart-label">Tue</span>
+                  </div>
+
+                  <div class="chart-bar-group">
+                    <div class="chart-bar active" style="height: 240px"></div>
+                    <span class="chart-label">Wed</span>
+                  </div>
+
+                  <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 150px"></div>
+                    <span class="chart-label">Thu</span>
+                  </div>
+
+                  <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 270px"></div>
+                    <span class="chart-label">Fri</span>
+                  </div>
+
+                  <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 210px"></div>
+                    <span class="chart-label">Sat</span>
+                  </div>
+
+                  <div class="chart-bar-group">
+                    <div class="chart-bar" style="height: 185px"></div>
+                    <span class="chart-label">Sun</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Today's Appointments -->
+
+            <div class="card">
+              <div class="card-body">
+                <div class="section-header">
+                  <div>
+                    <h3 class="card-title">Today's Appointments</h3>
+
+                    <p class="card-subtitle">Scheduled Patients</p>
+                  </div>
+
+                  <a href="#" class="section-link"> View All </a>
+                </div>
+
+                <div class="appointment-list">
+                  <div class="appointment-item">
+                    <img
+                      src="assets/avatars/patient-male.png"
+                      class="appointment-avatar"
+                      alt="Patient"
+                    />
+
+                    <div class="appointment-info">
+                      <h4>Rahul Sharma</h4>
+
+                      <p>General Checkup</p>
+
+                      <div class="appointment-time">
+                        <i data-lucide="clock"></i>
+
+                        09:30 AM
+                      </div>
+                    </div>
+
+                    <span class="status confirmed"> Confirmed </span>
+                  </div>
+
+                  <div class="appointment-item">
+                    <img
+                      src="assets/avatars/patient-female.png"
+                      class="appointment-avatar"
+                      alt="Patient"
+                    />
+
+                    <div class="appointment-info">
+                      <h4>Priya Patil</h4>
+
+                      <p>Dental Consultation</p>
+
+                      <div class="appointment-time">
+                        <i data-lucide="clock"></i>
+
+                        10:15 AM
+                      </div>
+                    </div>
+
+                    <span class="status waiting"> Waiting </span>
+                  </div>
+
+                  <div class="appointment-item">
+                    <img
+                      src="assets/avatars/patient-male.png"
+                      class="appointment-avatar"
+                      alt="Patient"
+                    />
+
+                    <div class="appointment-info">
+                      <h4>Amit Joshi</h4>
+
+                      <p>Eye Checkup</p>
+
+                      <div class="appointment-time">
+                        <i data-lucide="clock"></i>
+
+                        11:30 AM
+                      </div>
+                    </div>
+
+                    <span class="status confirmed"> Confirmed </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer id="footer"></footer>
+    </div>
+
+    <div id="modalContainer"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/sidebar.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+
+    <script src="js/loader.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/pages/dashboard.js"></script>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

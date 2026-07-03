@@ -1,0 +1,373 @@
+/* ==========================================================
+   DASHBOARD
+========================================================== */
+
+.dashboard {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 28px;
+}
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+.welcome-section {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 60px;
+
+  padding: 48px;
+
+  background: linear-gradient(135deg, #fff9f4 0%, #ffffff 100%);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-xl);
+}
+
+.welcome-left {
+  flex: 0 0 52%;
+}
+
+.page-tag {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 12px 22px;
+
+  background: var(--primary-light);
+
+  color: var(--primary);
+
+  border-radius: 999px;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+}
+
+.welcome-left h1 {
+  margin: 18px 0 14px;
+
+  font-size: 52px;
+
+  line-height: 1.15;
+}
+
+.welcome-left p {
+  margin-bottom: 30px;
+
+  font-size: 18px;
+
+  color: var(--text-light);
+}
+
+.hero-buttons {
+  display: flex;
+
+  gap: 18px;
+
+  margin-top: 6px;
+}
+
+.welcome-right {
+  flex: 0 0 48%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+.welcome-right img {
+  width: 100%;
+
+  max-width: 500px;
+
+  height: auto;
+}
+
+/* ==========================================================
+   MINI STATS
+========================================================== */
+
+.welcome-stats {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 18px;
+
+  margin-bottom: 28px;
+}
+
+.mini-stat {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 18px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  transition: var(--transition);
+}
+
+.mini-stat:hover {
+  transform: translateY(-4px);
+
+  box-shadow: var(--shadow-md);
+}
+
+.mini-stat svg {
+  width: 26px;
+
+  height: 26px;
+
+  color: var(--primary);
+}
+
+.mini-stat h3 {
+  margin-bottom: 4px;
+
+  font-size: 24px;
+}
+
+.mini-stat span {
+  font-size: 13px;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   KPI GRID
+========================================================== */
+
+.stats-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   DASHBOARD ROW
+========================================================== */
+
+.dashboard-row {
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   APPOINTMENTS
+========================================================== */
+
+.appointment-list,
+.activity-list,
+.stock-list {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.appointment-item,
+.activity-item,
+.stock-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid var(--border-light);
+}
+
+.appointment-item:last-child,
+.activity-item:last-child,
+.stock-item:last-child {
+  border-bottom: none;
+}
+
+.appointment-avatar {
+  width: 52px;
+
+  height: 52px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+.appointment-info,
+.activity-content {
+  flex: 1;
+}
+
+.appointment-info h4,
+.activity-content h4 {
+  margin-bottom: 4px;
+}
+
+.appointment-time {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 6px;
+
+  font-size: 13px;
+}
+
+.activity-icon {
+  width: 48px;
+
+  height: 48px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  border-radius: 14px;
+
+  background: var(--primary-light);
+
+  color: var(--primary);
+}
+
+/* ==========================================================
+   STOCK
+========================================================== */
+
+.stock-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.stock-name {
+  font-weight: 600;
+
+  color: var(--text-dark);
+}
+
+.stock-category {
+  font-size: 13px;
+
+  color: var(--text-muted);
+}
+
+.stock-quantity {
+  font-weight: 700;
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.confirmed {
+  background: var(--success-bg);
+
+  color: var(--success);
+}
+
+.waiting {
+  background: var(--warning-bg);
+
+  color: var(--warning);
+}
+
+.cancelled {
+  background: var(--danger-bg);
+
+  color: var(--danger);
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1200px) {
+  .welcome-right {
+    display: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 992px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-section {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 28px;
+  }
+
+  .welcome-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
