@@ -41,7 +41,7 @@ public class SecurityConfig {
                         // Open to everyone - no token required to
                         // register or log in.
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/nlp-test/**").permitAll()
+                        .requestMatchers("/api/chat/**").hasAnyRole("STAFF", "PATIENT")
 
                         // STAFF-only: clinic management operations.
                         // hasRole("STAFF") checks for the "ROLE_STAFF"
