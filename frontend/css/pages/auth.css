@@ -81,11 +81,29 @@
 .auth-right {
   display: flex;
 
+  flex-direction: column;
+
   justify-content: center;
 
-  align-items: center;
+  padding: 60px;
 
-  padding: 50px;
+  width: 100%;
+}
+
+/* ==========================================================
+   AUTH HEADER
+========================================================== */
+
+.auth-header {
+  margin-bottom: 32px;
+}
+
+.auth-header h1 {
+  margin-bottom: 10px;
+}
+
+.auth-header p {
+  color: var(--text-muted);
 }
 
 .auth-card {
@@ -248,14 +266,59 @@
   font-weight: 600;
 }
 
-#staffRole:checked + .role-card,
-#patientRole:checked + .role-card {
+.role-card.active {
   border-color: var(--primary);
 
   background: var(--primary-light);
 }
 
-#staffRole:checked + .role-card svg,
-#patientRole:checked + .role-card svg {
+.role-card.active svg {
   color: var(--primary);
+}
+
+/* ==========================================================
+   REGISTER FORM
+========================================================== */
+
+.auth-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+}
+
+.form-select {
+  height: 50px;
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  padding: 0 16px;
+
+  background: var(--surface);
+
+  outline: none;
+}
+
+.patient-fields,
+.staff-fields {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
 }

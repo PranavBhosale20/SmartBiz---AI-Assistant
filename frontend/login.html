@@ -26,7 +26,7 @@
         <p>AI-Assisted Clinic Management System</p>
 
         <img
-          src="assets/illustrations/login.png"
+          src="assets/illustrations/login-hero.png"
           alt="Login Illustration"
           class="auth-illustration"
         />
@@ -40,34 +40,27 @@
 
           <form id="loginForm">
             <div class="role-selector">
-              <input
-                type="radio"
+              <button
+                class="role-card active"
                 id="staffRole"
-                name="role"
-                value="STAFF"
-                checked
-                hidden
-              />
-
-              <label for="staffRole" class="role-card">
+                data-role="STAFF"
+                type="button"
+              >
                 <i data-lucide="briefcase-medical"></i>
 
                 <span>Staff</span>
-              </label>
+              </button>
 
-              <input
-                type="radio"
+              <button
+                class="role-card"
                 id="patientRole"
-                name="role"
-                value="PATIENT"
-                hidden
-              />
-
-              <label for="patientRole" class="role-card">
+                data-role="PATIENT"
+                type="button"
+              >
                 <i data-lucide="user-round"></i>
 
                 <span>Patient</span>
-              </label>
+              </button>
             </div>
 
             <div class="form-group">
@@ -107,7 +100,7 @@
 
           <div class="auth-footer">
             <p>
-              New Patient?
+              Don't have an account?
 
               <a href="register.html"> Create Account </a>
             </p>

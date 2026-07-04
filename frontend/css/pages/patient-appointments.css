@@ -1,0 +1,107 @@
+/* ==========================================================
+   PATIENT APPOINTMENTS
+========================================================== */
+
+.patient-appointments {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.patient-appointments .page-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+/* ==========================================================
+   TOOLBAR
+========================================================== */
+
+.patient-appointments .toolbar {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+.patient-appointments .toolbar-search {
+  flex: 1;
+
+  max-width: 420px;
+}
+
+.patient-appointments .toolbar-actions {
+  display: flex;
+
+  gap: 12px;
+}
+
+/* ==========================================================
+   TABLE
+========================================================== */
+
+.patient-appointments .table td {
+  vertical-align: middle;
+}
+
+.patient-appointments .table-actions {
+  display: flex;
+
+  justify-content: center;
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status.booked {
+  background: #fff4dd;
+
+  color: #d97706;
+}
+
+.status.confirmed {
+  background: #e8f9ef;
+
+  color: #16a34a;
+}
+
+.status.completed {
+  background: #eef2ff;
+
+  color: #4f46e5;
+}
+
+.status.cancelled {
+  background: #fdecec;
+
+  color: #dc2626;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+  .patient-appointments .toolbar {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .patient-appointments .toolbar-search {
+    max-width: 100%;
+  }
+}

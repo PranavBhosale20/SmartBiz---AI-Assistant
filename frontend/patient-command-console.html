@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-page="AI Assistant">
+<html lang="en" data-page="patient-command-console">
   <head>
     <meta charset="UTF-8" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Command Console | SmartBiz Clinic OS</title>
+    <title>AI Assistant | SmartBiz Clinic OS</title>
 
     <link rel="icon" href="assets/logo/favicon.png" />
 
@@ -13,20 +13,29 @@
   </head>
 
   <body>
+    <!-- Sidebar -->
     <aside id="sidebar"></aside>
 
     <div class="main-wrapper">
+      <!-- Header -->
       <header id="header"></header>
 
+      <!-- Main Content -->
       <main class="page-content">
-        <div class="command-console">
+        <div class="patient-command-console">
+          <!-- Page Header -->
+
           <div class="console-header">
             <div>
-              <h1>Command Console</h1>
+              <h1>AI Assistant</h1>
 
-              <p>AI Assistant for your clinic.</p>
+              <p>
+                Ask questions about your appointments, prescriptions and bills.
+              </p>
             </div>
           </div>
+
+          <!-- Chat -->
 
           <div class="card chat-card">
             <div class="chat-body">
@@ -34,16 +43,32 @@
                 Hello 👋 I'm SmartBiz AI. How can I help you today?
               </div>
 
-              <div class="message user">Show today's appointments.</div>
+              <div class="message user">When is my next appointment?</div>
 
               <div class="message bot">
-                Today's appointments: • Rahul Sharma — 09:30 AM • Priya Patil —
-                10:15 AM • Amit Joshi — 11:45 AM Anything else?
+                Your next appointment is with
+                <strong>Dr. Mehta</strong>
+                on
+                <strong>15 Jul 2026 at 10:30 AM.</strong>
+              </div>
+
+              <div class="message user">
+                How many medicines are low in stock?
+              </div>
+
+              <div class="message bot">
+                You're a patient, so inventory information isn't available. You
+                can ask about your appointments, prescriptions, medicines or
+                bills.
               </div>
             </div>
 
+            <!-- Input -->
+
             <div class="chat-input">
-              <textarea placeholder="Ask SmartBiz AI..."></textarea>
+              <textarea
+                placeholder="Ask about your appointments, medicines or bills..."
+              ></textarea>
 
               <button class="btn btn-primary">
                 <i data-lucide="send"></i>
@@ -55,22 +80,37 @@
         </div>
       </main>
 
+      <!-- Footer -->
+
       <footer id="footer"></footer>
     </div>
 
+    <!-- Modal -->
+
     <div id="modalContainer"></div>
 
+    <!-- Lucide -->
+
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Components -->
 
     <script src="js/components/modal.js"></script>
     <script src="js/components/sidebar.js"></script>
     <script src="js/components/header.js"></script>
     <script src="js/components/footer.js"></script>
 
+    <!-- Loader -->
+
     <script src="js/loader.js"></script>
+
+    <!-- App -->
+
     <script src="js/app.js"></script>
 
-    <script src="js/pages/command-console.js"></script>
+    <!-- Page -->
+
+    <script src="js/pages/patient-command-console.js"></script>
 
     <script>
       lucide.createIcons();

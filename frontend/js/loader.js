@@ -29,14 +29,18 @@ async function loadComponent(id, file) {
 async function loadComponents() {
   const page = document.documentElement.dataset.page;
 
-  if (page && page.startsWith("patient")) {
-    await loadComponent("sidebar", "components/patient-sidebar.html");
-    await loadComponent("header", "components/patient-header.html");
-  } else {
-    await loadComponent("sidebar", "components/sidebar.html");
-    await loadComponent("header", "components/header.html");
-  }
+const patientPages = [
+  "patient-dashboard",
+  "patient-profile",
+  "patient-appointments",
+  "patient-command-console",
+];
 
-  await loadComponent("footer", "components/footer.html");
-  await loadComponent("modalContainer", "components/modal.html");
+if (patientPages.includes(page)) {
+  await loadComponent("sidebar", "components/patient-sidebar.html");
+  await loadComponent("header", "components/patient-header.html");
+} else {
+  await loadComponent("sidebar", "components/sidebar.html");
+  await loadComponent("header", "components/header.html");
+}
 }

@@ -1,4 +1,10 @@
 /* ==========================================================
+   LOGIN PAGE
+========================================================== */
+
+let selectedRole = "STAFF";
+
+/* ==========================================================
    LOGIN
 ========================================================== */
 
@@ -10,19 +16,11 @@ async function login(username, password, role) {
 
     const response = {
       token: "dummy-jwt-token",
-
       username,
-
       role,
     };
 
-    saveLogin(
-      response.token,
-
-      response.username,
-
-      response.role,
-    );
+    saveLogin(response.token, response.username, response.role);
 
     if (response.role === "STAFF") {
       window.location.href = "dashboard.html";
@@ -35,13 +33,41 @@ async function login(username, password, role) {
 }
 
 /* ==========================================================
-   LOGIN FORM
+   INITIALIZE
 ========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("loginForm");
 
-  if (!form) return;
+  const staffButton = document.getElementById("staffRole");
+
+  const patientButton = document.getElementById("patientRole");
+
+  /* Default */
+
+  staffButton.classList.add("active");
+
+  /* Staff */
+
+  staffButton.addEventListener("click", () => {
+    selectedRole = "STAFF";
+
+    staffButton.classList.add("active");
+
+    patientButton.classList.remove("active");
+  });
+
+  /* Patient */
+
+  patientButton.addEventListener("click", () => {
+    selectedRole = "PATIENT";
+
+    patientButton.classList.add("active");
+
+    staffButton.classList.remove("active");
+  });
+
+  /* Login */
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -50,8 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const password = document.getElementById("password").value;
 
-    const role = document.querySelector('input[name="role"]:checked').value;
-
-    await login(username, password, role);
+    await login(username, password, selectedRole);
   });
 });

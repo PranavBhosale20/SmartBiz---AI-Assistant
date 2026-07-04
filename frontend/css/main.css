@@ -45,6 +45,8 @@
 @import url("./pages/command-console.css");
 @import url("./pages/patient-dashboard.css");
 @import url("./pages/patient-profile.css");
+@import url("./pages/patient-appointments.css");
+@import url("./pages/patient-command-console.css");
 
 /* ==========================================================
    AUTH
