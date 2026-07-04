@@ -1,5 +1,6 @@
 package com.smartbiz.service;
 
+import com.smartbiz.dto.BillResponseDTO;
 import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.Appointment;
 import com.smartbiz.model.Bill;
@@ -9,6 +10,8 @@ import com.smartbiz.repository.BillItemRepository;
 import com.smartbiz.repository.BillRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.smartbiz.exception.BusinessException;
+import com.smartbiz.exception.ResourceNotFoundException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +26,8 @@ public class BillService {
     private final AppointmentRepository appointmentRepository;
     private final BillItemRepository billItemRepository;
 
-    public BillService(BillRepository billRepository, AppointmentRepository appointmentRepository,
+    public BillService(BillRepository billRepository,
+                        AppointmentRepository appointmentRepository,
                         BillItemRepository billItemRepository) {
         this.billRepository = billRepository;
         this.appointmentRepository = appointmentRepository;
@@ -31,73 +35,84 @@ public class BillService {
     }
 
     @Transactional
-    public Bill generateBill(Long appointmentId) {
-        // CHANGED (Phase 5): ResourceNotFoundException instead of
-        // RuntimeException - 404, the appointment genuinely doesn't exist.
+    public BillResponseDTO generateBill(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", appointmentId));
 
-        // A bill should only ever be generated once per appointment -
-        // if one already exists, just return it instead of creating
-        // a duplicate.
         Optional<Bill> existing = billRepository.findByAppointmentId(appointmentId);
         if (existing.isPresent()) {
-            return existing.get();
+            return toResponseDTO(existing.get());
         }
 
-        // --- Step 1: figure out the visit fee ---
-        // Fetch EVERY appointment this user has ever had, then find
-        // the one with the EARLIEST createdAt (when it was booked,
-        // not the appointment's scheduled date/time). If THIS
-        // appointment's id matches that earliest one, it's their
-        // first visit ever.
-        List<Appointment> allUserAppointments = appointmentRepository.findByUserId(appointment.getUser().getId());
+        List<Appointment> allUserAppointments =
+                appointmentRepository.findByUserId(appointment.getUser().getId());
 
-        // CHANGED (Phase 5): removed the old .orElseThrow() here.
-        // This list can NEVER be empty: `appointment` was already
-        // fetched above (so it exists in the DB), and `appointment`
-        // belongs to the exact same user we're querying for here -
-        // so `appointment` itself is always at least one entry in
-        // this list. .min(...) is therefore guaranteed to find a
-        // value, which makes .get() safe to call directly instead of
-        // guarding against an Optional that can't actually be empty.
+        // Safe .get() - appointment itself guarantees list is non-empty
         Appointment earliestAppointment = allUserAppointments.stream()
                 .min(Comparator.comparing(Appointment::getCreatedAt))
                 .get();
 
         double visitFee;
         if (earliestAppointment.getId().equals(appointment.getId())) {
-            // This IS their first-ever appointment.
             visitFee = FIRST_TIME_FEE;
         } else {
-            // Not their first visit - use whatever this specific
-            // appointment's visit type charges for repeat visits.
             visitFee = appointment.getVisitType().getRepeatPrice();
         }
 
-        // --- Step 2: sum up medicine/product costs for this visit ---
         List<BillItem> billItems = billItemRepository.findByAppointmentId(appointmentId);
         double medicineCost = billItems.stream()
                 .mapToDouble(BillItem::getSubtotal)
                 .sum();
 
-        // --- Step 3: build and save the bill ---
         Bill bill = new Bill();
         bill.setAppointment(appointment);
         bill.setVisitFee(visitFee);
         bill.setMedicineCost(medicineCost);
         bill.setGrandTotal(visitFee + medicineCost);
 
-        return billRepository.save(bill);
+        Bill saved = billRepository.save(bill);
+        return toResponseDTO(saved);
     }
 
-    public Bill getBillByAppointmentId(Long appointmentId) {
-        // CHANGED (Phase 5): ResourceNotFoundException instead of
-        // RuntimeException. Using the 1-arg constructor here (not the
-        // (entityName, id) convenience one) because "Bill not found with
-        // id: X" would be ambiguous - X is actually an appointment id,
-        // not a bill id. This wording stays accurate about what X means.
-        return billRepository.findByAppointmentId(appointmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("No bill found for appointment id: " + appointmentId));
+    public BillResponseDTO getBillByAppointmentId(Long appointmentId) {
+        Bill bill = billRepository.findByAppointmentId(appointmentId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No bill found for appointment id: " + appointmentId));
+        return toResponseDTO(bill);
+    }
+
+    /**
+     * CHANGED (Phase 10 prep): converts Bill entity to BillResponseDTO.
+     * Extracts nested appointment fields (userId, userName, doctorId,
+     * doctorName) so frontend doesn't need to parse a nested entity.
+     */
+    private BillResponseDTO toResponseDTO(Bill bill) {
+        Appointment apt = bill.getAppointment();
+        return new BillResponseDTO(
+                bill.getId(),
+                apt.getId(),
+                apt.getUser().getId(),
+                apt.getUser().getName(),
+                apt.getDoctor().getId(),
+                apt.getDoctor().getName(),
+                bill.getVisitFee(),
+                bill.getMedicineCost(),
+                bill.getGrandTotal(),
+                bill.getStatus(),
+                bill.getCreatedAt()
+        );
+    }
+    
+    public BillResponseDTO markAsPaid(Long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill", billId));
+
+        if ("PAID".equals(bill.getStatus())) {
+            throw new BusinessException("Bill is already marked as paid!");
+        }
+
+        bill.setStatus("PAID");
+        Bill updated = billRepository.save(bill);
+        return toResponseDTO(updated);
     }
 }

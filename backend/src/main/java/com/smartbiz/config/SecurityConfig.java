@@ -42,6 +42,9 @@ public class SecurityConfig {
                         // register or log in.
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/chat/**").hasAnyRole("STAFF", "PATIENT")
+                        .requestMatchers("/api/health").permitAll()
+                        
+                        .requestMatchers("/api/dashboard/**").hasRole("STAFF")
 
                         // STAFF-only: clinic management operations.
                         // hasRole("STAFF") checks for the "ROLE_STAFF"

@@ -1,21 +1,17 @@
 package com.smartbiz.service;
 
+import com.smartbiz.dto.PrescriptionItemDTO;
 import com.smartbiz.dto.PrescriptionMapper;
 import com.smartbiz.dto.PrescriptionRequestDTO;
 import com.smartbiz.dto.PrescriptionResponseDTO;
 import com.smartbiz.exception.BusinessException;
 import com.smartbiz.exception.ResourceNotFoundException;
-import com.smartbiz.model.Appointment;
-import com.smartbiz.model.BillItem;
-import com.smartbiz.model.Prescription;
-import com.smartbiz.model.Product;
-import com.smartbiz.repository.AppointmentRepository;
-import com.smartbiz.repository.BillItemRepository;
-import com.smartbiz.repository.PrescriptionRepository;
-import com.smartbiz.repository.ProductRepository;
+import com.smartbiz.model.*;
+import com.smartbiz.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,68 +19,77 @@ import java.util.stream.Collectors;
 public class PrescriptionService {
 
     private final PrescriptionRepository prescriptionRepository;
-    private final ProductRepository productRepository;
     private final PrescriptionMapper prescriptionMapper;
-    private final BillItemRepository billItemRepository;
-
-    // NEW (Phase 5): AppointmentRepository moved here from
-    // PrescriptionMapper - this Service now resolves the
-    // appointmentId itself before handing the resolved Appointment
-    // to the (now pure) mapper.
     private final AppointmentRepository appointmentRepository;
+    private final ProductRepository productRepository;
+    private final BillItemRepository billItemRepository;
+    private final PrescriptionItemRepository prescriptionItemRepository;
 
     public PrescriptionService(PrescriptionRepository prescriptionRepository,
-                                ProductRepository productRepository,
                                 PrescriptionMapper prescriptionMapper,
+                                AppointmentRepository appointmentRepository,
+                                ProductRepository productRepository,
                                 BillItemRepository billItemRepository,
-                                AppointmentRepository appointmentRepository) {
+                                PrescriptionItemRepository prescriptionItemRepository) {
         this.prescriptionRepository = prescriptionRepository;
-        this.productRepository = productRepository;
         this.prescriptionMapper = prescriptionMapper;
-        this.billItemRepository = billItemRepository;
         this.appointmentRepository = appointmentRepository;
+        this.productRepository = productRepository;
+        this.billItemRepository = billItemRepository;
+        this.prescriptionItemRepository = prescriptionItemRepository;
     }
 
     @Transactional
     public PrescriptionResponseDTO createPrescription(PrescriptionRequestDTO dto) {
-        // NEW (Phase 5): resolving Appointment and Product here,
-        // BEFORE calling the mapper - these lookups used to live
-        // inside PrescriptionMapper.toEntity().
-        // ResourceNotFoundException instead of RuntimeException -
-        // both are genuine "doesn't exist" cases (404).
         Appointment appointment = appointmentRepository.findById(dto.getAppointmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", dto.getAppointmentId()));
 
-        Product product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product", dto.getProductId()));
-
-        // --- Business Rule: can't prescribe more than what's in stock ---
-        // CHANGED (Phase 5): BusinessException instead of RuntimeException.
-        if (dto.getQuantityPrescribed() > product.getQuantity()) {
-            throw new BusinessException(
-                    "Not enough stock! Available: " + product.getQuantity()
-                            + ", Requested: " + dto.getQuantityPrescribed());
+        if (dto.getItems() == null || dto.getItems().isEmpty()) {
+            throw new BusinessException("Prescription must contain at least one medicine.");
         }
 
-        // Step 1: save the prescription itself. toEntity() now takes
-        // the already-resolved appointment/product directly, instead
-        // of resolving them itself.
-        Prescription prescription = prescriptionMapper.toEntity(dto, appointment, product);
+        // Step 1: save prescription header
+        Prescription prescription = new Prescription();
+        prescription.setAppointment(appointment);
+        prescription.setNotes(dto.getNotes());
         Prescription savedPrescription = prescriptionRepository.save(prescription);
 
-        // Step 2: deduct stock.
-        product.setQuantity(product.getQuantity() - dto.getQuantityPrescribed());
-        productRepository.save(product);
+        // Step 2: process each medicine item
+        List<PrescriptionItem> savedItems = new ArrayList<>();
+        for (PrescriptionItemDTO itemDTO : dto.getItems()) {
+            Product product = productRepository.findById(itemDTO.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", itemDTO.getProductId()));
 
-        // Step 3: automatically create the matching BillItem.
-        BillItem billItem = new BillItem();
-        billItem.setAppointment(savedPrescription.getAppointment());
-        billItem.setProduct(product);
-        billItem.setQuantity(dto.getQuantityPrescribed());
-        billItem.setUnitPriceAtTimeOfSale(product.getPrice());
-        billItem.setSubtotal(product.getPrice() * dto.getQuantityPrescribed());
-        billItemRepository.save(billItem);
+            if (itemDTO.getQuantityPrescribed() > product.getQuantity()) {
+                throw new BusinessException(
+                        "Not enough stock for " + product.getName() +
+                        "! Available: " + product.getQuantity() +
+                        ", Requested: " + itemDTO.getQuantityPrescribed());
+            }
 
+            // Save prescription item
+            PrescriptionItem item = new PrescriptionItem();
+            item.setPrescription(savedPrescription);
+            item.setProduct(product);
+            item.setQuantityPrescribed(itemDTO.getQuantityPrescribed());
+            item.setDosageInstructions(itemDTO.getDosageInstructions());
+            savedItems.add(prescriptionItemRepository.save(item));
+
+            // Deduct stock
+            product.setQuantity(product.getQuantity() - itemDTO.getQuantityPrescribed());
+            productRepository.save(product);
+
+            // Auto-create BillItem for this medicine
+            BillItem billItem = new BillItem();
+            billItem.setAppointment(appointment);
+            billItem.setProduct(product);
+            billItem.setQuantity(itemDTO.getQuantityPrescribed());
+            billItem.setUnitPriceAtTimeOfSale(product.getPrice());
+            billItem.setSubtotal(product.getPrice() * itemDTO.getQuantityPrescribed());
+            billItemRepository.save(billItem);
+        }
+
+        savedPrescription.setItems(savedItems);
         return prescriptionMapper.toResponseDTO(savedPrescription);
     }
 

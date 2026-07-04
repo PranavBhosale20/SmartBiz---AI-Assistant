@@ -23,4 +23,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     // WHERE doctor_id = ? AND appointment_date BETWEEN ? AND ?
     List<Appointment> findByDoctorIdAndAppointmentDateBetween(
             Long doctorId, LocalDateTime startOfDay, LocalDateTime endOfDay);
+    
+ // Used by DashboardController to count today's appointments
+    List<Appointment> findByAppointmentDateBetween(LocalDateTime start, LocalDateTime end);
 }
