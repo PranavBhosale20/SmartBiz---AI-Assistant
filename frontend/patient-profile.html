@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" data-page="patient-profile">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Profile | SmartBiz Clinic OS</title>
+
+    <link rel="icon" href="assets/logo/favicon.png" />
+
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body>
+    <aside id="sidebar"></aside>
+
+    <div class="main-wrapper">
+      <header id="header"></header>
+
+      <main class="page-content">
+        <div class="profile-page">
+          <!-- Hero -->
+
+          <section class="profile-hero">
+            <div class="profile-left">
+              <img
+                src="assets/avatars/patient-male.png"
+                class="profile-avatar"
+                alt="Patient"
+              />
+
+              <div>
+                <h1>Rahul Sharma</h1>
+
+                <p>Patient ID : PT001</p>
+              </div>
+            </div>
+
+            <button class="btn btn-primary">
+              <i data-lucide="square-pen"></i>
+
+              Edit Profile
+            </button>
+          </section>
+
+          <!-- Details -->
+
+          <section class="profile-details">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">Personal Information</h3>
+
+                <table class="profile-table">
+                  <tr>
+                    <td>Full Name</td>
+                    <td>Rahul Sharma</td>
+                  </tr>
+
+                  <tr>
+                    <td>Email</td>
+                    <td>rahul@email.com</td>
+                  </tr>
+
+                  <tr>
+                    <td>Phone</td>
+                    <td>+91 9876543210</td>
+                  </tr>
+
+                  <tr>
+                    <td>Gender</td>
+                    <td>Male</td>
+                  </tr>
+
+                  <tr>
+                    <td>Age</td>
+                    <td>32 Years</td>
+                  </tr>
+
+                  <tr>
+                    <td>Blood Group</td>
+                    <td>O+</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer id="footer"></footer>
+    </div>
+
+    <div id="modalContainer"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/sidebar.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/footer.js"></script>
+
+    <script src="js/loader.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="js/pages/patient-profile.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

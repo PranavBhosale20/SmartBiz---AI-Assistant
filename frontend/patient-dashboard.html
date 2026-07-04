@@ -21,120 +21,183 @@
       <main class="page-content">
         <div class="patient-dashboard">
           <section class="patient-hero">
-            <div class="patient-info">
-              <img
-                src="assets/avatars/patient-male.png"
-                class="patient-avatar"
-                alt="Patient"
-              />
+            <div class="hero-content">
+              <span class="page-tag"> SmartBiz Patient Portal </span>
 
-              <div class="patient-details">
-                <h2>Rahul Sharma</h2>
+              <h1>Good Morning, Rahul 👋</h1>
 
-                <p>Patient ID : PT001</p>
-
-                <p>Male • 32 Years</p>
-              </div>
+              <p>
+                Your next appointment is today at
+                <strong>10:30 AM</strong>
+                with
+                <strong>Dr. Mehta</strong>
+              </p>
             </div>
 
-            <button class="btn btn-primary">
+            <a href="patient-appointments.html" class="btn btn-primary">
               <i data-lucide="calendar-plus"></i>
 
               Book Appointment
-            </button>
+            </a>
           </section>
 
           <section class="patient-stats">
             <div class="card stat-card">
               <div class="card-body">
-                <h2 class="stat-value">12</h2>
+                <div class="stat-header">
+                  <div class="stat-icon orange">
+                    <i data-lucide="calendar-clock"></i>
+                  </div>
+                </div>
 
-                <p class="stat-title">Appointments</p>
+                <h2 class="stat-value">1</h2>
+
+                <p class="stat-title">Upcoming Appointment</p>
               </div>
             </div>
 
             <div class="card stat-card">
               <div class="card-body">
-                <h2 class="stat-value">08</h2>
+                <div class="stat-header">
+                  <div class="stat-icon red">
+                    <i data-lucide="wallet"></i>
+                  </div>
+                </div>
 
-                <p class="stat-title">Prescriptions</p>
-              </div>
-            </div>
-
-            <div class="card stat-card">
-              <div class="card-body">
-                <h2 class="stat-value">₹14,200</h2>
-
-                <p class="stat-title">Total Billing</p>
-              </div>
-            </div>
-
-            <div class="card stat-card">
-              <div class="card-body">
-                <h2 class="stat-value">2</h2>
+                <h2 class="stat-value">₹520</h2>
 
                 <p class="stat-title">Pending Bills</p>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-header">
+                  <div class="stat-icon green">
+                    <i data-lucide="pill"></i>
+                  </div>
+                </div>
+
+                <h2 class="stat-value">4</h2>
+
+                <p class="stat-title">Active Medicines</p>
+              </div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-header">
+                  <div class="stat-icon blue">
+                    <i data-lucide="stethoscope"></i>
+                  </div>
+                </div>
+
+                <h2 class="stat-value">3</h2>
+
+                <p class="stat-title">Doctors Visited</p>
               </div>
             </div>
           </section>
 
           <section class="patient-grid">
+            <!-- Upcoming Appointments -->
+
             <div class="card">
               <div class="card-body">
-                <h3 class="card-title">Upcoming Appointments</h3>
+                <div class="section-header">
+                  <div>
+                    <h3 class="card-title">Upcoming Appointments</h3>
 
-                <div class="upcoming-list">
-                  <div class="upcoming-item">
-                    <div class="doctor-info">
-                      <img src="assets/avatars/doctor-1.png" />
-
-                      <div>
-                        <h4>Dr. Mehta</h4>
-
-                        <p>General Physician</p>
-                      </div>
-                    </div>
-
-                    <strong>15 Jul • 10:30 AM</strong>
+                    <p class="card-subtitle">Your scheduled clinic visits.</p>
                   </div>
 
-                  <div class="upcoming-item">
-                    <div class="doctor-info">
-                      <img src="assets/avatars/doctor-2.png" />
+                  <a href="patient-appointments.html" class="section-link">
+                    View All
+                  </a>
+                </div>
 
-                      <div>
-                        <h4>Dr. Joshi</h4>
+                <div class="appointment-list">
+                  <div class="appointment-item">
+                    <img
+                      src="assets/avatars/doctor.png"
+                      class="appointment-avatar"
+                    />
 
-                        <p>Dentist</p>
+                    <div class="appointment-info">
+                      <h4>Dr. Mehta</h4>
+
+                      <p>General Physician</p>
+
+                      <div class="appointment-time">
+                        <i data-lucide="calendar-days"></i>
+
+                        15 Jul 2026 • 10:30 AM
                       </div>
                     </div>
 
-                    <strong>22 Jul • 11:00 AM</strong>
+                    <span class="status confirmed"> Confirmed </span>
                   </div>
                 </div>
               </div>
             </div>
 
+            <!-- Recent Prescriptions -->
+
             <div class="card">
               <div class="card-body">
-                <h3 class="card-title">Recent Prescriptions</h3>
+                <div class="section-header">
+                  <div>
+                    <h3 class="card-title">Recent Prescription</h3>
 
-                <div class="prescription-item">
-                  <span>Paracetamol</span>
-
-                  <strong>5 Days</strong>
+                    <p class="card-subtitle">
+                      Medicines from your latest visit.
+                    </p>
+                  </div>
                 </div>
 
-                <div class="prescription-item">
-                  <span>Vitamin D3</span>
+                <div class="stock-list">
+                  <div class="stock-item">
+                    <div class="stock-info">
+                      <span class="stock-name"> Prescription #PR001 </span>
 
-                  <strong>30 Days</strong>
+                      <span class="stock-category">
+                        4 Medicines Prescribed
+                      </span>
+                    </div>
+
+                    <button
+                      class="btn btn-soft-primary open-modal"
+                      data-modal="view-prescription"
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Bills -->
+
+            <div class="card">
+              <div class="card-body">
+                <div class="section-header">
+                  <div>
+                    <h3 class="card-title">Recent Bill</h3>
+
+                    <p class="card-subtitle">Latest payment summary.</p>
+                  </div>
                 </div>
 
-                <div class="prescription-item">
-                  <span>Calcium</span>
+                <div class="stock-list">
+                  <div class="stock-item">
+                    <div class="stock-info">
+                      <span class="stock-name"> Invoice #INV001 </span>
 
-                  <strong>15 Days</strong>
+                      <span class="stock-category"> ₹520 • Pending </span>
+                    </div>
+
+                    <button class="btn btn-soft-primary">View</button>
+                  </div>
                 </div>
               </div>
             </div>

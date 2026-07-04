@@ -27,11 +27,16 @@ async function loadComponent(id, file) {
 }
 
 async function loadComponents() {
-  await loadComponent("sidebar", "components/sidebar.html");
+  const page = document.documentElement.dataset.page;
 
-  await loadComponent("header", "components/header.html");
+  if (page && page.startsWith("patient")) {
+    await loadComponent("sidebar", "components/patient-sidebar.html");
+    await loadComponent("header", "components/patient-header.html");
+  } else {
+    await loadComponent("sidebar", "components/sidebar.html");
+    await loadComponent("header", "components/header.html");
+  }
 
   await loadComponent("footer", "components/footer.html");
-
   await loadComponent("modalContainer", "components/modal.html");
 }
