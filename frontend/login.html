@@ -42,7 +42,7 @@
 
           <p>Select your role and sign in to continue.</p>
 
-          <form id="loginForm">
+          <form id="loginForm" autocomplete="on">
             <!-- Role Selection -->
 
             <div class="role-selector">
@@ -81,6 +81,10 @@
                   type="text"
                   id="username"
                   placeholder="Enter your username"
+                  minlength="4"
+                  maxlength="20"
+                  autocomplete="username"
+                  spellcheck="false"
                   required
                 />
               </div>
@@ -98,6 +102,8 @@
                   type="password"
                   id="password"
                   placeholder="Enter your password"
+                  minlength="8"
+                  autocomplete="current-password"
                   required
                 />
               </div>

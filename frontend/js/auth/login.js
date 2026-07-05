@@ -38,7 +38,7 @@ async function login(username, password, role) {
     saveLogin(
       response.token,
       response.username,
-      response.fullName,
+      response.fullName || response.name,
       response.role,
       response.gender,
     );

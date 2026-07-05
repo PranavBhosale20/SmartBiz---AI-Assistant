@@ -286,6 +286,20 @@
   border-top: 1px solid var(--border);
 }
 
+.profile-menu-item {
+  color: var(--text);
+}
+
+.profile-menu-item svg {
+  color: inherit;
+}
+
+.profile-menu-item:hover {
+  background: var(--surface-secondary);
+
+  color: var(--primary);
+}
+
 .logout-btn {
   color: var(--danger);
 }

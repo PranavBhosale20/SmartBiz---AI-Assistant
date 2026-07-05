@@ -12,10 +12,16 @@ const GENDER_KEY = "gender";
    SAVE LOGIN
 ========================================================== */
 
-function saveLogin(token, username, fullName, role, gender) {
+function saveLogin(token, username, fullName, role, gender = null) {
   localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(USERNAME_KEY, username);
-  localStorage.setItem(FULLNAME_KEY, fullName);
+
+  if (fullName) {
+    localStorage.setItem(FULLNAME_KEY, fullName);
+  } else {
+    localStorage.removeItem(FULLNAME_KEY);
+  }
+
   localStorage.setItem(ROLE_KEY, role);
 
   if (gender) {

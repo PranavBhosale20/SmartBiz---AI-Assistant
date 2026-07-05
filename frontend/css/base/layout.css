@@ -6,6 +6,14 @@ body {
   display: flex;
 
   min-height: 100vh;
+
+  background: var(--background);
+
+  color: var(--text);
+
+  transition:
+    background var(--transition),
+    color var(--transition);
 }
 
 /* ==========================================================
@@ -204,4 +212,25 @@ section {
   .main-wrapper {
     margin-left: 0;
   }
+}
+
+/* ==========================================================
+   THEME TRANSITIONS
+========================================================== */
+
+body,
+.main-wrapper,
+.page-content,
+section,
+.card,
+.top-header,
+.sidebar,
+.table-container,
+.modal,
+.auth-card {
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
 }

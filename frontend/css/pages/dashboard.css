@@ -371,3 +371,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================
+   DARK MODE
+========================================================== */
+
+[data-theme="dark"] .welcome-section {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+[data-theme="dark"] .welcome-left h1 {
+  color: #1f2937;
+}
+
+[data-theme="dark"] .welcome-left p {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .page-tag {
+  background: #fff3eb;
+
+  color: var(--primary);
+}

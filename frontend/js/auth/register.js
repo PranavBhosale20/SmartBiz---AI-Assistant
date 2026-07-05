@@ -19,6 +19,10 @@ function initializeRegister() {
     return;
   }
 
+  /* ======================================================
+     PHONE INPUT
+  ====================================================== */
+
   const phoneInput = document.getElementById("phone");
 
   phoneInput.addEventListener("input", () => {
@@ -74,7 +78,7 @@ async function handleRegister(event) {
   const gender = document.getElementById("gender").value;
 
   /* ======================================================
-     VALIDATION
+     REQUIRED FIELDS
   ====================================================== */
 
   if (
@@ -89,18 +93,80 @@ async function handleRegister(event) {
     return;
   }
 
+  /* ======================================================
+     FULL NAME
+  ====================================================== */
+
+  if (!/^[A-Za-z ]{3,50}$/.test(fullName)) {
+    showToast(
+      "Full name must be 3-50 characters and contain only letters and spaces.",
+      "warning",
+    );
+    return;
+  }
+
+  /* ======================================================
+     USERNAME
+  ====================================================== */
+
+  if (!/^[A-Za-z0-9_]{4,20}$/.test(username)) {
+    showToast(
+      "Username must be 4-20 characters and contain only letters, numbers and underscore.",
+      "warning",
+    );
+    return;
+  }
+
+  /* ======================================================
+     EMAIL
+  ====================================================== */
+
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+  if (!emailRegex.test(email)) {
+    showToast("Please enter a valid email address.", "warning");
+    return;
+  }
+
+  /* ======================================================
+     PHONE
+  ====================================================== */
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+    showToast("Phone number must contain exactly 10 digits.", "warning");
+    return;
+  }
+
+  /* ======================================================
+     PASSWORD
+  ====================================================== */
+
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#()_\-+=])[A-Za-z\d@$!%*?&^#()_\-+=]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    showToast(
+      "Password must contain at least 8 characters, including uppercase, lowercase, number and special character.",
+      "warning",
+    );
+    return;
+  }
+
+  /* ======================================================
+     CONFIRM PASSWORD
+  ====================================================== */
+
   if (password !== confirmPassword) {
     showToast("Passwords do not match.", "error");
     return;
   }
 
-  if (password.length < 6) {
-    showToast("Password must be at least 6 characters.", "warning");
-    return;
-  }
+  /* ======================================================
+     GENDER
+  ====================================================== */
 
-  if (!/^[0-9]{10}$/.test(phone)) {
-    showToast("Please enter a valid 10-digit mobile number.", "warning");
+  if (!gender) {
+    showToast("Please select your gender.", "warning");
     return;
   }
 
@@ -112,10 +178,6 @@ async function handleRegister(event) {
   submitButton.textContent = "Creating Account...";
 
   try {
-    /* ======================================================
-       API CALL
-    ====================================================== */
-
     await apiCall("/api/auth/patient-register", "POST", {
       name: fullName,
       email,
@@ -133,7 +195,9 @@ async function handleRegister(event) {
     document.getElementById("registerForm").reset();
 
     selectedGender = "MALE";
+
     document.getElementById("gender").value = "MALE";
+
     document.getElementById("maleCard").classList.add("active");
     document.getElementById("femaleCard").classList.remove("active");
 

@@ -98,14 +98,16 @@ function initializeHeader() {
   }
 
   /* ======================================================
-     APPEARANCE
-  ====================================================== */
+   APPEARANCE
+====================================================== */
 
   const themeButton = document.getElementById("themeButton");
 
   if (themeButton) {
     themeButton.addEventListener("click", () => {
-      showToast("Theme support coming soon.", "info");
+      toggleTheme();
+
+      profileMenu?.classList.remove("show");
     });
   }
 
