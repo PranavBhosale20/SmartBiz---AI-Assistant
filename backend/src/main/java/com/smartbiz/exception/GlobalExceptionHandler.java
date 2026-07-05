@@ -2,10 +2,13 @@ package com.smartbiz.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * WHY this class exists:
@@ -31,7 +34,6 @@ public class GlobalExceptionHandler {
 
     /**
      * Catches ResourceNotFoundException from anywhere in the app
-     * (Service layer, or the Mapper layer until that refactor lands)
      * and converts it into a 404 with just the message - no stack
      * trace, no internal class names.
      */
@@ -57,6 +59,25 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Catches @Valid validation failures from any @RequestBody DTO.
+     * Collects all field-level error messages into a single comma-
+     * separated string and returns HTTP 400. This means invalid phone,
+     * weak password, bad email format etc. all return clean JSON
+     * instead of hitting the generic 500 handler.
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(
+            MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", message));
+    }
+
+    /**
      * Safety net: catches anything NOT already handled above (a real
      * bug, a NullPointerException, whatever). Without this, an
      * unexpected exception type would fall through to Spring's default
@@ -65,8 +86,7 @@ public class GlobalExceptionHandler {
      * This intentionally returns a generic message rather than
      * ex.getMessage() - an unexpected exception's message might contain
      * internal details (SQL, field names, etc.) we don't want leaking
-     * to a client. Logging the real exception (not yet wired up - see
-     * note below) is how you'd actually debug this in practice.
+     * to a client.
      *
      * TODO (later phase): inject a Logger here and log ex with full
      * stack trace server-side, so 500s are still debuggable from the

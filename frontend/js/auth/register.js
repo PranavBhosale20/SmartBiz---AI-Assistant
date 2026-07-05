@@ -2,9 +2,9 @@
    PATIENT REGISTRATION PAGE
 ========================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
-  alert("NEW REGISTER.JS LOADED");
+let selectedGender = "MALE";
 
+document.addEventListener("DOMContentLoaded", () => {
   initializeRegister();
 });
 
@@ -18,6 +18,38 @@ function initializeRegister() {
   if (!registerForm) {
     return;
   }
+
+  const phoneInput = document.getElementById("phone");
+
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+  });
+
+  /* ======================================================
+     GENDER SELECTION
+  ====================================================== */
+
+  const maleCard = document.getElementById("maleCard");
+  const femaleCard = document.getElementById("femaleCard");
+  const genderInput = document.getElementById("gender");
+
+  maleCard.addEventListener("click", () => {
+    selectedGender = "MALE";
+
+    genderInput.value = selectedGender;
+
+    maleCard.classList.add("active");
+    femaleCard.classList.remove("active");
+  });
+
+  femaleCard.addEventListener("click", () => {
+    selectedGender = "FEMALE";
+
+    genderInput.value = selectedGender;
+
+    femaleCard.classList.add("active");
+    maleCard.classList.remove("active");
+  });
 
   registerForm.addEventListener("submit", handleRegister);
 
@@ -39,6 +71,7 @@ async function handleRegister(event) {
   const phone = document.getElementById("phone").value.trim();
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
+  const gender = document.getElementById("gender").value;
 
   /* ======================================================
      VALIDATION
@@ -66,6 +99,11 @@ async function handleRegister(event) {
     return;
   }
 
+  if (!/^[0-9]{10}$/.test(phone)) {
+    showToast("Please enter a valid 10-digit mobile number.", "warning");
+    return;
+  }
+
   /* ======================================================
      DISABLE BUTTON
   ====================================================== */
@@ -84,6 +122,7 @@ async function handleRegister(event) {
       phone,
       username,
       password,
+      gender,
     });
 
     showToast(
@@ -92,6 +131,11 @@ async function handleRegister(event) {
     );
 
     document.getElementById("registerForm").reset();
+
+    selectedGender = "MALE";
+    document.getElementById("gender").value = "MALE";
+    document.getElementById("maleCard").classList.add("active");
+    document.getElementById("femaleCard").classList.remove("active");
 
     setTimeout(() => {
       window.location.href = "login.html";

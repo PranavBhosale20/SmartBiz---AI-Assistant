@@ -4,16 +4,25 @@
 
 const TOKEN_KEY = "token";
 const USERNAME_KEY = "username";
+const FULLNAME_KEY = "fullName";
 const ROLE_KEY = "role";
+const GENDER_KEY = "gender";
 
 /* ==========================================================
    SAVE LOGIN
 ========================================================== */
 
-function saveLogin(token, username, role) {
+function saveLogin(token, username, fullName, role, gender) {
   localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(USERNAME_KEY, username);
+  localStorage.setItem(FULLNAME_KEY, fullName);
   localStorage.setItem(ROLE_KEY, role);
+
+  if (gender) {
+    localStorage.setItem(GENDER_KEY, gender);
+  } else {
+    localStorage.removeItem(GENDER_KEY);
+  }
 }
 
 /* ==========================================================
@@ -28,8 +37,16 @@ function getUsername() {
   return localStorage.getItem(USERNAME_KEY);
 }
 
+function getFullName() {
+  return localStorage.getItem(FULLNAME_KEY);
+}
+
 function getRole() {
   return localStorage.getItem(ROLE_KEY);
+}
+
+function getGender() {
+  return localStorage.getItem(GENDER_KEY);
 }
 
 /* ==========================================================
@@ -45,7 +62,12 @@ function isLoggedIn() {
 ========================================================== */
 
 function logout() {
-  localStorage.clear();
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USERNAME_KEY);
+  localStorage.removeItem(FULLNAME_KEY);
+  localStorage.removeItem(ROLE_KEY);
+  localStorage.removeItem(GENDER_KEY);
+
   window.location.href = "login.html";
 }
 

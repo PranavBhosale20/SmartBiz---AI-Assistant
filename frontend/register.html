@@ -112,10 +112,46 @@
               <input
                 type="tel"
                 id="phone"
-                placeholder="+91 9876543210"
+                placeholder="Enter 10-digit mobile number"
+                maxlength="10"
+                minlength="10"
+                inputmode="numeric"
+                pattern="[0-9]{10}"
                 required
               />
             </div>
+          </div>
+
+          <!-- Gender -->
+
+          <div class="form-group">
+            <label>Gender</label>
+
+            <div class="role-selector">
+              <button
+                type="button"
+                class="role-card active"
+                id="maleCard"
+                data-gender="MALE"
+              >
+                <i data-lucide="mars"></i>
+
+                <span>Male</span>
+              </button>
+
+              <button
+                type="button"
+                class="role-card"
+                id="femaleCard"
+                data-gender="FEMALE"
+              >
+                <i data-lucide="venus"></i>
+
+                <span>Female</span>
+              </button>
+            </div>
+
+            <input type="hidden" id="gender" value="MALE" />
           </div>
 
           <!-- Password -->

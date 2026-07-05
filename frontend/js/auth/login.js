@@ -35,7 +35,13 @@ async function login(username, password, role) {
        SAVE LOGIN
     ====================================================== */
 
-    saveLogin(response.token, response.username, response.role);
+    saveLogin(
+      response.token,
+      response.username,
+      response.fullName,
+      response.role,
+      response.gender,
+    );
 
     showToast("Login successful. Redirecting...", "success");
 

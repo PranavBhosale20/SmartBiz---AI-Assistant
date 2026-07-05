@@ -28,21 +28,33 @@ function initializeHeader() {
   const avatarElement = document.getElementById("headerAvatar");
 
   const username = getUsername();
+  const fullName = getFullName();
   const role = getRole();
+  const gender = getGender();
 
   if (usernameElement) {
-    usernameElement.textContent = username || "Guest";
+    usernameElement.textContent = fullName || username || "Guest";
   }
 
   if (roleElement) {
-    roleElement.textContent = role || "";
+    if (role === "STAFF") {
+      roleElement.textContent = "Staff";
+    } else if (role === "PATIENT") {
+      roleElement.textContent = "Patient";
+    } else {
+      roleElement.textContent = "";
+    }
   }
 
   if (avatarElement) {
     if (role === "STAFF") {
       avatarElement.src = "assets/avatars/doctor.png";
     } else {
-      avatarElement.src = "assets/avatars/patient-male.png";
+      if (gender === "FEMALE") {
+        avatarElement.src = "assets/avatars/patient-female.png";
+      } else {
+        avatarElement.src = "assets/avatars/patient-male.png";
+      }
     }
   }
 
@@ -78,12 +90,9 @@ function initializeHeader() {
   if (profileButton) {
     profileButton.addEventListener("click", () => {
       if (role === "STAFF") {
-        // TODO
-        // window.location.href = "staff-profile.html";
-
         showToast("Staff Profile page coming soon.", "info");
       } else {
-        window.location.href = "patient-profile.html";
+        showToast("Patient Profile page coming soon.", "info");
       }
     });
   }
@@ -96,7 +105,7 @@ function initializeHeader() {
 
   if (themeButton) {
     themeButton.addEventListener("click", () => {
-      showToast("Theme support will be added soon.", "info");
+      showToast("Theme support coming soon.", "info");
     });
   }
 
@@ -115,4 +124,6 @@ function initializeHeader() {
       }, 800);
     });
   }
+
+  console.log("✓ Header Initialized");
 }
