@@ -9,26 +9,52 @@ let selectedRole = "STAFF";
 ========================================================== */
 
 async function login(username, password, role) {
-  try {
-    // TODO
-    // Replace with:
-    // const response = await apiCall("/api/auth/...", "POST", {...});
+  const submitButton = document.querySelector(".auth-btn");
 
-    const response = {
-      token: "dummy-jwt-token",
+  submitButton.disabled = true;
+  submitButton.textContent = "Signing In...";
+
+  try {
+    /* ======================================================
+       SELECT ENDPOINT
+    ====================================================== */
+
+    const endpoint =
+      role === "STAFF" ? "/api/auth/staff-login" : "/api/auth/patient-login";
+
+    /* ======================================================
+       API CALL
+    ====================================================== */
+
+    const response = await apiCall(endpoint, "POST", {
       username,
-      role,
-    };
+      password,
+    });
+
+    /* ======================================================
+       SAVE LOGIN
+    ====================================================== */
 
     saveLogin(response.token, response.username, response.role);
 
-    if (response.role === "STAFF") {
-      window.location.href = "dashboard.html";
-    } else {
-      window.location.href = "patient-dashboard.html";
-    }
+    showToast("Login successful. Redirecting...", "success");
+
+    /* ======================================================
+       REDIRECT
+    ====================================================== */
+
+    setTimeout(() => {
+      if (response.role === "STAFF") {
+        window.location.href = "dashboard.html";
+      } else {
+        window.location.href = "patient-dashboard.html";
+      }
+    }, 1000);
   } catch (error) {
-    alert("Invalid username or password.");
+    showToast(error.message, "error");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Login";
   }
 }
 
@@ -75,6 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const username = document.getElementById("username").value.trim();
 
     const password = document.getElementById("password").value;
+
+    if (!username || !password) {
+      showToast("Please enter username and password.", "warning");
+      return;
+    }
 
     await login(username, password, selectedRole);
   });

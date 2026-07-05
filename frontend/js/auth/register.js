@@ -1,8 +1,10 @@
 /* ==========================================================
-   REGISTER PAGE
+   PATIENT REGISTRATION PAGE
 ========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+  alert("NEW REGISTER.JS LOADED");
+
   initializeRegister();
 });
 
@@ -11,33 +13,93 @@ document.addEventListener("DOMContentLoaded", () => {
 ========================================================== */
 
 function initializeRegister() {
-  const staffButton = document.getElementById("staffRole");
-  const patientButton = document.getElementById("patientRole");
+  const registerForm = document.getElementById("registerForm");
 
-  const staffFields = document.querySelector(".staff-fields");
-  const patientFields = document.querySelector(".patient-fields");
+  if (!registerForm) {
+    return;
+  }
 
-  // Default = Staff
+  registerForm.addEventListener("submit", handleRegister);
 
-  patientFields.style.display = "none";
+  console.log("✓ Patient Registration Page Loaded");
+}
 
-  staffButton.classList.add("active");
+/* ==========================================================
+   HANDLE REGISTRATION
+========================================================== */
 
-  staffButton.addEventListener("click", () => {
-    staffButton.classList.add("active");
-    patientButton.classList.remove("active");
+async function handleRegister(event) {
+  event.preventDefault();
 
-    staffFields.style.display = "block";
-    patientFields.style.display = "none";
-  });
+  const submitButton = document.querySelector(".auth-btn");
 
-  patientButton.addEventListener("click", () => {
-    patientButton.classList.add("active");
-    staffButton.classList.remove("active");
+  const fullName = document.getElementById("fullName").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
 
-    patientFields.style.display = "block";
-    staffFields.style.display = "none";
-  });
+  /* ======================================================
+     VALIDATION
+  ====================================================== */
 
-  console.log("✓ Register Page Loaded");
+  if (
+    !fullName ||
+    !username ||
+    !email ||
+    !phone ||
+    !password ||
+    !confirmPassword
+  ) {
+    showToast("Please fill all required fields.", "warning");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showToast("Passwords do not match.", "error");
+    return;
+  }
+
+  if (password.length < 6) {
+    showToast("Password must be at least 6 characters.", "warning");
+    return;
+  }
+
+  /* ======================================================
+     DISABLE BUTTON
+  ====================================================== */
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Creating Account...";
+
+  try {
+    /* ======================================================
+       API CALL
+    ====================================================== */
+
+    await apiCall("/api/auth/patient-register", "POST", {
+      name: fullName,
+      email,
+      phone,
+      username,
+      password,
+    });
+
+    showToast(
+      "Account created successfully. Redirecting to login...",
+      "success",
+    );
+
+    document.getElementById("registerForm").reset();
+
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
+  } catch (error) {
+    showToast(error.message, "error");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Create Patient Account";
+  }
 }

@@ -16,6 +16,8 @@
   gap: 16px;
 
   z-index: 5000;
+
+  pointer-events: none;
 }
 
 /* ==========================================================
@@ -23,13 +25,13 @@
 ========================================================== */
 
 .toast {
-  min-width: 320px;
+  min-width: 340px;
 
-  max-width: 400px;
+  max-width: 420px;
 
   display: flex;
 
-  align-items: flex-start;
+  align-items: center;
 
   gap: 14px;
 
@@ -43,7 +45,7 @@
 
   box-shadow: var(--shadow-lg);
 
-  animation: toastShow 0.3s ease;
+  pointer-events: auto;
 }
 
 /* ==========================================================
@@ -70,6 +72,12 @@
   flex-shrink: 0;
 }
 
+.toast-icon svg {
+  width: 20px;
+
+  height: 20px;
+}
+
 /* ==========================================================
    CONTENT
 ========================================================== */
@@ -92,6 +100,8 @@
   font-size: 14px;
 
   color: var(--text-light);
+
+  line-height: 1.5;
 }
 
 /* ==========================================================
@@ -99,15 +109,35 @@
 ========================================================== */
 
 .toast-close {
-  color: var(--text-muted);
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 32px;
+
+  height: 32px;
+
+  border-radius: 8px;
 
   cursor: pointer;
+
+  color: var(--text-muted);
 
   transition: var(--transition);
 }
 
 .toast-close:hover {
+  background: var(--surface-secondary);
+
   color: var(--danger);
+}
+
+.toast-close svg {
+  width: 18px;
+
+  height: 18px;
 }
 
 /* ==========================================================
@@ -158,6 +188,14 @@
    ANIMATION
 ========================================================== */
 
+.toast.show {
+  animation: toastShow 0.35s ease forwards;
+}
+
+.toast.hide {
+  animation: toastHide 0.3s ease forwards;
+}
+
 @keyframes toastShow {
   from {
     opacity: 0;
@@ -169,5 +207,39 @@
     opacity: 1;
 
     transform: translateX(0);
+  }
+}
+
+@keyframes toastHide {
+  from {
+    opacity: 1;
+
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+
+    transform: translateX(40px);
+  }
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+  .toast-container {
+    top: 16px;
+
+    right: 16px;
+
+    left: 16px;
+  }
+
+  .toast {
+    min-width: auto;
+
+    max-width: 100%;
   }
 }

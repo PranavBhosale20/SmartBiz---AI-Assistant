@@ -9,22 +9,28 @@ const API_BASE_URL = "http://localhost:8081";
 ========================================================== */
 
 async function apiCall(endpoint, method = "GET", body = null) {
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const options = {
-    method: method,
+    method,
 
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  // Attach JWT if available
+  /* ======================================================
+     ATTACH JWT
+  ====================================================== */
+
   if (token) {
-    options.headers["Authorization"] = `Bearer ${token}`;
+    options.headers.Authorization = `Bearer ${token}`;
   }
 
-  // Attach request body
+  /* ======================================================
+     REQUEST BODY
+  ====================================================== */
+
   if (body) {
     options.body = JSON.stringify(body);
   }
@@ -32,28 +38,51 @@ async function apiCall(endpoint, method = "GET", body = null) {
   try {
     const response = await fetch(API_BASE_URL + endpoint, options);
 
-    // Unauthorized / Forbidden
-    if (response.status === 401 || response.status === 403) {
-      localStorage.clear();
+    /* ======================================================
+       SESSION EXPIRED
+    ====================================================== */
 
-      window.location.href = "login.html";
+    if (response.status === 401) {
+      logout();
 
-      return null;
+      throw new Error("Session expired. Please login again.");
     }
 
-    // Other server errors
-    if (!response.ok) {
-      throw new Error(`API Error : ${response.status}`);
+    /* ======================================================
+       FORBIDDEN
+    ====================================================== */
+
+    if (response.status === 403) {
+      throw new Error("You are not authorized to perform this action.");
     }
 
-    // No Content
+    /* ======================================================
+       NO CONTENT
+    ====================================================== */
+
     if (response.status === 204) {
       return null;
     }
 
-    return await response.json();
+    /* ======================================================
+       READ RESPONSE
+    ====================================================== */
+
+    const data = await response.json().catch(() => null);
+
+    /* ======================================================
+       API ERROR
+    ====================================================== */
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message || data?.error || `Request failed (${response.status}).`,
+      );
+    }
+
+    return data;
   } catch (error) {
-    console.error("API Request Failed :", error);
+    console.error("API Error:", error);
 
     throw error;
   }

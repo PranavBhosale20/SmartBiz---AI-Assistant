@@ -2,6 +2,16 @@
    PATIENT DASHBOARD
 ========================================================== */
 
+protectPage("PATIENT");
+
+document.addEventListener("DOMContentLoaded", () => {
+  initializePatientDashboard();
+});
+
+/* ==========================================================
+   INITIALIZE
+========================================================== */
+
 async function initializePatientDashboard() {
   loadUpcomingAppointments();
 
@@ -28,7 +38,6 @@ async function loadUpcomingAppointments() {
 
     if (appointments.length === 0) {
       showEmptyState(container, "No upcoming appointments.");
-
       return;
     }
 
@@ -59,7 +68,6 @@ async function loadRecentBills() {
 
     if (bills.length === 0) {
       showEmptyState(container, "No recent bills.");
-
       return;
     }
 

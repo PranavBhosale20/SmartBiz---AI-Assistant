@@ -1,21 +1,18 @@
 package com.smartbiz.config;
 
 import com.smartbiz.security.JwtAuthFilter;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-/**
- * CHANGED (Phase 6): replaces the temporary permitAll() configuration.
- * Real rules now: STAFF-only endpoints for clinic management,
- * STAFF-or-PATIENT for appointment/profile endpoints (ownership
- * enforced in the Service layer, not here - see PATIENT ownership
- * note below), and open access only for /api/auth/** (you can't log
- * in if logging in itself requires being logged in).
- */
 @Configuration
 public class SecurityConfig {
 
@@ -27,32 +24,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
 
-                // STATELESS: we never create or rely on an HTTP
-                // session - every request must carry its own valid
-                // JWT. This is the core difference from classic
-                // session-based Spring Security.
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        // Open to everyone - no token required to
-                        // register or log in.
-                		.requestMatchers("/api/auth/patient-register").permitAll()
-                		.requestMatchers("/api/auth/staff-login").permitAll()
-                		.requestMatchers("/api/auth/patient-login").permitAll()
-                		.requestMatchers("/api/auth/staff-register").hasRole("STAFF")
-                		
-                        .requestMatchers("/api/chat/**").hasAnyRole("STAFF", "PATIENT")
+
+                        // Allow browser preflight requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Authentication
+                        .requestMatchers("/api/auth/patient-register").permitAll()
+                        .requestMatchers("/api/auth/patient-login").permitAll()
+                        .requestMatchers("/api/auth/staff-login").permitAll()
+                        .requestMatchers("/api/auth/staff-register").hasRole("STAFF")
+
+                        // Health
                         .requestMatchers("/api/health").permitAll()
-                        
+
+                        // Dashboard
                         .requestMatchers("/api/dashboard/**").hasRole("STAFF")
 
-                        // STAFF-only: clinic management operations.
-                        // hasRole("STAFF") checks for the "ROLE_STAFF"
-                        // authority our JwtAuthFilter attaches.
+                        // Staff only
                         .requestMatchers("/api/doctors/**").hasRole("STAFF")
                         .requestMatchers("/api/products/**").hasRole("STAFF")
                         .requestMatchers("/api/visit-types/**").hasRole("STAFF")
@@ -60,34 +57,47 @@ public class SecurityConfig {
                         .requestMatchers("/api/bill-items/**").hasRole("STAFF")
                         .requestMatchers("/api/bills/**").hasRole("STAFF")
 
-                        // STAFF or PATIENT - both roles can reach
-                        // these URLs, but WHICH records they can
-                        // actually see/modify is enforced inside the
-                        // Service layer (ownership check), not here.
-                        // Spring Security's URL matchers can't compare
-                        // "the {userId} in this path" against "the
-                        // userId embedded in the caller's JWT" - that
-                        // comparison needs real Java logic, which is
-                        // why it lives in AppointmentService/
-                        // UserService instead.
+                        // Staff + Patient
                         .requestMatchers("/api/appointments/**").hasAnyRole("STAFF", "PATIENT")
                         .requestMatchers("/api/users/**").hasAnyRole("STAFF", "PATIENT")
+                        .requestMatchers("/api/chat/**").hasAnyRole("STAFF", "PATIENT")
 
-                        // Anything not explicitly listed above
-                        // requires SOME valid authentication, but no
-                        // specific role - a safe default rather than
-                        // accidentally leaving something open.
                         .anyRequest().authenticated()
                 )
 
-                // Insert our JWT filter BEFORE Spring Security's own
-                // username/password filter - our filter needs to run
-                // first so that by the time Spring Security checks
-                // "is this request authenticated," our filter has
-                // already set the Authentication if a valid token
-                // was present.
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of(
+                "http://127.0.0.1:5500",
+                "http://localhost:5500"
+        ));
+
+        configuration.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+        ));
+
+        configuration.setAllowedHeaders(List.of("*"));
+
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }
