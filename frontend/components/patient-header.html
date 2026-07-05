@@ -1,4 +1,6 @@
 <div class="top-header">
+  <!-- Left -->
+
   <div class="header-left">
     <div class="page-info">
       <h2>Patient Portal</h2>
@@ -6,6 +8,8 @@
       <p>Manage your appointments and health records</p>
     </div>
   </div>
+
+  <!-- Center -->
 
   <div class="header-center">
     <div class="search-box">
@@ -15,27 +19,47 @@
     </div>
   </div>
 
+  <!-- Right -->
+
   <div class="header-right">
-    <button class="header-btn">
-      <i data-lucide="moon"></i>
-    </button>
+    <div class="profile-dropdown">
+      <div class="profile" id="profileToggle">
+        <img
+          id="headerAvatar"
+          src="assets/avatars/patient-male.png"
+          alt="Patient"
+        />
 
-    <button class="header-btn notification-btn">
-      <i data-lucide="bell"></i>
+        <div class="profile-info">
+          <h4 id="headerUsername">Loading...</h4>
 
-      <span class="notification-badge">2</span>
-    </button>
+          <span id="headerRole">Loading...</span>
+        </div>
 
-    <div class="profile">
-      <img src="assets/avatars/patient-male.png" alt="Patient" />
-
-      <div class="profile-info">
-        <h4>Rahul Sharma</h4>
-
-        <span>Patient</span>
+        <i data-lucide="chevron-down"></i>
       </div>
 
-      <i data-lucide="chevron-down"></i>
+      <div class="profile-menu" id="profileMenu">
+        <button class="profile-menu-item" id="profileButton">
+          <i data-lucide="user"></i>
+
+          <span>My Profile</span>
+        </button>
+
+        <button class="profile-menu-item" id="themeButton">
+          <i data-lucide="moon"></i>
+
+          <span>Appearance</span>
+        </button>
+
+        <hr />
+
+        <button class="profile-menu-item logout-btn" id="logoutButton">
+          <i data-lucide="log-out"></i>
+
+          <span>Logout</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

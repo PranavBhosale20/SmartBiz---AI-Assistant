@@ -125,19 +125,19 @@
 }
 
 /* ==========================================================
-   ICON BUTTON
+   HEADER BUTTON
 ========================================================== */
 
-.header-icon {
+.header-btn {
   width: 46px;
 
   height: 46px;
 
   display: flex;
 
-  justify-content: center;
-
   align-items: center;
+
+  justify-content: center;
 
   background: var(--surface-secondary);
 
@@ -145,16 +145,18 @@
 
   border-radius: 14px;
 
+  cursor: pointer;
+
   transition: var(--transition);
 }
 
-.header-icon:hover {
+.header-btn:hover {
   background: var(--primary-light);
 
   color: var(--primary);
 }
 
-.header-icon svg {
+.header-btn svg {
   width: 20px;
 
   height: 20px;
@@ -163,6 +165,10 @@
 /* ==========================================================
    PROFILE
 ========================================================== */
+
+.profile-dropdown {
+  position: relative;
+}
 
 .profile {
   display: flex;
@@ -174,6 +180,8 @@
   padding: 6px 10px;
 
   border-radius: 14px;
+
+  cursor: pointer;
 
   transition: var(--transition);
 }
@@ -198,10 +206,110 @@
   color: var(--text-dark);
 }
 
-.profile-info p {
+.profile-info span {
   font-size: 13px;
 
   color: var(--text-muted);
+}
+
+/* ==========================================================
+   PROFILE MENU
+========================================================== */
+
+.profile-menu {
+  position: absolute;
+
+  top: calc(100% + 12px);
+
+  right: 0;
+
+  width: 220px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-lg);
+
+  display: none;
+
+  overflow: hidden;
+
+  z-index: 9999;
+}
+
+.profile-menu.show {
+  display: block;
+
+  animation: dropdownFade 0.2s ease;
+}
+
+.profile-menu-item {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 18px;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  transition: var(--transition);
+}
+
+.profile-menu-item:hover {
+  background: var(--surface-secondary);
+}
+
+.profile-menu-item svg {
+  width: 18px;
+
+  height: 18px;
+}
+
+.profile-menu hr {
+  margin: 0;
+
+  border: none;
+
+  border-top: 1px solid var(--border);
+}
+
+.logout-btn {
+  color: var(--danger);
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* ==========================================================
+   ANIMATION
+========================================================== */
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
 }
 
 /* ==========================================================

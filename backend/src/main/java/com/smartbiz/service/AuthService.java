@@ -29,9 +29,6 @@ public class AuthService {
     }
 
     public AuthResponseDTO registerStaff(StaffRegisterDTO dto) {
-        // Business rule: usernames must be unique - fail fast with a
-        // clear message rather than letting the DB's unique
-        // constraint throw an opaque SQL error.
         if (staffMemberRepository.findByUsername(dto.getUsername()).isPresent()) {
             throw new BusinessException("Username already taken: " + dto.getUsername());
         }
@@ -39,12 +36,10 @@ public class AuthService {
         StaffMember staff = new StaffMember();
         staff.setFullName(dto.getFullName());
         staff.setUsername(dto.getUsername());
-        // NEVER store the raw password - always hash it first.
         staff.setPassword(passwordEncoder.encode(dto.getPassword()));
         staff.setRole(dto.getRole());
 
         StaffMember saved = staffMemberRepository.save(staff);
-
         String token = jwtUtil.generateToken(saved.getUsername(), saved.getRole(), saved.getId());
         return new AuthResponseDTO(token, saved.getUsername(), saved.getRole());
     }
@@ -60,22 +55,16 @@ public class AuthService {
         user.setPhone(dto.getPhone());
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        // NEW: save gender from registration DTO
+        user.setGender(dto.getGender());
 
         User saved = userRepository.save(user);
-
-        // Patients always get the role "PATIENT" - there's no DTO
-        // field for it, since a patient could never grant themselves
-        // a different role through self-registration.
         String token = jwtUtil.generateToken(saved.getUsername(), "PATIENT", saved.getId());
-        return new AuthResponseDTO(token, saved.getUsername(), "PATIENT");
+        return new AuthResponseDTO(token, saved.getUsername(), saved.getName(), "PATIENT", saved.getGender());
     }
 
     public AuthResponseDTO loginStaff(LoginRequestDTO dto) {
         StaffMember staff = staffMemberRepository.findByUsername(dto.getUsername())
-                // Deliberately vague message - "Invalid username or
-                // password" rather than "username not found," so we
-                // don't reveal to an attacker WHICH part was wrong.
-                // This is standard practice for login endpoints.
                 .orElseThrow(() -> new BusinessException("Invalid username or password"));
 
         if (!passwordEncoder.matches(dto.getPassword(), staff.getPassword())) {
@@ -83,6 +72,7 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(staff.getUsername(), staff.getRole(), staff.getId());
+        // STAFF login - no fullName or gender in response
         return new AuthResponseDTO(token, staff.getUsername(), staff.getRole());
     }
 
@@ -95,6 +85,7 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(user.getUsername(), "PATIENT", user.getId());
-        return new AuthResponseDTO(token, user.getUsername(), "PATIENT");
+        // PATIENT login - include fullName and gender
+        return new AuthResponseDTO(token, user.getUsername(), user.getName(), "PATIENT", user.getGender());
     }
 }

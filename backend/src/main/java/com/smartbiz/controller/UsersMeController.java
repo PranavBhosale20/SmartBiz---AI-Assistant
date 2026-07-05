@@ -12,15 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * GET /api/users/me
- * Returns the currently logged-in user's profile using the JWT token.
- * Checks role first, then fetches from the correct table:
- * - STAFF  → StaffMember table
- * - PATIENT → User table
- * No request body or path variable needed - userId and role come
- * from the JWT via AuthHelper.
- */
 @RestController
 @RequestMapping("/api/users")
 public class UsersMeController {
@@ -52,7 +43,8 @@ public class UsersMeController {
                     staff.getFullName(),
                     staff.getUsername(),
                     "STAFF",
-                    null // StaffMember has no email field yet
+                    null,
+                    null // STAFF has no gender field
             );
         } else {
             User user = userRepository.findById(userId)
@@ -62,7 +54,8 @@ public class UsersMeController {
                     user.getName(),
                     user.getUsername(),
                     "PATIENT",
-                    user.getEmail()
+                    user.getEmail(),
+                    user.getGender()
             );
         }
 
