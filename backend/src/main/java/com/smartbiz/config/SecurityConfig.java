@@ -40,7 +40,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Open to everyone - no token required to
                         // register or log in.
-                        .requestMatchers("/api/auth/**").permitAll()
+                		.requestMatchers("/api/auth/patient-register").permitAll()
+                		.requestMatchers("/api/auth/staff-login").permitAll()
+                		.requestMatchers("/api/auth/patient-login").permitAll()
+                		.requestMatchers("/api/auth/staff-register").hasRole("STAFF")
+                		
                         .requestMatchers("/api/chat/**").hasAnyRole("STAFF", "PATIENT")
                         .requestMatchers("/api/health").permitAll()
                         
