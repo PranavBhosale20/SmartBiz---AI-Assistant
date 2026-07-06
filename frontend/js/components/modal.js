@@ -28,6 +28,18 @@ async function openModal(modalName) {
     lucide.createIcons();
 
     bindModalEvents();
+
+    /* ==========================================================
+   PAGE SPECIFIC MODAL EVENTS
+========================================================== */
+
+    if (modalName === "add-doctor" && typeof createDoctor === "function") {
+      const saveDoctorBtn = document.getElementById("saveDoctorBtn");
+
+      if (saveDoctorBtn) {
+        saveDoctorBtn.addEventListener("click", createDoctor);
+      }
+    }
   } catch (error) {
     console.error("Unable to load modal :", error);
   }

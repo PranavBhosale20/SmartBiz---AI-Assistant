@@ -20,41 +20,12 @@ async function loadDoctors() {
   showLoading(tableBody, "Loading doctors...");
 
   try {
-    // TODO: Replace with:
-    // const doctors = await apiCall("/api/doctors");
-
-    const doctors = [
-      {
-        id: "DR001",
-        name: "Dr. Mehta",
-        specialization: "Cardiologist",
-        experience: "12 Yrs",
-        phone: "+91 9876543201",
-        status: "Available",
-        avatar: "assets/avatars/doctor.png",
-      },
-      {
-        id: "DR002",
-        name: "Dr. Patil",
-        specialization: "Dentist",
-        experience: "8 Yrs",
-        phone: "+91 9876543202",
-        status: "Available",
-        avatar: "assets/avatars/doctor.png",
-      },
-      {
-        id: "DR003",
-        name: "Dr. Kulkarni",
-        specialization: "Orthopedic",
-        experience: "15 Yrs",
-        phone: "+91 9876543203",
-        status: "Unavailable",
-        avatar: "assets/avatars/doctor.png",
-      },
-    ];
+    const doctors = await apiCall("/api/doctors");
 
     renderDoctors(doctors);
   } catch (error) {
+    console.error(error);
+
     showError(tableBody, "Failed to load doctors.");
   }
 }
@@ -66,7 +37,7 @@ async function loadDoctors() {
 function renderDoctors(doctors) {
   const tableBody = document.getElementById("doctorTableBody");
 
-  if (doctors.length === 0) {
+  if (!doctors || doctors.length === 0) {
     showEmptyState(tableBody, "No doctors found.");
     return;
   }
@@ -77,43 +48,48 @@ function renderDoctors(doctors) {
     tableBody.innerHTML += `
       <tr>
 
-        <td>${doctor.id}</td>
-
-<td>
-  <div class="patient-info">
-    <img src="${doctor.avatar}" alt="${doctor.name}" />
-
-    <div>
-      <h4>${doctor.name}</h4>
-    </div>
-  </div>
-</td>
-
-<td>${doctor.specialization}</td>
-
-<td>${doctor.experience}</td>
-
-        <td>${doctor.phone}</td>
+        <td>#${doctor.id}</td>
 
         <td>
-          <span class="status ${doctor.status.toLowerCase()}">
-            ${doctor.status}
+          <div class="patient-info">
+            <img
+              src="assets/avatars/doctor.png"
+              alt="${doctor.name}"
+            />
+
+            <div>
+              <h4>${doctor.name}</h4>
+            </div>
+          </div>
+        </td>
+
+        <td>${doctor.specialization}</td>
+
+        <td>-</td>
+
+        <td>${doctor.opdStartTime} - ${doctor.opdEndTime}</td>
+
+        <td>
+          <span class="status active">
+            Available
           </span>
         </td>
 
         <td>
-
           <div class="table-actions">
 
             <button
               class="action-btn open-modal"
-              data-modal="view-doctor">
+              data-modal="view-doctor"
+              data-id="${doctor.id}">
 
               <i data-lucide="eye"></i>
 
             </button>
 
-            <button class="action-btn edit-doctor">
+            <button
+              class="action-btn edit-doctor"
+              data-id="${doctor.id}">
 
               <i data-lucide="square-pen"></i>
 
@@ -121,14 +97,14 @@ function renderDoctors(doctors) {
 
             <button
               class="action-btn open-modal"
-              data-modal="delete-confirmation">
+              data-modal="delete-confirmation"
+              data-id="${doctor.id}">
 
               <i data-lucide="trash-2"></i>
 
             </button>
 
           </div>
-
         </td>
 
       </tr>
@@ -136,4 +112,37 @@ function renderDoctors(doctors) {
   });
 
   lucide.createIcons();
+
+  console.log("✓ Doctors Loaded");
+}
+
+/* ==========================================================
+   CREATE DOCTOR
+========================================================== */
+
+async function createDoctor() {
+  console.log("Save Doctor clicked");
+  const doctor = {
+    name: document.getElementById("doctorName").value.trim(),
+    specialization: document.getElementById("specialization").value,
+    opdStartTime: document.getElementById("opdStartTime").value,
+    opdEndTime: document.getElementById("opdEndTime").value,
+    slotDurationMinutes: Number(
+      document.getElementById("slotDurationMinutes").value,
+    ),
+  };
+
+  try {
+    const form = document.getElementById("doctorForm");
+
+    if (form) {
+      form.reset();
+    }
+
+    closeModal();
+
+    loadDoctors();
+  } catch (error) {
+    showToast(error.message || "Failed to add doctor.", "error");
+  }
 }

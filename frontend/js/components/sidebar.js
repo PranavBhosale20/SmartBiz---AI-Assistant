@@ -1,3 +1,7 @@
+/* ==========================================================
+   SIDEBAR
+========================================================== */
+
 function initializeSidebar() {
   const currentPage = window.location.pathname.split("/").pop();
 
@@ -13,33 +17,43 @@ function initializeSidebar() {
     }
   });
 
-  /* ==========================================================
-     LOAD USER
-  ========================================================== */
+  loadCurrentUserSidebar().catch(console.error);
 
-  const sidebarUsername = document.getElementById("sidebarUsername");
-  const sidebarRole = document.getElementById("sidebarRole");
-  const sidebarAvatar = document.getElementById("sidebarAvatar");
+  console.log("✓ Sidebar Initialized");
+}
 
-  if (sidebarUsername) {
-    sidebarUsername.textContent = getFullName() || getUsername() || "Guest";
-  }
+/* ==========================================================
+   LOAD CURRENT USER
+========================================================== */
 
-  if (sidebarRole) {
-    const role = getRole();
+async function loadCurrentUserSidebar() {
+  try {
+    const user = await apiCall("/api/users/me");
 
-    sidebarRole.textContent = role === "STAFF" ? "Staff" : "Patient";
-  }
+    const sidebarUsername = document.getElementById("sidebarUsername");
+    const sidebarRole = document.getElementById("sidebarRole");
+    const sidebarAvatar = document.getElementById("sidebarAvatar");
 
-  if (sidebarAvatar) {
-    if (getRole() === "STAFF") {
-      sidebarAvatar.src = "assets/avatars/doctor.png";
-    } else {
-      sidebarAvatar.src =
-        getGender() === "FEMALE"
-          ? "assets/avatars/patient-female.png"
-          : "assets/avatars/patient-male.png";
+    if (sidebarUsername) {
+      sidebarUsername.textContent = user.name;
     }
+
+    if (sidebarRole) {
+      sidebarRole.textContent = user.role === "STAFF" ? "Staff" : "Patient";
+    }
+
+    if (sidebarAvatar) {
+      if (user.role === "STAFF") {
+        sidebarAvatar.src = "assets/avatars/doctor.png";
+      } else {
+        sidebarAvatar.src =
+          user.gender === "FEMALE"
+            ? "assets/avatars/patient-female.png"
+            : "assets/avatars/patient-male.png";
+      }
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 

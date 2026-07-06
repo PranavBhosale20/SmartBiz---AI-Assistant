@@ -19,44 +19,12 @@ function initializeHeader() {
     });
   }
 
+  loadCurrentUserHeader().catch(console.error);
   /* ======================================================
      LOAD USER INFO
   ====================================================== */
 
-  const usernameElement = document.getElementById("headerUsername");
-  const roleElement = document.getElementById("headerRole");
-  const avatarElement = document.getElementById("headerAvatar");
-
-  const username = getUsername();
-  const fullName = getFullName();
   const role = getRole();
-  const gender = getGender();
-
-  if (usernameElement) {
-    usernameElement.textContent = fullName || username || "Guest";
-  }
-
-  if (roleElement) {
-    if (role === "STAFF") {
-      roleElement.textContent = "Staff";
-    } else if (role === "PATIENT") {
-      roleElement.textContent = "Patient";
-    } else {
-      roleElement.textContent = "";
-    }
-  }
-
-  if (avatarElement) {
-    if (role === "STAFF") {
-      avatarElement.src = "assets/avatars/doctor.png";
-    } else {
-      if (gender === "FEMALE") {
-        avatarElement.src = "assets/avatars/patient-female.png";
-      } else {
-        avatarElement.src = "assets/avatars/patient-male.png";
-      }
-    }
-  }
 
   /* ======================================================
      PROFILE DROPDOWN
@@ -128,4 +96,39 @@ function initializeHeader() {
   }
 
   console.log("✓ Header Initialized");
+}
+
+/* ==========================================================
+   LOAD CURRENT USER
+========================================================== */
+
+async function loadCurrentUserHeader() {
+  try {
+    const user = await apiCall("/api/users/me");
+
+    const usernameElement = document.getElementById("headerUsername");
+    const roleElement = document.getElementById("headerRole");
+    const avatarElement = document.getElementById("headerAvatar");
+
+    if (usernameElement) {
+      usernameElement.textContent = user.name;
+    }
+
+    if (roleElement) {
+      roleElement.textContent = user.role === "STAFF" ? "Staff" : "Patient";
+    }
+
+    if (avatarElement) {
+      if (user.role === "STAFF") {
+        avatarElement.src = "assets/avatars/doctor.png";
+      } else {
+        avatarElement.src =
+          user.gender === "FEMALE"
+            ? "assets/avatars/patient-female.png"
+            : "assets/avatars/patient-male.png";
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }

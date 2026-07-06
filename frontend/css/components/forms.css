@@ -113,3 +113,17 @@ select.form-control {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================
+   FORM ROW
+========================================================== */
+
+.form-row {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 20px;
+
+  grid-column: 1 / -1;
+}

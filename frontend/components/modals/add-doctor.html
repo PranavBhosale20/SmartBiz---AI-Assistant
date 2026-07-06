@@ -11,65 +11,93 @@
 </div>
 
 <div class="modal-body">
-  <form class="form-grid">
+  <form id="doctorForm" class="form-grid">
     <div class="full-width">
-      <h3>Professional Information</h3>
+      <h3 class="form-section-title">Doctor Information</h3>
     </div>
 
-    <div class="form-group">
-      <label class="form-label"> First Name </label>
+    <!-- ==========================================================
+     DOCTOR NAME
+========================================================== -->
 
-      <input type="text" class="form-control" placeholder="First Name" />
+    <div class="form-group full-width">
+      <label class="form-label" for="doctorName"> Doctor Name </label>
+
+      <input
+        class="form-control"
+        type="text"
+        id="doctorName"
+        placeholder="Enter doctor's full name"
+      />
     </div>
 
-    <div class="form-group">
-      <label class="form-label"> Last Name </label>
+    <!-- ==========================================================
+     SPECIALIZATION
+========================================================== -->
 
-      <input type="text" class="form-control" placeholder="Last Name" />
-    </div>
+    <div class="form-group full-width">
+      <label class="form-label" for="specialization"> Specialization </label>
 
-    <div class="form-group">
-      <label class="form-label"> Specialization </label>
-
-      <select class="form-control">
-        <option>Select Specialization</option>
-
+      <select class="form-control" id="specialization">
         <option>General Physician</option>
-
-        <option>Dentist</option>
-
-        <option>Orthopedic</option>
-
         <option>Cardiologist</option>
-
+        <option>Dermatologist</option>
+        <option>Dentist</option>
         <option>Neurologist</option>
+        <option>Orthopedic</option>
+        <option>Pediatrician</option>
+        <option>Psychiatrist</option>
+        <option>ENT Specialist</option>
+        <option>Gynecologist</option>
       </select>
     </div>
 
-    <div class="form-group">
-      <label class="form-label"> Experience </label>
+    <!-- ==========================================================
+     OPD TIMINGS
+========================================================== -->
 
-      <input type="number" class="form-control" placeholder="Years" />
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="opdStartTime"> OPD Start Time </label>
+
+        <input class="form-control" type="time" id="opdStartTime" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="opdEndTime"> OPD End Time </label>
+
+        <input class="form-control" type="time" id="opdEndTime" />
+      </div>
     </div>
 
-    <div class="form-group">
-      <label class="form-label"> Phone </label>
-
-      <input type="tel" class="form-control" />
-    </div>
+    <!-- ==========================================================
+     SLOT DURATION
+========================================================== -->
 
     <div class="form-group">
-      <label class="form-label"> Email </label>
+      <label class="form-label" for="slotDurationMinutes">
+        Slot Duration (Minutes)
+      </label>
 
-      <input type="email" class="form-control" />
+      <input
+        class="form-control"
+        type="number"
+        id="slotDurationMinutes"
+        min="5"
+        max="120"
+        step="5"
+        placeholder="30"
+      />
     </div>
   </form>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-secondary">Cancel</button>
+  <button type="button" id="cancelDoctorBtn" class="btn btn-secondary">
+    Cancel
+  </button>
 
-  <button class="btn btn-primary">
+  <button type="button" id="saveDoctorBtn" class="btn btn-primary">
     <i data-lucide="save"></i>
 
     Save Doctor

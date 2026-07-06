@@ -40,7 +40,10 @@
                 SmartBiz - Clinic Management System
               </span>
 
-              <h1>Welcome back, Dr. Mehta 👋</h1>
+              <h1>
+                Welcome back,
+                <span id="heroName">Administrator</span> 👋
+              </h1>
 
               <p>
                 Manage appointments, patients, billing, and clinic operations
@@ -77,6 +80,8 @@
 ========================================================== -->
 
           <section class="stats-grid">
+            <!-- Total Patients -->
+
             <div class="card stat-card">
               <div class="card-body">
                 <div class="stat-header">
@@ -84,16 +89,38 @@
                     <i data-lucide="users"></i>
                   </div>
 
-                  <span class="badge badge-success"> +12% </span>
+                  <span class="badge badge-success">Live</span>
                 </div>
 
-                <h2 class="stat-value">1,248</h2>
+                <h2 class="stat-value" id="totalPatients">0</h2>
 
                 <p class="stat-title">Total Patients</p>
 
-                <small class="stat-footer"> Compared to last month </small>
+                <small class="stat-footer">Registered patients</small>
               </div>
             </div>
+
+            <!-- Total Doctors -->
+
+            <div class="card stat-card">
+              <div class="card-body">
+                <div class="stat-header">
+                  <div class="stat-icon green">
+                    <i data-lucide="stethoscope"></i>
+                  </div>
+
+                  <span class="badge badge-success">Live</span>
+                </div>
+
+                <h2 class="stat-value" id="totalDoctors">0</h2>
+
+                <p class="stat-title">Total Doctors</p>
+
+                <small class="stat-footer">Available doctors</small>
+              </div>
+            </div>
+
+            <!-- Today's Appointments -->
 
             <div class="card stat-card">
               <div class="card-body">
@@ -102,34 +129,18 @@
                     <i data-lucide="calendar-days"></i>
                   </div>
 
-                  <span class="badge badge-success"> +8% </span>
+                  <span class="badge badge-success">Today</span>
                 </div>
 
-                <h2 class="stat-value">84</h2>
+                <h2 class="stat-value" id="appointmentsToday">0</h2>
 
                 <p class="stat-title">Today's Appointments</p>
 
-                <small class="stat-footer"> Compared to yesterday </small>
+                <small class="stat-footer">Appointments scheduled today</small>
               </div>
             </div>
 
-            <div class="card stat-card">
-              <div class="card-body">
-                <div class="stat-header">
-                  <div class="stat-icon green">
-                    <i data-lucide="indian-rupee"></i>
-                  </div>
-
-                  <span class="badge badge-success"> +18% </span>
-                </div>
-
-                <h2 class="stat-value">₹42.5K</h2>
-
-                <p class="stat-title">Revenue Today</p>
-
-                <small class="stat-footer"> Compared to last week </small>
-              </div>
-            </div>
+            <!-- Low Stock -->
 
             <div class="card stat-card">
               <div class="card-body">
@@ -138,14 +149,14 @@
                     <i data-lucide="package"></i>
                   </div>
 
-                  <span class="badge badge-danger"> -2% </span>
+                  <span class="badge badge-danger">Alert</span>
                 </div>
 
-                <h2 class="stat-value">08</h2>
+                <h2 class="stat-value" id="lowStockItems">0</h2>
 
                 <p class="stat-title">Low Stock Items</p>
 
-                <small class="stat-footer"> Needs attention </small>
+                <small class="stat-footer">Needs attention</small>
               </div>
             </div>
           </section>
@@ -331,6 +342,8 @@
     <div id="modalContainer"></div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/utils/api.js"></script>
 
     <script src="js/utils/auth.js"></script>
 

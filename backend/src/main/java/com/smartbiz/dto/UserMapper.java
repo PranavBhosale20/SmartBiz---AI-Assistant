@@ -14,11 +14,13 @@ public class UserMapper {
 
     public static UserResponseDTO toResponseDTO(User user) {
         return new UserResponseDTO(
-            user.getId(),
-            user.getName(),
-            user.getEmail(),
-            user.getPhone(),
-            user.getCreatedAt()
+                user.getId(),
+                user.getName(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getGender(),
+                user.getCreatedAt()
         );
     }
 }
