@@ -2,7 +2,7 @@
   <div class="modal-title">
     <h2>Doctor Details</h2>
 
-    <p>Doctor profile information.</p>
+    <p>View doctor profile information.</p>
   </div>
 
   <button class="modal-close">
@@ -12,38 +12,94 @@
 
 <div class="modal-body">
   <div class="form-grid">
-    <div>
-      <strong>ID</strong>
-      <p>DOC001</p>
+    <!-- ==========================================================
+         DOCTOR ID
+    ========================================================== -->
+
+    <div class="form-group">
+      <label class="form-label">Doctor ID</label>
+
+      <input id="viewDoctorId" class="form-control" type="text" readonly />
     </div>
 
-    <div>
-      <strong>Name</strong>
-      <p>Dr. Mehta</p>
+    <!-- ==========================================================
+         DOCTOR NAME
+    ========================================================== -->
+
+    <div class="form-group">
+      <label class="form-label">Doctor Name</label>
+
+      <input id="viewDoctorName" class="form-control" type="text" readonly />
     </div>
 
-    <div>
-      <strong>Specialization</strong>
-      <p>General Physician</p>
+    <!-- ==========================================================
+         SPECIALIZATION
+    ========================================================== -->
+
+    <div class="form-group">
+      <label class="form-label">Specialization</label>
+
+      <input
+        id="viewDoctorSpecialization"
+        class="form-control"
+        type="text"
+        readonly
+      />
     </div>
 
-    <div>
-      <strong>Experience</strong>
-      <p>12 Years</p>
+    <!-- ==========================================================
+         SLOT DURATION
+    ========================================================== -->
+
+    <div class="form-group">
+      <label class="form-label">Slot Duration (Minutes)</label>
+
+      <input
+        id="viewDoctorSlotDuration"
+        class="form-control"
+        type="text"
+        readonly
+      />
     </div>
 
-    <div>
-      <strong>Phone</strong>
-      <p>9876543210</p>
+    <!-- ==========================================================
+         OPD TIMINGS
+    ========================================================== -->
+
+    <div class="form-group">
+      <label class="form-label">OPD Start Time</label>
+
+      <input
+        id="viewDoctorStartTime"
+        class="form-control"
+        type="text"
+        readonly
+      />
     </div>
 
-    <div>
-      <strong>Email</strong>
-      <p>doctor@email.com</p>
+    <div class="form-group">
+      <label class="form-label">OPD End Time</label>
+
+      <input id="viewDoctorEndTime" class="form-control" type="text" readonly />
+    </div>
+
+    <!-- ==========================================================
+         CREATED DATE
+    ========================================================== -->
+
+    <div class="form-group full-width">
+      <label class="form-label">Created On</label>
+
+      <input
+        id="viewDoctorCreatedAt"
+        class="form-control"
+        type="text"
+        readonly
+      />
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary">Close</button>
+  <button type="button" class="btn btn-primary modal-close">Close</button>
 </div>

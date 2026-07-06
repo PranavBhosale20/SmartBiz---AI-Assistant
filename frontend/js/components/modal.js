@@ -10,12 +10,11 @@ let currentModal = null;
    OPEN MODAL
 ========================================================== */
 
-async function openModal(modalName) {
+async function openModal(modalName, modalData = null) {
   try {
     const response = await fetch(`components/modals/${modalName}.html`);
 
     const html = await response.text();
-    console.log(html);
 
     modalContainer.innerHTML = html;
 
@@ -29,19 +28,9 @@ async function openModal(modalName) {
 
     bindModalEvents();
 
-    /* ==========================================================
-   PAGE SPECIFIC MODAL EVENTS
-========================================================== */
-
-    if (modalName === "add-doctor" && typeof createDoctor === "function") {
-      const saveDoctorBtn = document.getElementById("saveDoctorBtn");
-
-      if (saveDoctorBtn) {
-        saveDoctorBtn.addEventListener("click", createDoctor);
-      }
-    }
+    initializeModalPage(modalName, modalData);
   } catch (error) {
-    console.error("Unable to load modal :", error);
+    console.error("Unable to load modal:", error);
   }
 }
 
@@ -66,6 +55,12 @@ function bindModalEvents() {
     closeButton.addEventListener("click", closeModal);
   }
 
+  const cancelButton = modalContainer.querySelector(".btn-secondary");
+
+  if (cancelButton) {
+    cancelButton.addEventListener("click", closeModal);
+  }
+
   if (currentModal) {
     currentModal.addEventListener("click", (event) => {
       if (event.target === currentModal) {
@@ -82,15 +77,12 @@ function bindModalEvents() {
 document.addEventListener("click", (event) => {
   const button = event.target.closest(".open-modal");
 
-  if (!button) {
-    return;
-  }
+  if (!button) return;
 
-  const modalName = button.dataset.modal;
-
-  if (modalName) {
-    openModal(modalName);
-  }
+  openModal(button.dataset.modal, {
+    id: button.dataset.id || null,
+    entity: button.dataset.entity || null,
+  });
 });
 
 /* ==========================================================
@@ -104,12 +96,55 @@ document.addEventListener("keydown", (event) => {
 });
 
 /* ==========================================================
+   INITIALIZE PAGE MODAL
+========================================================== */
+
+function initializeModalPage(modalName, modalData) {
+  switch (modalName) {
+    /* ======================================================
+       DOCTORS
+    ====================================================== */
+
+    case "add-doctor":
+      if (modalData?.id) {
+        initializeEditDoctorModal?.(modalData);
+      } else {
+        initializeAddDoctorModal?.();
+      }
+      break;
+
+    case "view-doctor":
+      initializeViewDoctorModal?.(modalData);
+      break;
+
+    case "delete-confirmation":
+      initializeDeleteConfirmationModal?.(modalData);
+      break;
+
+    /* ======================================================
+       PATIENTS
+    ====================================================== */
+
+    case "add-patient":
+      initializeAddPatientModal?.(modalData);
+      break;
+
+    case "view-patient":
+      initializeViewPatientModal?.(modalData);
+      break;
+
+    case "edit-patient":
+      initializeEditPatientModal?.(modalData);
+      break;
+  }
+}
+
+/* ==========================================================
    GLOBAL MODAL API
 ========================================================== */
 
 window.Modal = {
   open: openModal,
-
   close: closeModal,
 };
 

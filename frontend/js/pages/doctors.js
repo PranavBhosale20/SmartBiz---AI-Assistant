@@ -79,7 +79,7 @@ function renderDoctors(doctors) {
           <div class="table-actions">
 
             <button
-              class="action-btn open-modal"
+              class="action-btn open-modal view-doctor-btn"
               data-modal="view-doctor"
               data-id="${doctor.id}">
 
@@ -88,7 +88,8 @@ function renderDoctors(doctors) {
             </button>
 
             <button
-              class="action-btn edit-doctor"
+              class="action-btn open-modal"
+              data-modal="add-doctor"
               data-id="${doctor.id}">
 
               <i data-lucide="square-pen"></i>
@@ -98,7 +99,8 @@ function renderDoctors(doctors) {
             <button
               class="action-btn open-modal"
               data-modal="delete-confirmation"
-              data-id="${doctor.id}">
+              data-id="${doctor.id}"
+              data-entity="doctor">
 
               <i data-lucide="trash-2"></i>
 
@@ -117,11 +119,12 @@ function renderDoctors(doctors) {
 }
 
 /* ==========================================================
-   CREATE DOCTOR
+   SAVE DOCTOR (CREATE / UPDATE)
 ========================================================== */
 
-async function createDoctor() {
-  console.log("Save Doctor clicked");
+async function saveDoctor() {
+  const doctorId = document.getElementById("doctorId").value;
+
   const doctor = {
     name: document.getElementById("doctorName").value.trim(),
     specialization: document.getElementById("specialization").value,
@@ -133,16 +136,180 @@ async function createDoctor() {
   };
 
   try {
-    const form = document.getElementById("doctorForm");
+    if (doctorId) {
+      await apiCall(`/api/doctors/${doctorId}`, "PUT", doctor);
 
-    if (form) {
-      form.reset();
+      showToast("Doctor updated successfully.", "success");
+    } else {
+      await apiCall("/api/doctors", "POST", doctor);
+
+      showToast("Doctor added successfully.", "success");
     }
+
+    document.getElementById("doctorForm").reset();
 
     closeModal();
 
     loadDoctors();
   } catch (error) {
-    showToast(error.message || "Failed to add doctor.", "error");
+    showToast(error.message || "Failed to save doctor.", "error");
+  }
+}
+
+/* ==========================================================
+   ADD DOCTOR MODAL
+========================================================== */
+
+function initializeAddDoctorModal() {
+  document.getElementById("doctorId").value = "";
+
+  document.getElementById("doctorModalTitle").textContent = "Add Doctor";
+
+  document.getElementById("doctorModalSubtitle").textContent =
+    "Register a doctor in SmartBiz Clinic OS.";
+
+  document.getElementById("saveDoctorBtnText").textContent = "Save Doctor";
+
+  const saveDoctorBtn = document.getElementById("saveDoctorBtn");
+
+  saveDoctorBtn.replaceWith(saveDoctorBtn.cloneNode(true));
+
+  document
+    .getElementById("saveDoctorBtn")
+    .addEventListener("click", saveDoctor);
+}
+
+/* ==========================================================
+   EDIT DOCTOR MODAL
+========================================================== */
+
+async function initializeEditDoctorModal(modalData) {
+  if (!modalData?.id) return;
+
+  try {
+    const doctor = await apiCall(`/api/doctors/${modalData.id}`);
+
+    document.getElementById("doctorId").value = doctor.id;
+
+    document.getElementById("doctorName").value = doctor.name;
+
+    document.getElementById("specialization").value = doctor.specialization;
+
+    document.getElementById("opdStartTime").value =
+      doctor.opdStartTime.substring(0, 5);
+
+    document.getElementById("opdEndTime").value = doctor.opdEndTime.substring(
+      0,
+      5,
+    );
+
+    document.getElementById("slotDurationMinutes").value =
+      doctor.slotDurationMinutes;
+
+    document.getElementById("doctorModalTitle").textContent = "Edit Doctor";
+
+    document.getElementById("doctorModalSubtitle").textContent =
+      "Update doctor information.";
+
+    document.getElementById("saveDoctorBtnText").textContent = "Update Doctor";
+
+    const saveDoctorBtn = document.getElementById("saveDoctorBtn");
+
+    saveDoctorBtn.replaceWith(saveDoctorBtn.cloneNode(true));
+
+    document
+      .getElementById("saveDoctorBtn")
+      .addEventListener("click", saveDoctor);
+  } catch (error) {
+    showToast(error.message || "Failed to load doctor.", "error");
+  }
+}
+/* ==========================================================
+   VIEW DOCTOR MODAL
+========================================================== */
+
+function initializeViewDoctorModal(modalData) {
+  if (!modalData?.id) return;
+
+  viewDoctor(modalData.id);
+}
+
+/* ==========================================================
+   VIEW DOCTOR
+========================================================== */
+
+async function viewDoctor(id) {
+  try {
+    const doctor = await apiCall(`/api/doctors/${id}`);
+
+    document.getElementById("viewDoctorId").value = doctor.id;
+    document.getElementById("viewDoctorName").value = doctor.name;
+    document.getElementById("viewDoctorSpecialization").value =
+      doctor.specialization;
+    document.getElementById("viewDoctorSlotDuration").value =
+      doctor.slotDurationMinutes;
+    document.getElementById("viewDoctorStartTime").value = doctor.opdStartTime;
+    document.getElementById("viewDoctorEndTime").value = doctor.opdEndTime;
+
+    document.getElementById("viewDoctorCreatedAt").value = new Date(
+      doctor.createdAt,
+    ).toLocaleString();
+  } catch (error) {
+    showToast(error.message || "Failed to load doctor.", "error");
+  }
+}
+
+/* ==========================================================
+   DELETE CONFIRMATION MODAL
+========================================================== */
+
+function initializeDeleteConfirmationModal(modalData) {
+  if (!modalData?.id) return;
+
+  const title = document.getElementById("deleteModalTitle");
+  const subtitle = document.getElementById("deleteModalSubtitle");
+  const message = document.getElementById("deleteModalMessage");
+  const confirmButton = document.getElementById("confirmDeleteBtn");
+  const confirmText = document.getElementById("confirmDeleteText");
+
+  if (modalData.entity === "doctor") {
+    title.textContent = "Delete Doctor";
+    subtitle.textContent = "This action cannot be undone.";
+    message.textContent =
+      "Are you sure you want to permanently delete this doctor?";
+    confirmText.textContent = "Delete Doctor";
+  }
+
+  confirmButton.replaceWith(confirmButton.cloneNode(true));
+
+  document
+    .getElementById("confirmDeleteBtn")
+    .addEventListener("click", async () => {
+      switch (modalData.entity) {
+        case "doctor":
+          await deleteDoctor(modalData.id);
+          break;
+
+        default:
+          showToast("Delete action not implemented.", "warning");
+      }
+    });
+}
+
+/* ==========================================================
+   DELETE DOCTOR
+========================================================== */
+
+async function deleteDoctor(id) {
+  try {
+    await apiCall(`/api/doctors/${id}`, "DELETE");
+
+    showToast("Doctor deleted successfully.", "success");
+
+    closeModal();
+
+    loadDoctors();
+  } catch (error) {
+    showToast(error.message || "Failed to delete doctor.", "error");
   }
 }

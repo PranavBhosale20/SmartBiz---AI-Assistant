@@ -1,8 +1,8 @@
 <div class="modal-header">
   <div class="modal-title">
-    <h2>Delete Record</h2>
+    <h2 id="deleteModalTitle">Delete Record</h2>
 
-    <p>This action cannot be undone.</p>
+    <p id="deleteModalSubtitle">This action cannot be undone.</p>
   </div>
 
   <button class="modal-close">
@@ -11,15 +11,23 @@
 </div>
 
 <div class="modal-body">
-  <p>Are you sure you want to permanently delete this record?</p>
+  <div class="delete-confirmation">
+    <i data-lucide="triangle-alert" class="delete-icon"></i>
+
+    <p id="deleteModalMessage">
+      Are you sure you want to permanently delete this record?
+    </p>
+  </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-secondary">Cancel</button>
+  <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">
+    Cancel
+  </button>
 
-  <button class="btn btn-danger">
+  <button type="button" id="confirmDeleteBtn" class="btn btn-danger">
     <i data-lucide="trash-2"></i>
 
-    Delete
+    <span id="confirmDeleteText"> Delete </span>
   </button>
 </div>
