@@ -41,7 +41,8 @@ public class AuthService {
 
         StaffMember saved = staffMemberRepository.save(staff);
         String token = jwtUtil.generateToken(saved.getUsername(), saved.getRole(), saved.getId());
-        return new AuthResponseDTO(token, saved.getUsername(), saved.getRole());
+        // FIXED: include fullName in register response too
+        return new AuthResponseDTO(token, saved.getUsername(), saved.getFullName(), saved.getRole(), null);
     }
 
     public AuthResponseDTO registerPatient(PatientRegisterDTO dto) {
@@ -72,8 +73,8 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(staff.getUsername(), staff.getRole(), staff.getId());
-        // STAFF login - no fullName or gender in response
-        return new AuthResponseDTO(token, staff.getUsername(), staff.getRole());
+        // FIXED: use 5-arg constructor to include fullName from DB
+        return new AuthResponseDTO(token, staff.getUsername(), staff.getFullName(), staff.getRole(), null);
     }
 
     public AuthResponseDTO loginPatient(LoginRequestDTO dto) {
