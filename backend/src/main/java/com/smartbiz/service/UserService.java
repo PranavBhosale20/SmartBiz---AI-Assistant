@@ -10,6 +10,7 @@ import com.smartbiz.repository.UserRepository;
 import com.smartbiz.security.AuthHelper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,57 +18,81 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    // NEW (Phase 6): needed for ownership checks on profile access.
     private final AuthHelper authHelper;
 
-    public UserService(UserRepository userRepository, AuthHelper authHelper) {
+    public UserService(UserRepository userRepository,
+                       AuthHelper authHelper) {
         this.userRepository = userRepository;
         this.authHelper = authHelper;
     }
 
+    /* ==========================================================
+       CREATE USER
+    ========================================================== */
+
     public UserResponseDTO createUser(UserRequestDTO dto) {
-        // STAFF-only in SecurityConfig - no ownership check needed.
+
+        validateUser(dto);
+
         User user = UserMapper.toEntity(dto);
+
         User saved = userRepository.save(user);
+
         return UserMapper.toResponseDTO(saved);
     }
 
+    /* ==========================================================
+       GET ALL USERS
+    ========================================================== */
+
     public List<UserResponseDTO> getAllUsers() {
-        // STAFF-only in SecurityConfig - no ownership check needed.
+
         return userRepository.findAll()
                 .stream()
                 .map(UserMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
+    /* ==========================================================
+       GET USER BY ID
+    ========================================================== */
+
     public UserResponseDTO getUserById(Long id) {
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", id));
 
-        // NEW (Phase 6): PATIENT can only view their own profile.
-        // STAFF can view any user's profile.
         if (authHelper.isPatient()) {
+
             Long callerUserId = authHelper.getAuthenticatedUserId();
+
             if (!callerUserId.equals(id)) {
                 throw new BusinessException(
-                        "You are not authorized to view this profile!");
+                        "You are not authorized to view this profile.");
             }
         }
 
         return UserMapper.toResponseDTO(user);
     }
 
+    /* ==========================================================
+       UPDATE USER
+    ========================================================== */
+
     public UserResponseDTO updateUser(Long id, UserRequestDTO dto) {
+
+        validateUser(dto);
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", id));
 
-        // NEW (Phase 6): PATIENT can only update their own profile.
         if (authHelper.isPatient()) {
+
             Long callerUserId = authHelper.getAuthenticatedUserId();
+
             if (!callerUserId.equals(id)) {
                 throw new BusinessException(
-                        "You are not authorized to update this profile!");
+                        "You are not authorized to update this profile.");
             }
         }
 
@@ -75,14 +100,41 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
 
+        user.setGender(dto.getGender());
+        user.setDateOfBirth(dto.getDateOfBirth());
+        user.setAddress(dto.getAddress());
+
+        user.setBloodGroup(dto.getBloodGroup());
+        user.setEmergencyContact(dto.getEmergencyContact());
+
         User updated = userRepository.save(user);
+
         return UserMapper.toResponseDTO(updated);
     }
 
+    /* ==========================================================
+       DELETE USER
+    ========================================================== */
+
     public void deleteUser(Long id) {
-        // STAFF-only in SecurityConfig - no ownership check needed.
+
         userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", id));
+
         userRepository.deleteById(id);
+    }
+
+    /* ==========================================================
+       VALIDATION
+    ========================================================== */
+
+    private void validateUser(UserRequestDTO dto) {
+
+        if (dto.getDateOfBirth() != null &&
+                dto.getDateOfBirth().isAfter(LocalDate.now())) {
+
+            throw new BusinessException(
+                    "Date of birth cannot be in the future.");
+        }
     }
 }

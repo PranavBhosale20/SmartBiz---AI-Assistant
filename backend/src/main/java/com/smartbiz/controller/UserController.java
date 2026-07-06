@@ -5,6 +5,7 @@ import com.smartbiz.dto.UserResponseDTO;
 import com.smartbiz.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class UserController {
     // request and convert it into a UserRequestDTO object for me."
     // This is the client -> server direction.
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO dto) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO dto) {
         UserResponseDTO created = userService.createUser(dto);
         // ResponseEntity.ok(...) sends back HTTP 200 with the DTO as
         // the JSON body. Notice: we NEVER touch the User entity here,
@@ -51,8 +52,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id,
-                                                        @RequestBody UserRequestDTO dto) {
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UserRequestDTO dto) {
         return ResponseEntity.ok(userService.updateUser(id, dto));
     }
 

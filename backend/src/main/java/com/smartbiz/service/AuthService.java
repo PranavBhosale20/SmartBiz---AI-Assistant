@@ -51,13 +51,19 @@ public class AuthService {
         }
 
         User user = new User();
+
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
+
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        // NEW: save gender from registration DTO
+
         user.setGender(dto.getGender());
+        user.setDateOfBirth(dto.getDateOfBirth());
+        user.setAddress(dto.getAddress());
+        user.setBloodGroup(dto.getBloodGroup());
+        user.setEmergencyContact(dto.getEmergencyContact());
 
         User saved = userRepository.save(user);
         String token = jwtUtil.generateToken(saved.getUsername(), "PATIENT", saved.getId());
