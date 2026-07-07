@@ -1,8 +1,8 @@
 <div class="modal-header">
   <div class="modal-title">
-    <h2>Book Appointment</h2>
+    <h2 id="appointmentModalTitle">Book Appointment</h2>
 
-    <p>Schedule a new appointment.</p>
+    <p id="appointmentModalSubtitle">Schedule a new appointment.</p>
   </div>
 
   <button class="modal-close">
@@ -11,53 +11,71 @@
 </div>
 
 <div class="modal-body">
-  <form class="form-grid">
+  <form id="appointmentForm" class="form-grid">
+    <input type="hidden" id="appointmentId" />
+
     <div class="full-width">
-      <h3>Appointment Details</h3>
+      <h3 class="form-section-title">Appointment Details</h3>
     </div>
+
+    <!-- ==========================================================
+         PATIENT
+    ========================================================== -->
 
     <div class="form-group">
-      <label class="form-label"> Patient </label>
+      <label class="form-label" for="appointmentPatient"> Patient </label>
 
-      <select class="form-control">
-        <option>Select Patient</option>
-      </select>
+      <select id="appointmentPatient" class="form-control"></select>
     </div>
+
+    <!-- ==========================================================
+         DOCTOR
+    ========================================================== -->
 
     <div class="form-group">
-      <label class="form-label"> Doctor </label>
+      <label class="form-label" for="appointmentDoctor"> Doctor </label>
 
-      <select class="form-control">
-        <option>Select Doctor</option>
-      </select>
+      <select id="appointmentDoctor" class="form-control"></select>
     </div>
+
+    <!-- ==========================================================
+         VISIT TYPE
+    ========================================================== -->
 
     <div class="form-group">
-      <label class="form-label"> Appointment Date </label>
+      <label class="form-label" for="visitType"> Visit Type </label>
 
-      <input type="date" class="form-control" />
+      <select id="visitType" class="form-control"></select>
     </div>
+
+    <!-- ==========================================================
+         DATE
+    ========================================================== -->
 
     <div class="form-group">
-      <label class="form-label"> Appointment Time </label>
+      <label class="form-label" for="appointmentDate"> Appointment Date </label>
 
-      <input type="time" class="form-control" />
+      <input id="appointmentDate" type="date" class="form-control" />
     </div>
+
+    <!-- ==========================================================
+         TIME
+    ========================================================== -->
 
     <div class="form-group full-width">
-      <label class="form-label"> Reason </label>
+      <label class="form-label" for="appointmentTime"> Appointment Time </label>
 
-      <textarea class="form-control" placeholder="Reason for visit"></textarea>
+      <select id="appointmentTime" class="form-control"></select>
     </div>
   </form>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-secondary">Cancel</button>
+  <button type="button" class="btn btn-secondary">Cancel</button>
 
-  <button class="btn btn-primary">
+  <button type="button" id="saveAppointmentBtn" class="btn btn-primary">
     <i data-lucide="calendar-plus"></i>
 
-    Book Appointment
+    <span id="saveAppointmentBtnText"> Book Appointment </span>
   </button>
 </div>

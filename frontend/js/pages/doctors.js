@@ -260,43 +260,6 @@ async function viewDoctor(id) {
 }
 
 /* ==========================================================
-   DELETE CONFIRMATION MODAL
-========================================================== */
-
-function initializeDeleteConfirmationModal(modalData) {
-  if (!modalData?.id) return;
-
-  const title = document.getElementById("deleteModalTitle");
-  const subtitle = document.getElementById("deleteModalSubtitle");
-  const message = document.getElementById("deleteModalMessage");
-  const confirmButton = document.getElementById("confirmDeleteBtn");
-  const confirmText = document.getElementById("confirmDeleteText");
-
-  if (modalData.entity === "doctor") {
-    title.textContent = "Delete Doctor";
-    subtitle.textContent = "This action cannot be undone.";
-    message.textContent =
-      "Are you sure you want to permanently delete this doctor?";
-    confirmText.textContent = "Delete Doctor";
-  }
-
-  confirmButton.replaceWith(confirmButton.cloneNode(true));
-
-  document
-    .getElementById("confirmDeleteBtn")
-    .addEventListener("click", async () => {
-      switch (modalData.entity) {
-        case "doctor":
-          await deleteDoctor(modalData.id);
-          break;
-
-        default:
-          showToast("Delete action not implemented.", "warning");
-      }
-    });
-}
-
-/* ==========================================================
    DELETE DOCTOR
 ========================================================== */
 

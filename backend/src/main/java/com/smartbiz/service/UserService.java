@@ -8,6 +8,7 @@ import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.User;
 import com.smartbiz.repository.UserRepository;
 import com.smartbiz.security.AuthHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,13 +18,23 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    /* ==========================================================
+       DEPENDENCIES
+    ========================================================== */
+
     private final UserRepository userRepository;
+
     private final AuthHelper authHelper;
 
+    private final PasswordEncoder passwordEncoder;
+
     public UserService(UserRepository userRepository,
-                       AuthHelper authHelper) {
+                       AuthHelper authHelper,
+                       PasswordEncoder passwordEncoder) {
+
         this.userRepository = userRepository;
         this.authHelper = authHelper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /* ==========================================================
@@ -35,6 +46,28 @@ public class UserService {
         validateUser(dto);
 
         User user = UserMapper.toEntity(dto);
+
+        /* ==========================================================
+           AUTO-GENERATE LOGIN CREDENTIALS
+        ========================================================== */
+
+        String baseUsername = dto.getName()
+                .trim()
+                .toLowerCase()
+                .replaceAll("\\s+", "");
+
+        String username = baseUsername;
+        int counter = 1;
+
+        while (userRepository.findByUsername(username).isPresent()) {
+            username = baseUsername + counter++;
+        }
+
+        user.setUsername(username);
+
+        user.setPassword(
+                passwordEncoder.encode("Patient@123")
+        );
 
         User saved = userRepository.save(user);
 
@@ -103,7 +136,6 @@ public class UserService {
         user.setGender(dto.getGender());
         user.setDateOfBirth(dto.getDateOfBirth());
         user.setAddress(dto.getAddress());
-
         user.setBloodGroup(dto.getBloodGroup());
         user.setEmergencyContact(dto.getEmergencyContact());
 

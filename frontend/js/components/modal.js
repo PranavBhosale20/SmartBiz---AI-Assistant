@@ -122,19 +122,30 @@ function initializeModalPage(modalName, modalData) {
       break;
 
     /* ======================================================
-       PATIENTS
-    ====================================================== */
+   PATIENTS
+====================================================== */
 
     case "add-patient":
-      initializeAddPatientModal?.(modalData);
+      if (modalData?.id) {
+        initializeEditPatientModal?.(modalData);
+      } else {
+        initializeAddPatientModal?.();
+      }
       break;
 
     case "view-patient":
       initializeViewPatientModal?.(modalData);
       break;
 
-    case "edit-patient":
-      initializeEditPatientModal?.(modalData);
+    /* ======================================================
+   APPOINTMENTS
+====================================================== */
+    case "add-appointment":
+      if (modalData?.id) {
+        initializeEditAppointmentModal?.(modalData);
+      } else {
+        initializeAddAppointmentModal?.();
+      }
       break;
   }
 }
@@ -157,3 +168,72 @@ function initializeModal() {
 }
 
 console.log("✓ Modal Manager Loaded");
+
+/* ==========================================================
+   DELETE CONFIRMATION MODAL
+========================================================== */
+
+function initializeDeleteConfirmationModal(modalData) {
+  if (!modalData?.id) return;
+
+  console.log("Delete Modal:", modalData);
+
+  const title = document.getElementById("deleteModalTitle");
+  const subtitle = document.getElementById("deleteModalSubtitle");
+  const message = document.getElementById("deleteModalMessage");
+  const confirmButton = document.getElementById("confirmDeleteBtn");
+  const confirmText = document.getElementById("confirmDeleteText");
+
+  switch (modalData.entity) {
+    case "doctor":
+      title.textContent = "Delete Doctor";
+      subtitle.textContent = "This action cannot be undone.";
+      message.textContent =
+        "Are you sure you want to permanently delete this doctor?";
+      confirmText.textContent = "Delete Doctor";
+      break;
+
+    case "patient":
+      title.textContent = "Delete Patient";
+      subtitle.textContent = "This action cannot be undone.";
+      message.textContent =
+        "Are you sure you want to permanently delete this patient?";
+      confirmText.textContent = "Delete Patient";
+      break;
+
+    default:
+      title.textContent = "Delete Record";
+      subtitle.textContent = "This action cannot be undone.";
+      message.textContent =
+        "Are you sure you want to permanently delete this record?";
+      confirmText.textContent = "Delete";
+      break;
+  }
+
+  confirmButton.replaceWith(confirmButton.cloneNode(true));
+
+  document
+    .getElementById("confirmDeleteBtn")
+    .addEventListener("click", async () => {
+      console.log("Delete button pressed:", modalData);
+
+      try {
+        switch (modalData.entity) {
+          case "doctor":
+            await deleteDoctor(modalData.id);
+            break;
+
+          case "patient":
+            await deletePatient(modalData.id);
+            break;
+
+          default:
+            showToast("Delete action not implemented.", "warning");
+            break;
+        }
+      } catch (error) {
+        console.error(error);
+        showToast(error.message || "Delete failed.", "error");
+      }
+    });
+}

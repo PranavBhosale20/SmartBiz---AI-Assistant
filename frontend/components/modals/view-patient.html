@@ -12,44 +12,88 @@
 
 <div class="modal-body">
   <div class="form-grid">
-    <div>
-      <strong>Patient ID</strong>
-      <p>PT001</p>
+    <div class="form-group">
+      <label class="form-label">Patient ID</label>
+
+      <input id="viewPatientId" class="form-control" type="text" readonly />
     </div>
 
-    <div>
-      <strong>Name</strong>
-      <p>Rahul Sharma</p>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+
+      <input id="viewPatientName" class="form-control" type="text" readonly />
     </div>
 
-    <div>
-      <strong>Age</strong>
-      <p>32 Years</p>
+    <div class="form-group">
+      <label class="form-label">Gender</label>
+
+      <input id="viewPatientGender" class="form-control" type="text" readonly />
     </div>
 
-    <div>
-      <strong>Gender</strong>
-      <p>Male</p>
+    <div class="form-group">
+      <label class="form-label">Date of Birth</label>
+
+      <input id="viewPatientDob" class="form-control" type="text" readonly />
     </div>
 
-    <div>
-      <strong>Phone</strong>
-      <p>+91 9876543210</p>
+    <div class="form-group">
+      <label class="form-label">Phone Number</label>
+
+      <input id="viewPatientPhone" class="form-control" type="text" readonly />
     </div>
 
-    <div>
-      <strong>Email</strong>
-      <p>rahul@email.com</p>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+
+      <input id="viewPatientEmail" class="form-control" type="text" readonly />
     </div>
 
-    <div class="full-width">
-      <strong>Address</strong>
+    <div class="form-group">
+      <label class="form-label">Blood Group</label>
 
-      <p>Mumbai, Maharashtra</p>
+      <input
+        id="viewPatientBloodGroup"
+        class="form-control"
+        type="text"
+        readonly
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Emergency Contact</label>
+
+      <input
+        id="viewPatientEmergencyContact"
+        class="form-control"
+        type="text"
+        readonly
+      />
+    </div>
+
+    <div class="form-group full-width">
+      <label class="form-label">Address</label>
+
+      <textarea
+        id="viewPatientAddress"
+        class="form-control"
+        rows="3"
+        readonly
+      ></textarea>
+    </div>
+
+    <div class="form-group full-width">
+      <label class="form-label">Created At</label>
+
+      <input
+        id="viewPatientCreatedAt"
+        class="form-control"
+        type="text"
+        readonly
+      />
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary">Close</button>
+  <button type="button" class="btn btn-primary modal-close">Close</button>
 </div>
