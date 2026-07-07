@@ -210,4 +210,65 @@ public class AppointmentService {
                 .filter(slot -> !bookedTimes.contains(slot))
                 .collect(Collectors.toList());
     }
+    
+    /* ==========================================================
+    UPDATE APPOINTMENT
+ ========================================================== */
+
+ public AppointmentResponseDTO updateAppointment(
+         Long id,
+         AppointmentRequestDTO dto) {
+
+     Appointment appointment = appointmentRepository.findById(id)
+             .orElseThrow(() ->
+                     new ResourceNotFoundException("Appointment", id));
+
+     if (authHelper.isPatient()) {
+
+         Long callerUserId = authHelper.getAuthenticatedUserId();
+
+         if (!callerUserId.equals(appointment.getUser().getId())) {
+
+             throw new BusinessException(
+                     "You are not authorized to update this appointment.");
+         }
+     }
+
+     LocalDateTime requestedDate =
+             LocalDateTime.parse(dto.getAppointmentDate());
+
+     if (requestedDate.isBefore(LocalDateTime.now())) {
+
+         throw new BusinessException(
+                 "Cannot book an appointment in the past.");
+     }
+
+     User user = userRepository.findById(dto.getUserId())
+             .orElseThrow(() ->
+                     new ResourceNotFoundException(
+                             "User",
+                             dto.getUserId()));
+
+     Doctor doctor = doctorRepository.findById(dto.getDoctorId())
+             .orElseThrow(() ->
+                     new ResourceNotFoundException(
+                             "Doctor",
+                             dto.getDoctorId()));
+
+     VisitType visitType = visitTypeRepository.findById(dto.getVisitTypeId())
+             .orElseThrow(() ->
+                     new ResourceNotFoundException(
+                             "VisitType",
+                             dto.getVisitTypeId()));
+
+     appointment.setUser(user);
+     appointment.setDoctor(doctor);
+     appointment.setVisitType(visitType);
+     appointment.setAppointmentDate(requestedDate);
+
+     Appointment updated =
+             appointmentRepository.save(appointment);
+
+     return appointmentMapper.toResponseDTO(updated);
+ }
 }

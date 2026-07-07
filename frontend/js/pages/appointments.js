@@ -104,9 +104,7 @@ function renderAppointments(appointments) {
               class="action-btn open-modal"
               data-modal="add-appointment"
               data-id="${appointment.id}">
-
               <i data-lucide="square-pen"></i>
-
             </button>
 
             <button
@@ -152,15 +150,71 @@ async function initializeAddAppointmentModal() {
   await loadDoctorsDropdown();
   await loadVisitTypesDropdown();
 
-  const saveAppointmentBtn = document.getElementById("saveAppointmentBtn");
+  initializeAvailableSlots();
 
-  saveAppointmentBtn.replaceWith(saveAppointmentBtn.cloneNode(true));
+  const saveBtn = document.getElementById("saveAppointmentBtn");
+
+  saveBtn.replaceWith(saveBtn.cloneNode(true));
 
   document
     .getElementById("saveAppointmentBtn")
     .addEventListener("click", saveAppointment);
+}
+
+/* ==========================================================
+   EDIT APPOINTMENT MODAL
+========================================================== */
+
+async function initializeEditAppointmentModal(modalData) {
+  if (!modalData?.id) return;
+
+  await loadPatientsDropdown();
+  await loadDoctorsDropdown();
+  await loadVisitTypesDropdown();
 
   initializeAvailableSlots();
+
+  try {
+    const appointment = await apiCall(`/api/appointments/${modalData.id}`);
+
+    document.getElementById("appointmentId").value = appointment.id;
+
+    document.getElementById("appointmentPatient").value = appointment.userId;
+
+    document.getElementById("appointmentDoctor").value = appointment.doctorId;
+
+    document.getElementById("visitType").value = appointment.visitTypeId;
+
+    const dateTime = new Date(appointment.appointmentDate);
+
+    document.getElementById("appointmentDate").value = dateTime
+      .toISOString()
+      .split("T")[0];
+
+    await loadAvailableSlots();
+
+    document.getElementById("appointmentTime").value =
+      appointment.appointmentDate.substring(11, 16);
+
+    document.getElementById("appointmentModalTitle").textContent =
+      "Edit Appointment";
+
+    document.getElementById("appointmentModalSubtitle").textContent =
+      "Update appointment details.";
+
+    document.getElementById("saveAppointmentBtnText").textContent =
+      "Update Appointment";
+
+    const saveBtn = document.getElementById("saveAppointmentBtn");
+
+    saveBtn.replaceWith(saveBtn.cloneNode(true));
+
+    document
+      .getElementById("saveAppointmentBtn")
+      .addEventListener("click", saveAppointment);
+  } catch (error) {
+    showToast(error.message || "Failed to load appointment.", "error");
+  }
 }
 
 /* ==========================================================
@@ -319,14 +373,74 @@ async function saveAppointment() {
   };
 
   try {
-    await apiCall("/api/appointments", "POST", appointment);
+    const appointmentId = document.getElementById("appointmentId").value;
 
-    showToast("Appointment booked successfully.", "success");
+    if (appointmentId) {
+      await apiCall(`/api/appointments/${appointmentId}`, "PUT", appointment);
+
+      showToast("Appointment updated successfully.", "success");
+    } else {
+      await apiCall("/api/appointments", "POST", appointment);
+
+      showToast("Appointment booked successfully.", "success");
+    }
 
     closeModal();
 
     loadAppointments();
   } catch (error) {
     showToast(error.message || "Failed to book appointment.", "error");
+  }
+}
+
+/* ==========================================================
+   VIEW APPOINTMENT MODAL
+========================================================== */
+
+function initializeViewAppointmentModal(modalData) {
+  if (!modalData?.id) return;
+
+  viewAppointment(modalData.id);
+}
+
+/* ==========================================================
+   VIEW APPOINTMENT
+========================================================== */
+
+async function viewAppointment(id) {
+  try {
+    const appointment = await apiCall(`/api/appointments/${id}`);
+
+    document.getElementById("viewAppointmentId").textContent =
+      "#" + appointment.id;
+
+    document.getElementById("viewAppointmentPatient").textContent =
+      appointment.userName;
+
+    document.getElementById("viewAppointmentDoctor").textContent =
+      appointment.doctorName;
+
+    document.getElementById("viewAppointmentVisitType").textContent =
+      appointment.visitTypeName;
+
+    document.getElementById("viewAppointmentStatus").textContent =
+      appointment.status;
+
+    const dateTime = new Date(appointment.appointmentDate);
+
+    document.getElementById("viewAppointmentDate").textContent =
+      dateTime.toLocaleDateString();
+
+    document.getElementById("viewAppointmentTime").textContent =
+      dateTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+    document.getElementById("viewAppointmentCreatedAt").textContent = new Date(
+      appointment.createdAt,
+    ).toLocaleString();
+  } catch (error) {
+    showToast(error.message || "Failed to load appointment.", "error");
   }
 }

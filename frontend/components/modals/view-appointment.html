@@ -2,7 +2,7 @@
   <div class="modal-title">
     <h2>Appointment Details</h2>
 
-    <p>Appointment information.</p>
+    <p>Complete appointment information.</p>
   </div>
 
   <button class="modal-close">
@@ -13,33 +13,47 @@
 <div class="modal-body">
   <div class="form-grid">
     <div>
+      <strong>Appointment ID</strong>
+      <p id="viewAppointmentId">-</p>
+    </div>
+
+    <div>
+      <strong>Status</strong>
+      <p id="viewAppointmentStatus">-</p>
+    </div>
+
+    <div>
       <strong>Patient</strong>
-      <p>Rahul Sharma</p>
+      <p id="viewAppointmentPatient">-</p>
     </div>
 
     <div>
       <strong>Doctor</strong>
-      <p>Dr. Mehta</p>
+      <p id="viewAppointmentDoctor">-</p>
+    </div>
+
+    <div>
+      <strong>Visit Type</strong>
+      <p id="viewAppointmentVisitType">-</p>
     </div>
 
     <div>
       <strong>Date</strong>
-      <p>15 Jul 2026</p>
+      <p id="viewAppointmentDate">-</p>
     </div>
 
     <div>
       <strong>Time</strong>
-      <p>10:30 AM</p>
+      <p id="viewAppointmentTime">-</p>
     </div>
 
     <div class="full-width">
-      <strong>Reason</strong>
-
-      <p>General Health Checkup</p>
+      <strong>Created At</strong>
+      <p id="viewAppointmentCreatedAt">-</p>
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary">Close</button>
+  <button class="btn btn-primary modal-close">Close</button>
 </div>

@@ -147,6 +147,10 @@ function initializeModalPage(modalName, modalData) {
         initializeAddAppointmentModal?.();
       }
       break;
+
+    case "view-appointment":
+      initializeViewAppointmentModal?.(modalData);
+      break;
   }
 }
 

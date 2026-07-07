@@ -57,6 +57,16 @@ public class AppointmentController {
     public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByUserId(userId));
     }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<AppointmentResponseDTO> updateAppointment(
+            @PathVariable Long id,
+            @RequestBody AppointmentRequestDTO dto) {
+
+        return ResponseEntity.ok(
+                appointmentService.updateAppointment(id, dto)
+        );
+    }
 
     // PUT, not DELETE - cancelling doesn't remove the row, it just
     // changes its status. The appointment record stays in the
