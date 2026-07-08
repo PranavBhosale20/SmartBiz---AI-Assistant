@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="en" data-page="appointments">
+<html lang="en" data-page="visit-types">
   <head>
     <meta charset="UTF-8" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Appointments | SmartBiz Clinic OS</title>
+    <title>Visit Types | SmartBiz Clinic OS</title>
 
-    <link rel="icon" href="assets/logo/smartbiz-logo.png" />
+    <link rel="icon" href="assets/logo/favicon.png" />
 
     <link rel="stylesheet" href="css/main.css" />
   </head>
@@ -27,25 +27,25 @@
       <!-- Main Content -->
 
       <main class="page-content">
-        <div class="appointments-page">
+        <div class="visit-types-page">
           <!-- ==========================================================
                      PAGE HEADER
                 ========================================================== -->
 
           <div class="page-header">
             <div>
-              <h1>Appointments</h1>
+              <h1>Visit Types</h1>
 
-              <p>Manage patient appointments and schedules.</p>
+              <p>Manage clinic visit types and consultation charges.</p>
             </div>
 
             <button
               class="btn btn-primary open-modal"
-              data-modal="add-appointment"
+              data-modal="add-visit-type"
             >
-              <i data-lucide="calendar-plus"></i>
+              <i data-lucide="plus"></i>
 
-              Add Appointment
+              Add Visit Type
             </button>
           </div>
 
@@ -53,19 +53,19 @@
      TOOLBAR
 ========================================================== -->
 
-          <div class="card appointment-toolbar">
+          <div class="card">
             <div class="toolbar">
               <div class="toolbar-search">
                 <i data-lucide="search"></i>
 
-                <input type="text" placeholder="Search appointment..." />
+                <input type="text" placeholder="Search visit types..." />
               </div>
 
               <div class="toolbar-actions">
                 <button class="btn btn-secondary">
                   <i data-lucide="filter"></i>
 
-                  Filter
+                  Filters
                 </button>
 
                 <button class="btn btn-secondary">
@@ -78,7 +78,7 @@
           </div>
 
           <!-- ==========================================================
-     APPOINTMENTS TABLE
+     VISIT TYPES TABLE
 ========================================================== -->
 
           <div class="card">
@@ -87,21 +87,14 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Patient</th>
-
-                      <th>Doctor</th>
-
-                      <th>Date</th>
-
-                      <th>Time</th>
-
-                      <th>Status</th>
-
+                      <th>Name</th>
+                      <th>First Visit Price</th>
+                      <th>Repeat Visit Price</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
 
-                  <tbody id="appointmentTableBody"></tbody>
+                  <tbody id="visitTypeTableBody"></tbody>
                 </table>
               </div>
 
@@ -121,8 +114,12 @@
         </div>
       </main>
 
+      <!-- Footer -->
+
       <footer id="footer"></footer>
     </div>
+
+    <!-- Modal -->
 
     <div id="modalContainer"></div>
 
@@ -132,7 +129,7 @@
 
     <!-- Components -->
     <script src="js/components/modal.js"></script>
-    <script src="js/components/appointment-modal.js"></script>
+    <script src="js/components/visit-type-modal.js"></script>
     <script src="js/components/sidebar.js"></script>
     <script src="js/components/header.js"></script>
     <script src="js/components/footer.js"></script>
@@ -150,7 +147,7 @@
     <script src="js/app.js"></script>
 
     <!-- Page -->
-    <script src="js/pages/staff-appointments.js"></script>
+    <script src="js/pages/visit-types.js"></script>
 
     <script>
       lucide.createIcons();

@@ -8,6 +8,7 @@ import com.smartbiz.exception.ResourceNotFoundException;
 import com.smartbiz.model.Doctor;
 import com.smartbiz.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -81,8 +82,17 @@ public class DoctorService {
     }
 
     public void deleteDoctor(Long id) {
-        doctorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Doctor", id));
-        doctorRepository.deleteById(id);
+
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Doctor", id));
+
+        try {
+            doctorRepository.delete(doctor);
+        } catch (DataIntegrityViolationException ex) {
+
+            throw new BusinessException(
+                    "Cannot delete doctor because appointments are linked to this doctor.");
+        }
     }
 }

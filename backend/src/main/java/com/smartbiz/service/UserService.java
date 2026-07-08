@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.springframework.dao.DataIntegrityViolationException;
 @Service
 public class UserService {
 
@@ -150,10 +150,19 @@ public class UserService {
 
     public void deleteUser(Long id) {
 
-        userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User", id));
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User", id));
 
-        userRepository.deleteById(id);
+        try {
+
+            userRepository.delete(user);
+
+        } catch (DataIntegrityViolationException ex) {
+
+            throw new BusinessException(
+                    "Cannot delete patient because appointments are linked to this patient.");
+        }
     }
 
     /* ==========================================================

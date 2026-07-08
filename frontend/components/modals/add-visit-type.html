@@ -1,0 +1,80 @@
+<div class="modal-overlay">
+  <div class="modal modal-md">
+    <!-- ==========================================================
+         HEADER
+    ========================================================== -->
+
+    <div class="modal-header">
+      <div>
+        <h2 id="visitTypeModalTitle">Add Visit Type</h2>
+
+        <p id="visitTypeModalSubtitle">
+          Create a new visit type for the clinic.
+        </p>
+      </div>
+
+      <button class="modal-close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <!-- ==========================================================
+         BODY
+    ========================================================== -->
+
+    <div class="modal-body">
+      <input type="hidden" id="visitTypeId" />
+
+      <div class="form-group">
+        <label for="visitTypeName">Visit Type Name</label>
+
+        <input
+          type="text"
+          id="visitTypeName"
+          class="form-control"
+          placeholder="Enter visit type name"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstVisitPrice">First Visit Price (₹)</label>
+
+          <input
+            type="number"
+            id="firstVisitPrice"
+            class="form-control"
+            placeholder="500"
+            min="0"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="repeatVisitPrice">Repeat Visit Price (₹)</label>
+
+          <input
+            type="number"
+            id="repeatVisitPrice"
+            class="form-control"
+            placeholder="300"
+            min="0"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         FOOTER
+    ========================================================== -->
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary">Cancel</button>
+
+      <button class="btn btn-primary" id="saveVisitTypeBtn">
+        <i data-lucide="save"></i>
+
+        <span id="saveVisitTypeBtnText"> Save Visit Type </span>
+      </button>
+    </div>
+  </div>
+</div>

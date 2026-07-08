@@ -56,5 +56,3 @@ async function loadCurrentUserSidebar() {
     console.error(error);
   }
 }
-
-document.addEventListener("DOMContentLoaded", initializeSidebar);

@@ -1,134 +1,6 @@
 /* ==========================================================
-   APPOINTMENTS PAGE
+   APPOINTMENT MODALS
 ========================================================== */
-
-async function initializeAppointments() {
-  const tableBody = document.getElementById("appointmentTableBody");
-
-  if (!tableBody) return;
-
-  loadAppointments();
-}
-
-/* ==========================================================
-   LOAD APPOINTMENTS
-========================================================== */
-
-async function loadAppointments() {
-  const tableBody = document.getElementById("appointmentTableBody");
-
-  showLoading(tableBody, "Loading appointments...");
-
-  try {
-    const appointments = await apiCall("/api/appointments");
-
-    renderAppointments(appointments);
-  } catch (error) {
-    console.error(error);
-
-    showError(tableBody, "Failed to load appointments.");
-  }
-}
-
-/* ==========================================================
-   RENDER APPOINTMENTS
-========================================================== */
-
-function renderAppointments(appointments) {
-  const tableBody = document.getElementById("appointmentTableBody");
-
-  if (!appointments || appointments.length === 0) {
-    showEmptyState(tableBody, "No appointments found.");
-    return;
-  }
-
-  tableBody.innerHTML = "";
-
-  appointments.forEach((appointment) => {
-    const avatar = "assets/avatars/patient-male.png";
-
-    const appointmentDate = new Date(appointment.appointmentDate);
-
-    const date = appointmentDate.toLocaleDateString();
-
-    const time = appointmentDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    tableBody.innerHTML += `
-      <tr>
-
-        <td>
-          <div class="patient-info">
-
-            <img
-              src="${avatar}"
-              alt="${appointment.userName}"
-            />
-
-            <div>
-              <h4>${appointment.userName}</h4>
-              <p>#${appointment.userId}</p>
-            </div>
-
-          </div>
-        </td>
-
-        <td>${appointment.doctorName}</td>
-
-        <td>${date}</td>
-
-        <td>${time}</td>
-
-        <td>
-          <span class="status ${appointment.status.toLowerCase()}">
-            ${appointment.status}
-          </span>
-        </td>
-
-        <td>
-
-          <div class="table-actions">
-
-            <button
-              class="action-btn open-modal"
-              data-modal="view-appointment"
-              data-id="${appointment.id}">
-
-              <i data-lucide="eye"></i>
-
-            </button>
-
-            <button
-              class="action-btn open-modal"
-              data-modal="add-appointment"
-              data-id="${appointment.id}">
-              <i data-lucide="square-pen"></i>
-            </button>
-
-            <button
-              class="action-btn open-modal"
-              data-modal="delete-confirmation"
-              data-entity="appointment"
-              data-id="${appointment.id}">
-
-              <i data-lucide="trash-2"></i>
-
-            </button>
-
-          </div>
-
-        </td>
-
-      </tr>
-    `;
-  });
-
-  lucide.createIcons();
-
-  console.log("✓ Appointments Loaded");
-}
 
 /* ==========================================================
    ADD APPOINTMENT MODAL
@@ -136,6 +8,7 @@ function renderAppointments(appointments) {
 
 async function initializeAddAppointmentModal() {
   console.log("✓ initializeAddAppointmentModal()");
+
   document.getElementById("appointmentId").value = "";
 
   document.getElementById("appointmentModalTitle").textContent =
@@ -219,13 +92,27 @@ async function initializeEditAppointmentModal(modalData) {
 }
 
 /* ==========================================================
+   VIEW APPOINTMENT MODAL
+========================================================== */
+
+function initializeViewAppointmentModal(modalData) {
+  if (!modalData?.id) return;
+
+  viewAppointment(modalData.id);
+}
+
+/* ==========================================================
    LOAD PATIENT DROPDOWN
 ========================================================== */
 
 async function loadPatientsDropdown() {
   const select = document.getElementById("appointmentPatient");
 
-  select.innerHTML = `<option value="">Select Patient</option>`;
+  if (!select) return;
+
+  select.innerHTML = `
+    <option value="">Select Patient</option>
+  `;
 
   const patients = await apiCall("/api/users");
 
@@ -245,7 +132,11 @@ async function loadPatientsDropdown() {
 async function loadDoctorsDropdown() {
   const select = document.getElementById("appointmentDoctor");
 
-  select.innerHTML = `<option value="">Select Doctor</option>`;
+  if (!select) return;
+
+  select.innerHTML = `
+    <option value="">Select Doctor</option>
+  `;
 
   const doctors = await apiCall("/api/doctors");
 
@@ -265,7 +156,11 @@ async function loadDoctorsDropdown() {
 async function loadVisitTypesDropdown() {
   const select = document.getElementById("visitType");
 
-  select.innerHTML = `<option value="">Select Visit Type</option>`;
+  if (!select) return;
+
+  select.innerHTML = `
+    <option value="">Select Visit Type</option>
+  `;
 
   const visitTypes = await apiCall("/api/visit-types");
 
@@ -286,18 +181,20 @@ function initializeAvailableSlots() {
   console.log("✓ initializeAvailableSlots()");
 
   const doctorSelect = document.getElementById("appointmentDoctor");
+
   const dateInput = document.getElementById("appointmentDate");
 
   if (!doctorSelect || !dateInput) return;
 
-  // Prevent duplicate listeners when reopening the modal
   doctorSelect.onchange = loadAvailableSlots;
   dateInput.onchange = loadAvailableSlots;
 }
 
 async function loadAvailableSlots() {
   const doctorId = document.getElementById("appointmentDoctor").value;
+
   const date = document.getElementById("appointmentDate").value;
+
   const timeSelect = document.getElementById("appointmentTime");
 
   console.log("Doctor ID:", doctorId);
@@ -314,7 +211,7 @@ async function loadAvailableSlots() {
 
   try {
     console.log(
-      `Fetching: /api/appointments/available-slots?doctorId=${doctorId}&date=${date}`,
+      `/api/appointments/available-slots?doctorId=${doctorId}&date=${date}`,
     );
 
     const slots = await apiCall(
@@ -327,7 +224,9 @@ async function loadAvailableSlots() {
 
     if (!slots || slots.length === 0) {
       timeSelect.innerHTML = `
-        <option value="">No Slots Available</option>
+        <option value="">
+          No Slots Available
+        </option>
       `;
       return;
     }
@@ -344,7 +243,7 @@ async function loadAvailableSlots() {
       `;
     });
   } catch (error) {
-    console.error("Failed to load slots:", error);
+    console.error(error);
 
     showToast("Failed to load available slots.", "error");
   }
@@ -388,20 +287,16 @@ async function saveAppointment() {
 
     closeModal();
 
-    loadAppointments();
+    if (typeof loadStaffAppointments === "function") {
+      loadStaffAppointments();
+    }
+
+    if (typeof loadPatientAppointments === "function") {
+      loadPatientAppointments();
+    }
   } catch (error) {
-    showToast(error.message || "Failed to book appointment.", "error");
+    showToast(error.message || "Failed to save appointment.", "error");
   }
-}
-
-/* ==========================================================
-   VIEW APPOINTMENT MODAL
-========================================================== */
-
-function initializeViewAppointmentModal(modalData) {
-  if (!modalData?.id) return;
-
-  viewAppointment(modalData.id);
 }
 
 /* ==========================================================
@@ -458,7 +353,13 @@ async function deleteAppointment(id) {
 
     showToast("Appointment deleted successfully.", "success");
 
-    loadAppointments();
+    if (typeof loadStaffAppointments === "function") {
+      loadStaffAppointments();
+    }
+
+    if (typeof loadPatientAppointments === "function") {
+      loadPatientAppointments();
+    }
   } catch (error) {
     showToast(error.message || "Failed to delete appointment.", "error");
   }

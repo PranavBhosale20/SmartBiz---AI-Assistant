@@ -49,10 +49,20 @@ public class SecurityConfig {
                         // Dashboard
                         .requestMatchers("/api/dashboard/**").hasRole("STAFF")
 
+                        // Doctors
+                        .requestMatchers(HttpMethod.GET, "/api/doctors/**")
+                                .hasAnyRole("STAFF", "PATIENT")
+                        .requestMatchers("/api/doctors/**")
+                                .hasRole("STAFF")
+
+                        // Visit Types
+                        .requestMatchers(HttpMethod.GET, "/api/visit-types/**")
+                                .hasAnyRole("STAFF", "PATIENT")
+                        .requestMatchers("/api/visit-types/**")
+                                .hasRole("STAFF")
+
                         // Staff only
-                        .requestMatchers("/api/doctors/**").hasRole("STAFF")
                         .requestMatchers("/api/products/**").hasRole("STAFF")
-                        .requestMatchers("/api/visit-types/**").hasRole("STAFF")
                         .requestMatchers("/api/prescriptions/**").hasRole("STAFF")
                         .requestMatchers("/api/bill-items/**").hasRole("STAFF")
                         .requestMatchers("/api/bills/**").hasRole("STAFF")
@@ -76,9 +86,9 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(
-                "http://127.0.0.1:5500",
-                "http://localhost:5500"
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "http://127.0.0.1:*"
         ));
 
         configuration.setAllowedMethods(List.of(

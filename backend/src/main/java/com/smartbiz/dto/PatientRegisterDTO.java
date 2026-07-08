@@ -57,7 +57,6 @@ public class PatientRegisterDTO {
     @NotNull(message = "Gender is required")
     private Gender gender;
 
-    @NotNull(message = "Date of birth is required")
     private LocalDate dateOfBirth;
 
     @Size(max = 500,
@@ -68,7 +67,6 @@ public class PatientRegisterDTO {
        MEDICAL INFORMATION
     ========================================================== */
 
-    @NotNull(message = "Blood group is required")
     private BloodGroup bloodGroup;
 
     @Pattern(

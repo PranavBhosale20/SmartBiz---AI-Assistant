@@ -40,7 +40,6 @@ async function openModal(modalName, modalData = null) {
 
 function closeModal() {
   modalContainer.innerHTML = "";
-
   currentModal = null;
 }
 
@@ -117,13 +116,9 @@ function initializeModalPage(modalName, modalData) {
       initializeViewDoctorModal?.(modalData);
       break;
 
-    case "delete-confirmation":
-      initializeDeleteConfirmationModal?.(modalData);
-      break;
-
     /* ======================================================
-   PATIENTS
-====================================================== */
+       PATIENTS
+    ====================================================== */
 
     case "add-patient":
       if (modalData?.id) {
@@ -138,8 +133,9 @@ function initializeModalPage(modalName, modalData) {
       break;
 
     /* ======================================================
-   APPOINTMENTS
-====================================================== */
+       APPOINTMENTS
+    ====================================================== */
+
     case "add-appointment":
       if (modalData?.id) {
         initializeEditAppointmentModal?.(modalData);
@@ -150,6 +146,30 @@ function initializeModalPage(modalName, modalData) {
 
     case "view-appointment":
       initializeViewAppointmentModal?.(modalData);
+      break;
+
+    /* ======================================================
+       DELETE
+    ====================================================== */
+
+    case "delete-confirmation":
+      initializeDeleteConfirmationModal?.(modalData);
+      break;
+
+    /* ======================================================
+   VISIT TYPES
+====================================================== */
+
+    case "add-visit-type":
+      if (modalData?.id) {
+        initializeEditVisitTypeModal?.(modalData);
+      } else {
+        initializeAddVisitTypeModal?.();
+      }
+      break;
+
+    case "view-visit-type":
+      initializeViewVisitTypeModal?.(modalData);
       break;
   }
 }
@@ -168,7 +188,7 @@ window.Modal = {
 ========================================================== */
 
 function initializeModal() {
-  // Modal manager is initialized through global event listeners.
+  // Global event listeners initialize the modal manager.
 }
 
 console.log("✓ Modal Manager Loaded");
@@ -179,8 +199,6 @@ console.log("✓ Modal Manager Loaded");
 
 function initializeDeleteConfirmationModal(modalData) {
   if (!modalData?.id) return;
-
-  console.log("Delete Modal:", modalData);
 
   const title = document.getElementById("deleteModalTitle");
   const subtitle = document.getElementById("deleteModalSubtitle");
@@ -205,13 +223,28 @@ function initializeDeleteConfirmationModal(modalData) {
       confirmText.textContent = "Delete Patient";
       break;
 
+    case "appointment":
+      title.textContent = "Delete Appointment";
+      subtitle.textContent = "This action cannot be undone.";
+      message.textContent =
+        "Are you sure you want to permanently delete this appointment?";
+      confirmText.textContent = "Delete Appointment";
+      break;
+
+    case "visit-type":
+      title.textContent = "Delete Visit Type";
+      subtitle.textContent = "This action cannot be undone.";
+      message.textContent =
+        "Are you sure you want to permanently delete this visit type?";
+      confirmText.textContent = "Delete Visit Type";
+      break;
+
     default:
       title.textContent = "Delete Record";
       subtitle.textContent = "This action cannot be undone.";
       message.textContent =
         "Are you sure you want to permanently delete this record?";
       confirmText.textContent = "Delete";
-      break;
   }
 
   confirmButton.replaceWith(confirmButton.cloneNode(true));
@@ -219,8 +252,6 @@ function initializeDeleteConfirmationModal(modalData) {
   document
     .getElementById("confirmDeleteBtn")
     .addEventListener("click", async () => {
-      console.log("Delete button pressed:", modalData);
-
       try {
         switch (modalData.entity) {
           case "doctor":
@@ -231,9 +262,17 @@ function initializeDeleteConfirmationModal(modalData) {
             await deletePatient(modalData.id);
             break;
 
+          case "appointment":
+            await deleteAppointment(modalData.id);
+            break;
+
+          case "visit-type":
+            await deleteVisitType(modalData.id);
+            break;
+
           default:
             showToast("Delete action not implemented.", "warning");
-            break;
+            return;
         }
       } catch (error) {
         console.error(error);

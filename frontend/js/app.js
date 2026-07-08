@@ -34,8 +34,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       break;
 
     case "appointments":
-      if (typeof initializeAppointments === "function") {
-        initializeAppointments();
+      if (typeof initializeStaffAppointments === "function") {
+        initializeStaffAppointments();
+      }
+      break;
+
+    case "patient-appointments":
+      if (typeof initializePatientAppointments === "function") {
+        initializePatientAppointments();
       }
       break;
 
@@ -60,6 +66,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     case "command-console":
       if (typeof initializeCommandConsole === "function") {
         initializeCommandConsole();
+      }
+      break;
+
+    case "visit-types":
+      if (typeof initializeVisitTypes === "function") {
+        initializeVisitTypes();
       }
       break;
   }
