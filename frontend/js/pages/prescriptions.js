@@ -20,38 +20,12 @@ async function loadPrescriptions() {
   showLoading(tableBody, "Loading prescriptions...");
 
   try {
-    // TODO:
-    // const prescriptions = await apiCall("/api/prescriptions");
-
-    const prescriptions = [
-      {
-        id: "PR001",
-        patient: "Rahul Sharma",
-        doctor: "Dr. Mehta",
-        medicineCount: 4,
-        date: "12 Jul 2026",
-        status: "Issued",
-      },
-      {
-        id: "PR002",
-        patient: "Priya Patil",
-        doctor: "Dr. Joshi",
-        medicineCount: 3,
-        date: "13 Jul 2026",
-        status: "Issued",
-      },
-      {
-        id: "PR003",
-        patient: "Amit Joshi",
-        doctor: "Dr. Kulkarni",
-        medicineCount: 5,
-        date: "14 Jul 2026",
-        status: "Pending",
-      },
-    ];
+    const prescriptions = await apiCall("/api/prescriptions");
 
     renderPrescriptions(prescriptions);
   } catch (error) {
+    console.error(error);
+
     showError(tableBody, "Failed to load prescriptions.");
   }
 }
@@ -63,58 +37,52 @@ async function loadPrescriptions() {
 function renderPrescriptions(prescriptions) {
   const tableBody = document.getElementById("prescriptionTableBody");
 
-  if (prescriptions.length === 0) {
+  if (!prescriptions || prescriptions.length === 0) {
     showEmptyState(tableBody, "No prescriptions found.");
-
     return;
   }
 
   tableBody.innerHTML = "";
 
   prescriptions.forEach((prescription) => {
+    const medicineCount = prescription.items ? prescription.items.length : 0;
+
+    const createdDate = new Date(prescription.createdAt).toLocaleDateString();
+
     tableBody.innerHTML += `
       <tr>
 
-        <td>${prescription.id}</td>
+        <td>#${prescription.id}</td>
 
-        <td>${prescription.patient}</td>
+        <td>${prescription.patientName}</td>
 
-        <td>${prescription.doctor}</td>
+        <td>${prescription.doctorName}</td>
 
-<td>
+        <td>${medicineCount} Medicine(s)</td>
 
-    <button
-        class="btn btn-text open-modal"
-        data-modal="view-prescription">
-
-        View (${prescription.medicineCount})
-
-    </button>
-
-</td>
-        <td>${prescription.date}</td>
-
-        <td>
-          <span class="status ${prescription.status.toLowerCase()}">
-            ${prescription.status}
-          </span>
-        </td>
+        <td>${createdDate}</td>
 
         <td>
 
           <div class="table-actions">
 
-            <button class="action-btn open-modal" 
-            data-modal="view-prescription">
+            <button
+              class="action-btn open-modal"
+              data-modal="view-prescription"
+              data-id="${prescription.id}">
+
               <i data-lucide="eye"></i>
+
             </button>
 
-            <button class="action-btn">
-              <i data-lucide="download"></i>
-            </button>
+            <button
+              class="action-btn open-modal"
+              data-modal="delete-confirmation"
+              data-entity="prescription"
+              data-id="${prescription.id}">
 
-            <button class="action-btn">
-              <i data-lucide="printer"></i>
+              <i data-lucide="trash-2"></i>
+
             </button>
 
           </div>
@@ -126,4 +94,6 @@ function renderPrescriptions(prescriptions) {
   });
 
   lucide.createIcons();
+
+  console.log("✓ Prescriptions Loaded");
 }

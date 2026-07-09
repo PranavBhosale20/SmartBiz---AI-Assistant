@@ -18,13 +18,64 @@ public class VisitTypeController {
         this.visitTypeService = visitTypeService;
     }
 
+    /* ==========================================================
+       CREATE
+    ========================================================== */
+
     @PostMapping
-    public ResponseEntity<VisitTypeResponseDTO> addVisitType(@RequestBody VisitTypeRequestDTO dto) {
-        return ResponseEntity.ok(visitTypeService.addVisitType(dto));
+    public ResponseEntity<VisitTypeResponseDTO> addVisitType(
+            @RequestBody VisitTypeRequestDTO dto) {
+
+        return ResponseEntity.ok(
+                visitTypeService.addVisitType(dto));
     }
+
+    /* ==========================================================
+       GET ALL
+    ========================================================== */
 
     @GetMapping
     public ResponseEntity<List<VisitTypeResponseDTO>> getAllVisitTypes() {
-        return ResponseEntity.ok(visitTypeService.getAllVisitTypes());
+
+        return ResponseEntity.ok(
+                visitTypeService.getAllVisitTypes());
+    }
+
+    /* ==========================================================
+       GET BY ID
+    ========================================================== */
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VisitTypeResponseDTO> getVisitTypeById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                visitTypeService.getVisitTypeById(id));
+    }
+
+    /* ==========================================================
+       UPDATE
+    ========================================================== */
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VisitTypeResponseDTO> updateVisitType(
+            @PathVariable Long id,
+            @RequestBody VisitTypeRequestDTO dto) {
+
+        return ResponseEntity.ok(
+                visitTypeService.updateVisitType(id, dto));
+    }
+
+    /* ==========================================================
+       DELETE
+    ========================================================== */
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteVisitType(
+            @PathVariable Long id) {
+
+        visitTypeService.deleteVisitType(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

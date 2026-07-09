@@ -171,6 +171,34 @@ function initializeModalPage(modalName, modalData) {
     case "view-visit-type":
       initializeViewVisitTypeModal?.(modalData);
       break;
+
+    /* ======================================================
+   PRODUCTS
+====================================================== */
+
+    case "add-product":
+      if (modalData?.id) {
+        initializeEditProductModal?.(modalData);
+      } else {
+        initializeAddProductModal?.();
+      }
+      break;
+
+    case "view-product":
+      initializeViewProductModal?.(modalData);
+      break;
+
+    /* ======================================================
+   PRESCRIPTIONS
+====================================================== */
+
+    case "add-prescription":
+      initializeAddPrescriptionModal?.();
+      break;
+
+    case "view-prescription":
+      initializeViewPrescriptionModal?.(modalData);
+      break;
   }
 }
 
@@ -239,6 +267,19 @@ function initializeDeleteConfirmationModal(modalData) {
       confirmText.textContent = "Delete Visit Type";
       break;
 
+    case "product":
+      title.textContent = "Delete Medicine";
+      subtitle.textContent = "This action cannot be undone.";
+      message.textContent =
+        "Are you sure you want to permanently delete this medicine?";
+      confirmText.textContent = "Delete Medicine";
+      break;
+
+    case "prescription":
+      showToast("Prescription deletion is disabled.", "warning");
+      closeModal();
+      break;
+
     default:
       title.textContent = "Delete Record";
       subtitle.textContent = "This action cannot be undone.";
@@ -268,6 +309,10 @@ function initializeDeleteConfirmationModal(modalData) {
 
           case "visit-type":
             await deleteVisitType(modalData.id);
+            break;
+
+          case "product":
+            await deleteProduct(modalData.id);
             break;
 
           default:

@@ -1,59 +1,125 @@
-<div class="modal-header">
-  <div class="modal-title">
-    <h2>New Prescription</h2>
+<div class="modal-overlay">
+  <div class="modal modal-lg">
+    <!-- ==========================================================
+         HEADER
+    ========================================================== -->
 
-    <p>Create a prescription for a patient.</p>
+    <div class="modal-header">
+      <div>
+        <h2 id="prescriptionModalTitle">Create Prescription</h2>
+
+        <p id="prescriptionModalSubtitle">
+          Prescribe medicines for a patient's appointment.
+        </p>
+      </div>
+
+      <button class="modal-close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <!-- ==========================================================
+         BODY
+    ========================================================== -->
+
+    <div class="modal-body">
+      <input type="hidden" id="prescriptionId" />
+
+      <div class="form-group">
+        <label for="prescriptionAppointment"> Appointment </label>
+
+        <select id="prescriptionAppointment" class="form-control">
+          <option value="">Select Appointment</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="prescriptionNotes"> Doctor Notes </label>
+
+        <textarea
+          id="prescriptionNotes"
+          class="form-control"
+          rows="3"
+          placeholder="General instructions..."
+        ></textarea>
+      </div>
+
+      <hr />
+
+      <h3>Medicine</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Medicine</label>
+
+          <select id="prescriptionProduct" class="form-control">
+            <option value="">Select Medicine</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+
+          <input
+            type="number"
+            id="prescriptionQuantity"
+            class="form-control"
+            min="1"
+            placeholder="Quantity"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Dosage Instructions</label>
+
+        <input
+          type="text"
+          id="prescriptionDosage"
+          class="form-control"
+          placeholder="1 Tablet Twice Daily After Food"
+        />
+      </div>
+
+      <button class="btn btn-secondary" id="addMedicineBtn">
+        <i data-lucide="plus"></i>
+
+        Add Medicine
+      </button>
+
+      <br /><br />
+
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Medicine</th>
+
+              <th>Qty</th>
+
+              <th>Dosage</th>
+
+              <th>Remove</th>
+            </tr>
+          </thead>
+
+          <tbody id="prescriptionItemsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         FOOTER
+    ========================================================== -->
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary">Cancel</button>
+
+      <button class="btn btn-primary" id="savePrescriptionBtn">
+        <i data-lucide="save"></i>
+
+        <span id="savePrescriptionBtnText"> Create Prescription </span>
+      </button>
+    </div>
   </div>
-
-  <button class="modal-close">
-    <i data-lucide="x"></i>
-  </button>
-</div>
-
-<div class="modal-body">
-  <form class="form-grid">
-    <div class="form-group">
-      <label class="form-label">Patient</label>
-
-      <select class="form-control">
-        <option>Select Patient</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Doctor</label>
-
-      <select class="form-control">
-        <option>Select Doctor</option>
-      </select>
-    </div>
-
-    <div class="form-group full-width">
-      <label class="form-label">Medicines</label>
-
-      <textarea
-        class="form-control"
-        placeholder="Medicine name, dosage and duration"
-      ></textarea>
-    </div>
-
-    <div class="form-group full-width">
-      <label class="form-label">Notes</label>
-
-      <textarea
-        class="form-control"
-        placeholder="Additional instructions"
-      ></textarea>
-    </div>
-  </form>
-</div>
-
-<div class="modal-footer">
-  <button class="btn btn-secondary">Cancel</button>
-
-  <button class="btn btn-primary">
-    <i data-lucide="file-plus"></i>
-
-    Save Prescription
-  </button>
 </div>

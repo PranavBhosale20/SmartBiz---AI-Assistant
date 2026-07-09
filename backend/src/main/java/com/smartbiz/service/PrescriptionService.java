@@ -99,4 +99,20 @@ public class PrescriptionService {
                 .map(prescriptionMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
+    
+    /* ==========================================================
+    GET BY ID
+ ========================================================== */
+
+ public PrescriptionResponseDTO getPrescriptionById(Long id) {
+
+     Prescription prescription = prescriptionRepository.findById(id)
+             .orElseThrow(() ->
+                     new ResourceNotFoundException(
+                             "Prescription",
+                             id));
+
+     return prescriptionMapper.toResponseDTO(prescription);
+ }
+
 }

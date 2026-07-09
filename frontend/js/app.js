@@ -74,5 +74,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         initializeVisitTypes();
       }
       break;
+
+    case "inventory":
+      if (typeof initializeInventory === "function") {
+        initializeInventory();
+      }
+      break;
   }
 });

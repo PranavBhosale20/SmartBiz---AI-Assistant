@@ -18,13 +18,40 @@ public class PrescriptionController {
         this.prescriptionService = prescriptionService;
     }
 
+    /* ==========================================================
+       CREATE
+    ========================================================== */
+
     @PostMapping
-    public ResponseEntity<PrescriptionResponseDTO> createPrescription(@RequestBody PrescriptionRequestDTO dto) {
-        return ResponseEntity.ok(prescriptionService.createPrescription(dto));
+    public ResponseEntity<PrescriptionResponseDTO> createPrescription(
+            @RequestBody PrescriptionRequestDTO dto) {
+
+        return ResponseEntity.ok(
+                prescriptionService.createPrescription(dto));
     }
+
+    /* ==========================================================
+       GET ALL
+    ========================================================== */
 
     @GetMapping
     public ResponseEntity<List<PrescriptionResponseDTO>> getAllPrescriptions() {
-        return ResponseEntity.ok(prescriptionService.getAllPrescriptions());
+
+        return ResponseEntity.ok(
+                prescriptionService.getAllPrescriptions());
     }
+
+    /* ==========================================================
+       GET BY ID
+    ========================================================== */
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PrescriptionResponseDTO> getPrescriptionById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                prescriptionService.getPrescriptionById(id));
+    }
+
+    
 }

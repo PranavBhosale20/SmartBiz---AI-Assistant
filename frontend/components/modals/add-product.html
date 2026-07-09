@@ -1,0 +1,89 @@
+<div class="modal-overlay">
+  <div class="modal modal-md">
+    <!-- ==========================================================
+         HEADER
+    ========================================================== -->
+
+    <div class="modal-header">
+      <div>
+        <h2 id="medicineModalTitle">Add Medicine</h2>
+
+        <p id="medicineModalSubtitle">Add a medicine to the inventory.</p>
+      </div>
+
+      <button class="modal-close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <!-- ==========================================================
+         BODY
+    ========================================================== -->
+
+    <div class="modal-body">
+      <input type="hidden" id="productId" />
+
+      <div class="form-group">
+        <label for="medicineName">Medicine Name</label>
+
+        <input
+          type="text"
+          id="medicineName"
+          class="form-control"
+          placeholder="Enter medicine name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="medicineCategory">Category</label>
+
+        <input
+          type="text"
+          id="medicineCategory"
+          class="form-control"
+          placeholder="Tablet, Syrup, Injection..."
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="medicinePrice">Price (₹)</label>
+
+          <input
+            type="number"
+            id="medicinePrice"
+            class="form-control"
+            placeholder="Price"
+            min="0"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="medicineQuantity">Quantity</label>
+
+          <input
+            type="number"
+            id="medicineQuantity"
+            class="form-control"
+            placeholder="Available stock"
+            min="0"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+         FOOTER
+    ========================================================== -->
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary">Cancel</button>
+
+      <button class="btn btn-primary" id="saveProductBtn">
+        <i data-lucide="save"></i>
+
+        <span id="saveProductBtnText"> Save Medicine </span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -3,75 +3,58 @@
 ========================================================== */
 
 async function initializeInventory() {
-  const tableBody = document.getElementById("inventoryTableBody");
+  const tableBody = document.getElementById("productTableBody");
 
   if (!tableBody) return;
 
-  loadInventory();
+  loadProducts();
 }
 
 /* ==========================================================
-   LOAD INVENTORY
+   LOAD PRODUCTS
 ========================================================== */
 
-async function loadInventory() {
-  const tableBody = document.getElementById("inventoryTableBody");
+async function loadProducts() {
+  const tableBody = document.getElementById("productTableBody");
 
   showLoading(tableBody, "Loading inventory...");
 
   try {
-    // TODO:
-    // const products = await apiCall("/api/products");
+    const products = await apiCall("/api/products");
 
-    const products = [
-      {
-        id: "MED001",
-        name: "Paracetamol 500mg",
-        category: "Tablet",
-        quantity: 120,
-        price: "₹20",
-        status: "In Stock",
-      },
-      {
-        id: "MED002",
-        name: "Amoxicillin",
-        category: "Capsule",
-        quantity: 8,
-        price: "₹95",
-        status: "Low Stock",
-      },
-      {
-        id: "MED003",
-        name: "Vitamin C",
-        category: "Tablet",
-        quantity: 0,
-        price: "₹150",
-        status: "Out of Stock",
-      },
-    ];
-
-    renderInventory(products);
+    renderProducts(products);
   } catch (error) {
+    console.error(error);
+
     showError(tableBody, "Failed to load inventory.");
   }
 }
 
 /* ==========================================================
-   RENDER INVENTORY
+   RENDER PRODUCTS
 ========================================================== */
 
-function renderInventory(products) {
-  const tableBody = document.getElementById("inventoryTableBody");
+function renderProducts(products) {
+  const tableBody = document.getElementById("productTableBody");
 
-  if (products.length === 0) {
-    showEmptyState(tableBody, "No products found.");
-
+  if (!products || products.length === 0) {
+    showEmptyState(tableBody, "No medicines found.");
     return;
   }
 
   tableBody.innerHTML = "";
 
   products.forEach((product) => {
+    let status = "";
+
+    if (product.quantity === 0) {
+      status = "Out of Stock";
+    } else if (product.quantity <= 10) {
+      status = "Low Stock";
+    } else {
+      status = "Available";
+    }
+
     tableBody.innerHTML += `
       <tr>
 
@@ -79,13 +62,13 @@ function renderInventory(products) {
 
         <td>${product.category}</td>
 
+        <td>₹${product.price}</td>
+
         <td>${product.quantity}</td>
 
-        <td>${product.price}</td>
-
         <td>
-          <span class="status ${product.status.toLowerCase().replace(/\s/g, "-")}">
-            ${product.status}
+          <span class="status ${status.toLowerCase().replace(/\s/g, "-")}">
+            ${status}
           </span>
         </td>
 
@@ -93,16 +76,32 @@ function renderInventory(products) {
 
           <div class="table-actions">
 
-            <button class="action-btn open-modal" data-modal="view-medicine">
+            <button
+              class="action-btn open-modal"
+              data-modal="view-product"
+              data-id="${product.id}">
+
               <i data-lucide="eye"></i>
+
             </button>
 
-            <button class="action-btn">
+            <button
+              class="action-btn open-modal"
+              data-modal="add-product"
+              data-id="${product.id}">
+
               <i data-lucide="square-pen"></i>
+
             </button>
 
-            <button class="action-btn open-modal" data-modal="delete-confirmation">
+            <button
+              class="action-btn open-modal"
+              data-modal="delete-confirmation"
+              data-entity="product"
+              data-id="${product.id}">
+
               <i data-lucide="trash-2"></i>
+
             </button>
 
           </div>
@@ -114,4 +113,6 @@ function renderInventory(products) {
   });
 
   lucide.createIcons();
+
+  console.log("✓ Inventory Loaded");
 }
