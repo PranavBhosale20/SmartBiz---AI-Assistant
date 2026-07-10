@@ -50,7 +50,6 @@ async function loadAppointmentDropdown() {
   const appointments = await apiCall("/api/appointments");
 
   appointments.forEach((appointment) => {
-
     select.innerHTML += `
       <option value="${appointment.id}">
         #${appointment.id}
@@ -209,11 +208,60 @@ async function savePrescription() {
 }
 
 /* ==========================================================
-   VIEW PRESCRIPTION
+   VIEW PRESCRIPTION MODAL
 ========================================================== */
 
 function initializeViewPrescriptionModal(modalData) {
   if (!modalData?.id) return;
 
-  showToast("View Prescription coming soon.", "info");
+  viewPrescription(modalData.id);
+}
+
+/* ==========================================================
+   VIEW PRESCRIPTION
+========================================================== */
+
+async function viewPrescription(id) {
+  try {
+    const prescription = await apiCall(`/api/prescriptions/${id}`);
+
+    document.getElementById("viewPrescriptionId").textContent =
+      "#" + prescription.id;
+
+    document.getElementById("viewAppointmentId").textContent =
+      "#" + prescription.appointmentId;
+
+    document.getElementById("viewPrescriptionPatient").textContent =
+      prescription.patientName;
+
+    document.getElementById("viewPrescriptionDoctor").textContent =
+      prescription.doctorName;
+
+    document.getElementById("viewPrescriptionDate").textContent = new Date(
+      prescription.createdAt,
+    ).toLocaleString();
+
+    document.getElementById("viewPrescriptionNotes").value =
+      prescription.notes || "";
+
+    const tableBody = document.getElementById("viewPrescriptionItemsTableBody");
+
+    tableBody.innerHTML = "";
+
+    prescription.items.forEach((item) => {
+      tableBody.innerHTML += `
+        <tr>
+
+          <td>${item.productName}</td>
+
+          <td>${item.quantityPrescribed}</td>
+
+          <td>${item.dosageInstructions}</td>
+
+        </tr>
+      `;
+    });
+  } catch (error) {
+    showToast(error.message || "Failed to load prescription.", "error");
+  }
 }

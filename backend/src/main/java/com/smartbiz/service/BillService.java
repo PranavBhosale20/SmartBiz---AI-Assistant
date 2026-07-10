@@ -11,7 +11,6 @@ import com.smartbiz.repository.BillRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.smartbiz.exception.BusinessException;
-import com.smartbiz.exception.ResourceNotFoundException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -79,6 +78,18 @@ public class BillService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No bill found for appointment id: " + appointmentId));
         return toResponseDTO(bill);
+    }
+    
+    /* ==========================================================
+    GET ALL BILLS
+ ========================================================== */
+
+    public List<BillResponseDTO> getAllBills() {
+
+    	return billRepository.findAll()
+             .stream()
+             .map(this::toResponseDTO)
+             .toList();
     }
 
     /**

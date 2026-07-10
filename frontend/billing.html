@@ -28,9 +28,9 @@
             </div>
 
             <button class="btn btn-primary open-modal" data-modal="create-bill">
-              <i data-lucide="receipt"></i>
+              <i data-lucide="plus"></i>
 
-              Create Bill
+              Generate Bill
             </button>
           </div>
 
@@ -39,7 +39,7 @@
               <div class="toolbar-search">
                 <i data-lucide="search"></i>
 
-                <input type="text" placeholder="Search bill..." />
+                <input type="text" placeholder="Search bills..." />
               </div>
 
               <div class="toolbar-actions">
@@ -64,16 +64,12 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Invoice No.</th>
-
+                      <th>Bill ID</th>
                       <th>Patient</th>
-
-                      <th>Amount</th>
-
-                      <th>Date</th>
-
+                      <th>Doctor</th>
+                      <th>Total</th>
                       <th>Status</th>
-
+                      <th>Created</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -107,6 +103,7 @@
 
     <!-- Components -->
     <script src="js/components/modal.js"></script>
+    <script src="js/components/bill-modal.js"></script>
     <script src="js/components/sidebar.js"></script>
     <script src="js/components/header.js"></script>
     <script src="js/components/footer.js"></script>

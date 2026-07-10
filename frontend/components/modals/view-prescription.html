@@ -1,67 +1,82 @@
 <div class="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>Prescription Details</h2>
+  <div class="modal modal-lg">
+    <!-- ==========================================================
+         HEADER
+    ========================================================== -->
 
-      <button class="modal-close">✕</button>
+    <div class="modal-header">
+      <div>
+        <h2>Prescription Details</h2>
+
+        <p>Prescription information and prescribed medicines.</p>
+      </div>
+
+      <button class="modal-close">
+        <i data-lucide="x"></i>
+      </button>
     </div>
 
+    <!-- ==========================================================
+         BODY
+    ========================================================== -->
+
     <div class="modal-body">
-      <p><strong>Prescription No:</strong> PR001</p>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Prescription ID</label>
 
-      <p><strong>Patient:</strong> Rahul Sharma</p>
+          <p id="viewPrescriptionId">-</p>
+        </div>
 
-      <p><strong>Doctor:</strong> Dr. Mehta</p>
+        <div class="info-item">
+          <label>Appointment ID</label>
 
-      <p><strong>Date:</strong> 12 Jul 2026</p>
+          <p id="viewAppointmentId">-</p>
+        </div>
 
-      <hr />
+        <div class="info-item">
+          <label>Patient</label>
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Medicine</th>
+          <p id="viewPrescriptionPatient">-</p>
+        </div>
 
-            <th>Dosage</th>
+        <div class="info-item">
+          <label>Doctor</label>
 
-            <th>Days</th>
-          </tr>
-        </thead>
+          <p id="viewPrescriptionDoctor">-</p>
+        </div>
 
-        <tbody>
-          <tr>
-            <td>Paracetamol 500mg</td>
+        <div class="info-item">
+          <label>Created On</label>
 
-            <td>1-0-1</td>
+          <p id="viewPrescriptionDate">-</p>
+        </div>
+      </div>
 
-            <td>5</td>
-          </tr>
+      <div class="form-group">
+        <label>Doctor Notes</label>
 
-          <tr>
-            <td>Vitamin C</td>
+        <textarea
+          id="viewPrescriptionNotes"
+          class="form-control"
+          rows="3"
+          readonly
+        ></textarea>
+      </div>
 
-            <td>0-1-0</td>
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Medicine</th>
+              <th>Quantity</th>
+              <th>Dosage Instructions</th>
+            </tr>
+          </thead>
 
-            <td>10</td>
-          </tr>
-
-          <tr>
-            <td>Cough Syrup</td>
-
-            <td>10 ml Twice Daily</td>
-
-            <td>7</td>
-          </tr>
-
-          <tr>
-            <td>Azithromycin</td>
-
-            <td>1-0-0</td>
-
-            <td>3</td>
-          </tr>
-        </tbody>
-      </table>
+          <tbody id="viewPrescriptionItemsTableBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

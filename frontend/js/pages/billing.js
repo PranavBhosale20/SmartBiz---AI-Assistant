@@ -20,38 +20,12 @@ async function loadBills() {
   showLoading(tableBody, "Loading bills...");
 
   try {
-    // TODO:
-    // const bills = await apiCall("/api/bills");
-
-    const bills = [
-      {
-        id: "B001",
-        patient: "Rahul Sharma",
-        doctor: "Dr. Mehta",
-        amount: "₹520",
-        date: "12 Jul 2026",
-        status: "Paid",
-      },
-      {
-        id: "B002",
-        patient: "Priya Patil",
-        doctor: "Dr. Joshi",
-        amount: "₹750",
-        date: "13 Jul 2026",
-        status: "Pending",
-      },
-      {
-        id: "B003",
-        patient: "Amit Joshi",
-        doctor: "Dr. Kulkarni",
-        amount: "₹320",
-        date: "14 Jul 2026",
-        status: "Paid",
-      },
-    ];
+    const bills = await apiCall("/api/bills");
 
     renderBills(bills);
   } catch (error) {
+    console.error(error);
+
     showError(tableBody, "Failed to load bills.");
   }
 }
@@ -63,47 +37,65 @@ async function loadBills() {
 function renderBills(bills) {
   const tableBody = document.getElementById("billingTableBody");
 
-  if (bills.length === 0) {
+  if (!bills || bills.length === 0) {
     showEmptyState(tableBody, "No bills found.");
-
     return;
   }
 
   tableBody.innerHTML = "";
 
   bills.forEach((bill) => {
+    const createdDate = new Date(bill.createdAt).toLocaleDateString();
+
     tableBody.innerHTML += `
       <tr>
 
-        <td>${bill.id}</td>
+        <td>#${bill.id}</td>
 
-        <td>${bill.patient}</td>
+        <td>${bill.userName}</td>
 
-        <td>${bill.amount}</td>
+        <td>${bill.doctorName}</td>
 
-        <td>${bill.date}</td>
+        <td>₹${bill.grandTotal.toFixed(2)}</td>
 
         <td>
+
           <span class="status ${bill.status.toLowerCase()}">
             ${bill.status}
           </span>
+
         </td>
+
+        <td>${createdDate}</td>
 
         <td>
 
           <div class="table-actions">
 
-            <button class="action-btn open-modal" data-modal="view-bill">
+            <button
+              class="action-btn open-modal"
+              data-modal="view-bill"
+              data-id="${bill.id}"
+              data-appointment="${bill.appointmentId}">
+
               <i data-lucide="eye"></i>
+
             </button>
 
-            <button class="action-btn">
-              <i data-lucide="download"></i>
-            </button>
+            ${
+              bill.status === "UNPAID"
+                ? `
+            <button
+              class="action-btn open-modal"
+              data-modal="pay-bill"
+              data-id="${bill.id}">
 
-            <button class="action-btn">
-              <i data-lucide="printer"></i>
+              <i data-lucide="badge-indian-rupee"></i>
+
             </button>
+            `
+                : ""
+            }
 
           </div>
 
@@ -114,4 +106,6 @@ function renderBills(bills) {
   });
 
   lucide.createIcons();
+
+  console.log("✓ Bills Loaded");
 }

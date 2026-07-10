@@ -81,6 +81,7 @@ document.addEventListener("click", (event) => {
   openModal(button.dataset.modal, {
     id: button.dataset.id || null,
     entity: button.dataset.entity || null,
+    appointment: button.dataset.appointment || null,
   });
 });
 
@@ -198,6 +199,22 @@ function initializeModalPage(modalName, modalData) {
 
     case "view-prescription":
       initializeViewPrescriptionModal?.(modalData);
+      break;
+
+    /* ======================================================
+   BILLING
+====================================================== */
+
+    case "create-bill":
+      initializeCreateBillModal?.();
+      break;
+
+    case "view-bill":
+      initializeViewBillModal?.(modalData);
+      break;
+
+    case "pay-bill":
+      initializePayBillModal?.(modalData);
       break;
   }
 }
